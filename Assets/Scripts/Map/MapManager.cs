@@ -133,6 +133,7 @@ namespace Scripts.Map
         }
 
         private List<(int, int, Color)> _debugExploration = new List<(int, int, Color)>();
+        private List<(Vector2Int, Vector2Int, Color)> _debugLinks = new List<(Vector2Int, Vector2Int, Color)>();
         private void SetTileStatus(int x, int y, TileState state)
         {
             _mapPathfinding[y][x] = state;
