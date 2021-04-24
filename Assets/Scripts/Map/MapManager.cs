@@ -43,7 +43,6 @@ namespace Scripts.Map
                     _debugExploration.Add((x, y, Color.white));
                 }
                 _mapPathfinding.Add(_elems);
-                _mapPathNodes.Add(_elements);
             }
 
             ARoom firstRoom = AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION, _entry);

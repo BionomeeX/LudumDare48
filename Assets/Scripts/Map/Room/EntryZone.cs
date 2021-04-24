@@ -6,5 +6,8 @@ namespace Scripts.Map.Room
     {
         public EntryZone() : base(new Vector2Int(5, -1), Vector2Int.zero)
         { }
+
+        public override float GetCost()
+            => 100f;
     }
 }

@@ -34,6 +34,8 @@ namespace Scripts.Map.Room
             return rooms.ToArray();
         }
 
+        public abstract float GetCost();
+
         public static float GetDistance(ARoom a, ARoom b)
         {
             return Vector2Int.Distance(a.Position, b.Position);

@@ -6,5 +6,8 @@ namespace Scripts.Map.Room
     {
         public Corridor(Vector2Int size, Vector2Int position) : base(size, position)
         { }
+
+        public override float GetCost()
+            => .1f;
     }
 }

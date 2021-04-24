@@ -1,3 +1,4 @@
+using Scripts.Map.Room;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -83,7 +84,7 @@ namespace Scripts.Map
                         continue;
                     }
 
-                    float newMovementCostToNeighbour = currentNode.gCost + neighbour.currentNode.traverseCost;
+                    float newMovementCostToNeighbour = currentNode.gCost + neighbour.currentNode.GetCost();
 
                     if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
                     {
