@@ -1170,13 +1170,13 @@ MonoBehaviour:
   _receptionRoom: {fileID: 7917132105373856882, guid: 88ae41c23d15ea841888feb93566e28c, type: 3}
   _rooms:
   - GameObject: {fileID: 7917132105373856882, guid: 88ae41c23d15ea841888feb93566e28c, type: 3}
-    Size: {x: 1, y: 2}
+    Size: {x: 2, y: 1}
   - GameObject: {fileID: 2514209979806591841, guid: 65a1d1faf8064314d898ce254b28b89f, type: 3}
-    Size: {x: 1, y: 3}
+    Size: {x: 3, y: 1}
   - GameObject: {fileID: 8322689454127169940, guid: d115e56f7c00318498062ba212ea0235, type: 3}
     Size: {x: 2, y: 2}
   - GameObject: {fileID: 8974266133367059421, guid: 62fe6f650e677a042a11d11d72f7e9cd, type: 3}
-    Size: {x: 2, y: 3}
+    Size: {x: 3, y: 2}
   _corridor: {fileID: 1917970693088605037, guid: 66b959472c569f74bba447159cfb2f0e, type: 3}
   _elevator: {fileID: 952793276}
   _constructionSign: {fileID: 8695930291489931896, guid: f7e7142116be43b4296ab540c1ba3588, type: 3}
