@@ -27,7 +27,7 @@ namespace Scripts.UI
             _currentSelection = rType == _currentSelection ? (RoomType?)null : rType;
         }
 
-        private ARoom clicked = null;
+        private GenericRoom clicked = null;
         private void Update()
         {
             if (Input.GetMouseButtonDown(0) && _currentSelection != null)
@@ -39,7 +39,7 @@ namespace Scripts.UI
                     var xSize = x.Size.x / 2f;
                     return pos2d.x > x.GameObject.transform.position.x - xSize && pos2d.x < x.GameObject.transform.position.x + xSize
                     && pos2d.y > x.GameObject.transform.position.y && pos2d.y < x.GameObject.transform.position.y + x.Size.y;
-                });
+                }) as GenericRoom;
             }
             if (Input.GetMouseButtonUp(0) && clicked != null && clicked.IsBuilt)
             {

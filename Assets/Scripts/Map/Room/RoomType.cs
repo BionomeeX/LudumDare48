@@ -10,6 +10,8 @@
         DEFENSE,
         MINING,
         AIRLOCK,
-        FACTORY
+        FACTORY,
+
+        ELEVATOR
     }
 }
