@@ -6,9 +6,9 @@ namespace Scripts.Map.Room
     {
         public ARoom(Vector2Int size, Vector2Int position)
         {
-            _size = size;
-            _position = position;
-            _isBuilt = false;
+            Size = size;
+            Position = position;
+            IsBuilt = false;
 
             RoomUp = null;
             RoomDown = null;
@@ -16,9 +16,9 @@ namespace Scripts.Map.Room
             RoomRight = null;
         }
 
-        private bool _isBuilt;
-        private Vector2Int _size;
-        private Vector2Int _position;
+        public bool IsBuilt { set; get; }
+        public Vector2Int Size { private set; get; }
+        public Vector2Int Position { private set; get; }
 
         public ARoom RoomUp, RoomDown, RoomLeft, RoomRight;
     }

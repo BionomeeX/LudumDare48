@@ -1,4 +1,5 @@
 using Scripts.Map.Room;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,10 @@ namespace Scripts.Map
         private GameObject _corridor;
         [SerializeField]
         private GameObject _elevator;
+
+        [Header("Other")]
+        [SerializeField]
+        private GameObject _constructionSign;
 
         private EntryZone _entry = new EntryZone();
 
@@ -70,6 +75,16 @@ namespace Scripts.Map
                     SetTileStatus(x, y, TileState.OCCUPIED);
                 }
             }
+
+            StartCoroutine(BuildRoom(newRoom));
+        }
+
+        private IEnumerator BuildRoom(ARoom room)
+        {
+            var sign = Instantiate(_constructionSign, (Vector3)((Vector2)room.Position) + new Vector3(room.Size.x / 2, -room.Size.y / 2f, -1f), Quaternion.identity);
+            yield return new WaitForSeconds(3f);
+            room.IsBuilt = true;
+            Destroy(sign);
         }
 
         private List<(int, int, Color)> _debugExploration = new List<(int, int, Color)>();
