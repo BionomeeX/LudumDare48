@@ -48,22 +48,19 @@ namespace Scripts.Map
                 _mapPathfinding.Add(_elems);
                 _mapPathNodes.Add(_elements);
             }
-            AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION);
-            //AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION);
+
+            ARoom firstRoom = AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION, new EntryZone());
+
+            ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION, firstRoom);
         }
 
-        public void AddRoom(Vector2Int position, Vector2Int size, GameObject room, RoomType type, ARoom parentRoom)
+        public ARoom AddRoom(Vector2Int position, Vector2Int size, GameObject room, RoomType type, ARoom parentRoom)
         {
             ARoom newRoom;
             switch (type)
             {
                 case RoomType.RECEPTION:
-                    newRoom = new ReceptionRoom(size, position)
-                    {
-                        RoomUp = new EntryZone()
-                    };
-                    _entry.RoomDown = newRoom;
-
+                    newRoom = new ReceptionRoom(size, position);
                     break;
 
                 default:
@@ -112,17 +109,19 @@ namespace Scripts.Map
             else if (position.y > parentRoom.Position.y)
             // Comming from bottom
             {
-                __mapPathNodes[position.y - 1][position.x].neighbours.Add(_mapPathNodes[position.y][position.x]);
-                __mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y - 1][position.x]);
+                _mapPathNodes[position.y - 1][position.x].neighbours.Add(_mapPathNodes[position.y][position.x]);
+                _mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y - 1][position.x]);
             }
             else
             // Comming from top
             {
-                __mapPathNodes[position.y + 1][position.x].neighbours.Add(_mapPathNodes[position.y][position.x]);
-                __mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y + 1][position.x]);
+                _mapPathNodes[position.y + 1][position.x].neighbours.Add(_mapPathNodes[position.y][position.x]);
+                _mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y + 1][position.x]);
             }
 
             StartCoroutine(BuildRoom(newRoom));
+
+            return newRoom;
         }
 
         private IEnumerator BuildRoom(ARoom room)

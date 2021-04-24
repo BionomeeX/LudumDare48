@@ -9,6 +9,7 @@ namespace Scripts.Map
         {
             this.x = x;
             this.y = y;
+            neighbours = new List<PathNode>();
         }
 
         public static float GetDistance(PathNode begin, PathNode end) {
