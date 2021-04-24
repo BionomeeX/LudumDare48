@@ -22,6 +22,8 @@ namespace Scripts.Map
         [SerializeField]
         private GameObject _elevator;
 
+        private EntryZone _entry = new EntryZone();
+
         private void Start()
         {
             // Base zone discovered
@@ -41,15 +43,22 @@ namespace Scripts.Map
 
         public void AddRoom(Vector2Int position, Vector2Int size, GameObject room, RoomType type)
         {
+            ARoom newRoom;
             switch (type)
             {
                 case RoomType.RECEPTION:
-                    _mapRooms.Add(new ReceptionRoom(size, position));
+                    newRoom = new ReceptionRoom(size, position)
+                    {
+                        RoomUp = new EntryZone()
+                    };
+                    _entry.RoomDown = newRoom;
+
                     break;
 
                 default:
                     throw new System.ArgumentException("Invalid room type " + type.ToString(), nameof(type));
             }
+            _mapRooms.Add(newRoom);
 
             var go = Instantiate(room, position + new Vector2(1f, -size.y), Quaternion.identity);
             go.transform.parent = _mapTransform;

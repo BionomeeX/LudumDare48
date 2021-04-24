@@ -9,10 +9,17 @@ namespace Scripts.Map.Room
             _size = size;
             _position = position;
             _isBuilt = false;
+
+            RoomUp = null;
+            RoomDown = null;
+            RoomLeft = null;
+            RoomRight = null;
         }
 
         private bool _isBuilt;
         private Vector2Int _size;
         private Vector2Int _position;
+
+        public ARoom RoomUp, RoomDown, RoomLeft, RoomRight;
     }
 }
