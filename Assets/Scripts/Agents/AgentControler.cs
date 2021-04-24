@@ -12,7 +12,7 @@ namespace Scripts.Agents
     public class AgentControler : MonoBehaviour
     {
 
-        private List<ARoom> _roomPath = null;
+        private List<ARoom> _roomPath = new List<ARoom>();
         private ARoom _currentRoom;
         private ARoom _targetRoom;
 
@@ -39,6 +39,11 @@ namespace Scripts.Agents
                 _currentRoom.Position.y + 0.1f,
                 0f
             );
+        }
+
+        private void Start()
+        {
+            ChooseAction();
         }
 
         private void ChooseAction( /*??*/ )
