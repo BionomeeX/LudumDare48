@@ -34,6 +34,9 @@ namespace Scripts.Map
         [SerializeField]
         private GameObject _constructionSign;
 
+        [SerializeField]
+        private GameObject _aiPrefab;
+
         private EntryZone _entry = new EntryZone();
 
         private void Start()
@@ -59,13 +62,7 @@ namespace Scripts.Map
 
             ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.RECEPTION, thirdRoom);
 
-            var roompath = Astar.FindPath(firstRoom, fourthRoom);
-
-            Debug.Log(roompath.Count);
-            foreach(var room in roompath){
-                Debug.Log(room.Position.x + " " + room.Position.y);
-            }
-
+            Instantiate(_aiPrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
         }
 
         public ARoom AddRoom(Vector2Int position, Vector2Int size, GameObject room, RoomType type, ARoom parentRoom)

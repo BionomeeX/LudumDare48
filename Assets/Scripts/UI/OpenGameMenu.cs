@@ -10,6 +10,9 @@ namespace Scripts.UI
         [SerializeField]
         private GameObject _buildPanel;
 
+        [SerializeField]
+        private Material _materials;
+
         private void Start()
         {
             _buildPanel.SetActive(false);
