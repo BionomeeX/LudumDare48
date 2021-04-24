@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Scripts.Map.Room
 {
@@ -21,5 +22,21 @@ namespace Scripts.Map.Room
         public Vector2Int Position { private set; get; }
 
         public ARoom RoomUp, RoomDown, RoomLeft, RoomRight;
+
+        public ARoom[] GetNeighborhood()
+        {
+            List<ARoom> rooms = new List<ARoom>();
+            if (RoomUp != null) rooms.Add(RoomUp);
+            if (RoomDown != null) rooms.Add(RoomDown);
+            if (RoomLeft != null) rooms.Add(RoomLeft);
+            if (RoomRight != null) rooms.Add(RoomRight);
+
+            return rooms.ToArray();
+        }
+
+        public static float GetDistance(ARoom a, ARoom b)
+        {
+            return Vector2Int.Distance(a.Position, b.Position);
+        }
     }
 }
