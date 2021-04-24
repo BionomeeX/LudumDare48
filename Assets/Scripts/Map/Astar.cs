@@ -8,14 +8,34 @@ namespace Scripts.Map
     public class Astar
     {
 
-        public static List<PathNode> RetracePath(PathNode startPosition, PathNode endPosition)
+        public class Node {
+
+            public Node(PathNode node){
+                this.currentNode = node;
+            }
+            public PathNode currentNode;
+
+            public float gCost;
+            public float hCost;
+            public float fCost
+            {
+                get
+                {
+                    return gCost + hCost;
+                }
+            }
+            public Node parent;
+
+        }
+
+        public static List<PathNode> RetracePath(Node startPosition, Node endPosition)
         {
             List<PathNode> path = new List<PathNode>();
-            PathNode currentNode = endPosition;
+            Node currentNode = endPosition;
 
             while (currentNode != startPosition)
             {
-                path.Add(currentNode);
+                path.Add(currentNode.currentNode);
                 currentNode = currentNode.parent;
             }
 
@@ -25,19 +45,20 @@ namespace Scripts.Map
 
         public static List<PathNode> FindPath(PathNode startPosition, PathNode endPosition)
         {
-            List<PathNode> openSet = new List<PathNode>();
-            HashSet<PathNode> closedSet = new HashSet<PathNode>();
+            List<Node> openSet = new List<Node>();
+            HashSet<Node> closedSet = new HashSet<Node>();
 
-            openSet.Add(startPosition);
+            Node startingNode = new Node(startPosition);
+            openSet.Add(startingNode);
 
             while (openSet.Count > 0)
             {
 
-                PathNode currentNode = openSet[0];
+                Node currentNode = openSet[0];
 
                 for (int i = 1; i < openSet.Count; ++i)
                 {
-                    PathNode runningNode = openSet[i];
+                    Node runningNode = openSet[i];
                     if (runningNode.fCost < currentNode.fCost || runningNode.fCost == currentNode.fCost && runningNode.hCost < currentNode.hCost)
                     {
                         currentNode = openSet[i];
@@ -47,29 +68,32 @@ namespace Scripts.Map
                 openSet.Remove(currentNode);
                 closedSet.Add(currentNode);
 
-                if (currentNode == endPosition)
+                if (currentNode.currentNode == endPosition)
                 {
-                    return RetracePath(startPosition, endPosition);
+                    return RetracePath(startingNode, currentNode);
                 }
 
-                foreach (var neighbour in currentNode.neighbours)
+                foreach (PathNode neighbor in currentNode.currentNode.neighbours)
                 {
-                    if (closedSet.Contains(neighbour.node))
+
+                    Node neighbour = new Node(neighbor);
+
+                    if (closedSet.Contains(neighbour))
                     {
                         continue;
                     }
 
-                    float newMovementCostToNeighbour = currentNode.gCost + neighbour.cost;
+                    float newMovementCostToNeighbour = currentNode.gCost + neighbour.currentNode.traverseCost;
 
-                    if (newMovementCostToNeighbour < neighbour.node.gCost || !openSet.Contains(neighbour.node))
+                    if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
                     {
-                        neighbour.node.gCost = newMovementCostToNeighbour;
-                        neighbour.node.hCost = PathNode.GetDistance(neighbour.node, endPosition);
-                        neighbour.node.parent = currentNode;
+                        neighbour.gCost = newMovementCostToNeighbour;
+                        neighbour.hCost = PathNode.GetDistance(neighbor, endPosition);
+                        neighbour.parent = currentNode;
 
-                        if (!openSet.Contains(neighbour.node))
+                        if (!openSet.Contains(neighbour))
                         {
-                            openSet.Add(neighbour.node);
+                            openSet.Add(neighbour);
                         }
                     }
                 }
