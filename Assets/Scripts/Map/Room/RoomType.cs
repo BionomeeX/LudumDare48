@@ -4,6 +4,7 @@
     {
         EMPTY,
         CORRIDOR,
+        RECEPTION,
 
         STORAGE,
         DEFENSE,
