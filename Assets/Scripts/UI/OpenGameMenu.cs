@@ -14,6 +14,9 @@ namespace Scripts.UI
         private Material[] _materials;
         private Material _debugMaterial = null;
 
+        [SerializeField]
+        private Texture2D[] _textures;
+
         private void Start()
         {
             _buildPanel.SetActive(false);
@@ -28,12 +31,21 @@ namespace Scripts.UI
         public void SetCurrentBuild(int type)
         {
             var rType = (RoomType)type;
-            _currentSelection = rType == _currentSelection ? (RoomType?)null : rType;
+            _currentSelection = rType == _currentSelection || type == -1 ? (RoomType?)null : rType;
+            if (_currentSelection == null)
+            {
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            }
+            else
+            {
+                Cursor.SetCursor(type == 0 ? _textures[0] : _textures[type - 2], Vector2.zero, CursorMode.Auto);
+            }
         }
 
         private GenericRoom clicked = null;
         private void Update()
         {
+            // We want the user to click and release his mouse on the same element
             if (Input.GetMouseButtonDown(0) && _currentSelection != null)
             {
                 var mousePos = Input.mousePosition;
@@ -59,6 +71,10 @@ namespace Scripts.UI
                     renderer.material = clicked.RoomType == RoomType.EMPTY ? _debugMaterial : _materials[(int)clicked.RoomType - 3];
                 }
                 clicked = null;
+            }
+            if (Input.GetMouseButtonDown(1) && _currentSelection != null) // Reset selection
+            {
+                SetCurrentBuild(-1);
             }
         }
     }
