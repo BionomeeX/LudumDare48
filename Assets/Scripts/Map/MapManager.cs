@@ -6,6 +6,8 @@ namespace Scripts.Map
 {
     public class MapManager : MonoBehaviour
     {
+
+        private List<List<PathNode>> _mapPathNodes = new List<List<PathNode>>();
         private List<List<TileState>> _mapPathfinding = new List<List<TileState>>();
         private List<ARoom> _mapRooms = new List<ARoom>();
 
@@ -29,18 +31,23 @@ namespace Scripts.Map
             for (int y = 0; y < baseDiscoveredSize; y++)
             {
                 List<TileState> _elems = new List<TileState>();
+                List<PathNode> _elements = new List<PathNode>();
                 for (int x = 0; x < baseDiscoveredSize; x++)
                 {
                     _elems.Add(TileState.EMPTY);
+                    _elements.Add(new PathNode(x, y));
                     _debugExploration.Add((x, y, Color.white));
                 }
                 _mapPathfinding.Add(_elems);
+                _mapPathNodes.Add(_elements);
             }
             AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION);
+            AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION);
         }
 
-        public void AddRoom(Vector2Int position, Vector2Int size, GameObject room, RoomType type)
+        public void AddRoom(Vector2Int position, Vector2Int size, GameObject room, RoomType type, ARoom parentRoom)
         {
+
             switch (type)
             {
                 case RoomType.RECEPTION:
@@ -61,6 +68,47 @@ namespace Scripts.Map
                     SetTileStatus(x, y, TileState.OCCUPIED);
                 }
             }
+
+            // each element of the room is accessible from the others
+            if (size.x > 1)
+            {
+                for (int x = position.x; x < position.x + size.x - 1; ++x)
+                {
+                    // add the next block as neighbour
+                    _mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y][position.x + 1]);
+                    // add the preceding block as neighbour
+                    _mapPathNodes[position.y][position.x + 1].neighbours.Add(_mapPathNodes[position.y][position.x]);
+                }
+            }
+
+            // check where the parent room come from
+            if (position.x > parentRoom.Position.x + parentRoom.Size.x)
+            // Comming from left
+            {
+                _mapPathNodes[position.y][position.x - 1].neighbours.Add(_mapPathNodes[position.y][position.x]);
+                _mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y][position.x - 1]);
+            }
+            else if (position.x + size.x < parentRoom.Position.x)
+            // Comming from right
+            {
+                _mapPathNodes[position.y][position.x + size.x].neighbours.Add(_mapPathNodes[position.y][position.x + size.x + 1]);
+                _mapPathNodes[position.y][position.x + size.x + 1].neighbours.Add(_mapPathNodes[position.y][position.x + size.x]);
+            }
+
+            // Special case for Y => Only 1x1 connection from top <-> bottom from now
+            else if (position.y > parentRoom.Position.y)
+            // Comming from bottom
+            {
+                __mapPathNodes[position.y - 1][position.x].neighbours.Add(_mapPathNodes[position.y][position.x]);
+                __mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y - 1][position.x]);
+            }
+            else
+            // Comming from top
+            {
+                __mapPathNodes[position.y + 1][position.x].neighbours.Add(_mapPathNodes[position.y][position.x]);
+                __mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y + 1][position.x]);
+            }
+
         }
 
         private List<(int, int, Color)> _debugExploration = new List<(int, int, Color)>();
