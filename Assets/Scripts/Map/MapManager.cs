@@ -48,6 +48,18 @@ namespace Scripts.Map
             ARoom firstRoom = AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION, _entry);
 
             ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION, firstRoom);
+
+            ARoom thirdRoom = AddRoom(new Vector2Int(9, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION, secondRoom);
+
+            ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION, thirdRoom);
+
+            var roompath = Astar.FindPath(firstRoom, fourthRoom);
+
+            Debug.Log(roompath.Count);
+            foreach(var room in roompath){
+                Debug.Log(room.Position.x + " " + room.Position.y);
+            }
+
         }
 
         public ARoom AddRoom(Vector2Int position, Vector2Int size, GameObject room, RoomType type, ARoom parentRoom)
