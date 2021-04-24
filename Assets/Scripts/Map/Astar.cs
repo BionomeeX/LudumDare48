@@ -10,10 +10,10 @@ namespace Scripts.Map
 
         public class Node {
 
-            public Node(PathNode node){
+            public Node(ARoom node){
                 this.currentNode = node;
             }
-            public PathNode currentNode;
+            public ARoom currentNode;
 
             public float gCost;
             public float hCost;
@@ -28,9 +28,9 @@ namespace Scripts.Map
 
         }
 
-        public static List<PathNode> RetracePath(Node startPosition, Node endPosition)
+        public static List<ARoom> RetracePath(Node startPosition, Node endPosition)
         {
-            List<PathNode> path = new List<PathNode>();
+            List<ARoom> path = new List<ARoom>();
             Node currentNode = endPosition;
 
             while (currentNode != startPosition)
@@ -43,7 +43,7 @@ namespace Scripts.Map
             return path;
         }
 
-        public static List<PathNode> FindPath(PathNode startPosition, PathNode endPosition)
+        public static List<ARoom> FindPath(ARoom startPosition, ARoom endPosition)
         {
             List<Node> openSet = new List<Node>();
             HashSet<Node> closedSet = new HashSet<Node>();
@@ -73,7 +73,7 @@ namespace Scripts.Map
                     return RetracePath(startingNode, currentNode);
                 }
 
-                foreach (PathNode neighbor in currentNode.currentNode.neighbours)
+                foreach (ARoom neighbor in currentNode.currentNode.GetNeighbors())
                 {
 
                     Node neighbour = new Node(neighbor);
@@ -88,7 +88,7 @@ namespace Scripts.Map
                     if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
                     {
                         neighbour.gCost = newMovementCostToNeighbour;
-                        neighbour.hCost = PathNode.GetDistance(neighbor, endPosition);
+                        neighbour.hCost = ARoom.GetDistance(neighbor, endPosition);
                         neighbour.parent = currentNode;
 
                         if (!openSet.Contains(neighbour))
@@ -98,7 +98,7 @@ namespace Scripts.Map
                     }
                 }
             }
-            return new List<PathNode>();
+            return new List<ARoom>();
         }
 
     }

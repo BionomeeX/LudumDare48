@@ -8,7 +8,7 @@ namespace Scripts.Map
     public class MapManager : MonoBehaviour
     {
 
-        private List<List<PathNode>> _mapPathNodes = new List<List<PathNode>>();
+        private List<List<ARoom>> _mapPathNodes = new List<List<ARoom>>();
         private List<List<TileState>> _mapPathfinding = new List<List<TileState>>();
         private List<ARoom> _mapRooms = new List<ARoom>();
 
@@ -38,11 +38,11 @@ namespace Scripts.Map
             for (int y = 0; y < baseDiscoveredSize; y++)
             {
                 List<TileState> _elems = new List<TileState>();
-                List<PathNode> _elements = new List<PathNode>();
+                List<ARoom> _elements = new List<ARoom>();
                 for (int x = 0; x < baseDiscoveredSize; x++)
                 {
                     _elems.Add(TileState.EMPTY);
-                    _elements.Add(new PathNode(x, y));
+                    _elements.Add(new ARoom(x, y));
                     _debugExploration.Add((x, y, Color.white));
                 }
                 _mapPathfinding.Add(_elems);
