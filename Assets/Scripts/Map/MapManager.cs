@@ -7,8 +7,6 @@ namespace Scripts.Map
 {
     public class MapManager : MonoBehaviour
     {
-
-        private List<List<ARoom>> _mapPathNodes = new List<List<ARoom>>();
         private List<List<TileState>> _mapPathfinding = new List<List<TileState>>();
         private List<ARoom> _mapRooms = new List<ARoom>();
 
@@ -78,44 +76,32 @@ namespace Scripts.Map
                 }
             }
 
-            // each element of the room is accessible from the others
-            if (size.x > 1)
-            {
-                for (int x = position.x; x < position.x + size.x - 1; ++x)
-                {
-                    // add the next block as neighbour
-                    _mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y][position.x + 1]);
-                    // add the preceding block as neighbour
-                    _mapPathNodes[position.y][position.x + 1].neighbours.Add(_mapPathNodes[position.y][position.x]);
-                }
-            }
-
             // check where the parent room come from
             if (position.x > parentRoom.Position.x + parentRoom.Size.x)
             // Comming from left
             {
-                _mapPathNodes[position.y][position.x - 1].neighbours.Add(_mapPathNodes[position.y][position.x]);
-                _mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y][position.x - 1]);
+                parentRoom.RoomRight = newRoom;
+                newRoom.RoomLeft = parentRoom;
             }
             else if (position.x + size.x < parentRoom.Position.x)
             // Comming from right
             {
-                _mapPathNodes[position.y][position.x + size.x].neighbours.Add(_mapPathNodes[position.y][position.x + size.x + 1]);
-                _mapPathNodes[position.y][position.x + size.x + 1].neighbours.Add(_mapPathNodes[position.y][position.x + size.x]);
+                parentRoom.RoomLeft = newRoom;
+                newRoom.RoomRight = parentRoom;
             }
 
             // Special case for Y => Only 1x1 connection from top <-> bottom from now
             else if (position.y > parentRoom.Position.y)
             // Comming from bottom
             {
-                _mapPathNodes[position.y - 1][position.x].neighbours.Add(_mapPathNodes[position.y][position.x]);
-                _mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y - 1][position.x]);
+                parentRoom.RoomUp = newRoom;
+                newRoom.RoomDown = parentRoom;
             }
             else
             // Comming from top
             {
-                _mapPathNodes[position.y + 1][position.x].neighbours.Add(_mapPathNodes[position.y][position.x]);
-                _mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y + 1][position.x]);
+                parentRoom.RoomDown = newRoom;
+                newRoom.RoomUp = parentRoom;
             }
 
             StartCoroutine(BuildRoom(newRoom));

@@ -73,7 +73,7 @@ namespace Scripts.Map
                     return RetracePath(startingNode, currentNode);
                 }
 
-                foreach (ARoom neighbor in currentNode.currentNode.GetNeighbors())
+                foreach (ARoom neighbor in currentNode.currentNode.GetNeighborhood())
                 {
 
                     Node neighbour = new Node(neighbor);
