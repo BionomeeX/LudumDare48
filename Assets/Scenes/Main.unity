@@ -1194,7 +1194,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buildPanel: {fileID: 143676225}
-  _materials: {fileID: 0}
+  _materials:
+  - {fileID: 2100000, guid: 25a8bf8c757d77d4f9c566121aea9126, type: 2}
+  - {fileID: 2100000, guid: c0b712ceaf24f65498725b3c03b21276, type: 2}
+  - {fileID: 2100000, guid: ba9bf333a1f7cce41ae76a7b02eaceec, type: 2}
+  - {fileID: 2100000, guid: 71e24dae29dd87243a54d42501f6a853, type: 2}
+  - {fileID: 2100000, guid: 0c7a75659b5866642a56aa0c83ca0ddf, type: 2}
 --- !u!1 &2002968864
 GameObject:
   m_ObjectHideFlags: 0

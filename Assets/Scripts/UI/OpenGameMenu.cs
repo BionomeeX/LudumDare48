@@ -11,7 +11,7 @@ namespace Scripts.UI
         private GameObject _buildPanel;
 
         [SerializeField]
-        private Material _materials;
+        private Material[] _materials;
 
         private void Start()
         {
@@ -46,6 +46,9 @@ namespace Scripts.UI
             }
             if (Input.GetMouseButtonUp(0) && clicked != null && clicked.IsBuilt)
             {
+                clicked.RoomType = _currentSelection.Value;
+                foreach (var renderer in clicked.GameObject.GetComponentsInChildren<MeshRenderer>())
+                    renderer.material = clicked.RoomType == RoomType.EMPTY ? null : _materials[(int)clicked.RoomType - 3];
                 clicked = null;
             }
         }
