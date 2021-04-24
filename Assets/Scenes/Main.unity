@@ -1200,6 +1200,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: ba9bf333a1f7cce41ae76a7b02eaceec, type: 2}
   - {fileID: 2100000, guid: 71e24dae29dd87243a54d42501f6a853, type: 2}
   - {fileID: 2100000, guid: 0c7a75659b5866642a56aa0c83ca0ddf, type: 2}
+  _referenceCamera: {fileID: 0}
 --- !u!1 &2002968864
 GameObject:
   m_ObjectHideFlags: 0

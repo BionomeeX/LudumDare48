@@ -42,7 +42,7 @@ namespace Scripts.Map
         private void Start()
         {
             // Base zone discovered
-            const int baseDiscoveredSize = 20;
+            const int baseDiscoveredSize = 80;
             for (int y = 0; y < baseDiscoveredSize; y++)
             {
                 List<TileState> _elems = new List<TileState>();
@@ -56,11 +56,11 @@ namespace Scripts.Map
 
             ARoom firstRoom = AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.RECEPTION, _entry);
 
-            ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.RECEPTION, firstRoom);
+            ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, firstRoom);
 
-            ARoom thirdRoom = AddRoom(new Vector2Int(9, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.RECEPTION, secondRoom);
+            ARoom thirdRoom = AddRoom(new Vector2Int(9, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, secondRoom);
 
-            ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.RECEPTION, thirdRoom);
+            ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom);
 
             Instantiate(_aiPrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
         }
@@ -72,6 +72,10 @@ namespace Scripts.Map
             {
                 case RoomType.RECEPTION:
                     newRoom = new ReceptionRoom(size, position);
+                    break;
+
+                case RoomType.EMPTY:
+                    newRoom = new GenericRoom(size, position);
                     break;
 
                 default:
