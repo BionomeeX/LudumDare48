@@ -42,14 +42,13 @@ namespace Scripts.Map
                 for (int x = 0; x < baseDiscoveredSize; x++)
                 {
                     _elems.Add(TileState.EMPTY);
-                    _elements.Add(new ARoom(x, y));
                     _debugExploration.Add((x, y, Color.white));
                 }
                 _mapPathfinding.Add(_elems);
                 _mapPathNodes.Add(_elements);
             }
 
-            ARoom firstRoom = AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION, new EntryZone());
+            ARoom firstRoom = AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION, _entry);
 
             ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION, firstRoom);
         }
