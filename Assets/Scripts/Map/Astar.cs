@@ -8,68 +8,74 @@ namespace Scripts.Map
     public class Astar
     {
 
-        public class Node {
+        public static List<PathNode> RetracePath(PathNode startPosition, PathNode endPosition)
+        {
+            List<PathNode> path = new List<PathNode>();
+            PathNode currentNode = endPosition;
 
-            public int
-            public float gCost;
-            public float hCost;
-            public float fCost {
-                get {
-                    return gCost + hCost;
-                }
+            while (currentNode != startPosition)
+            {
+                path.Add(currentNode);
+                currentNode = currentNode.parent;
             }
 
+            path.Reverse();
+            return path;
         }
 
-        public static float EuclidianDistance(Vector2Int startPosition, Vector2Int endPosition) {
-            return (startPosition.x - endPosition.x) * (startPosition.x - endPosition.x) + (startPosition.y - endPosition.y) * (startPosition.y - endPosition.y);
-        }
-
-        public static (float gcost, float hcost, float fcost) PositionsValues(Vector2Int currentPosition, Vector2Int startPosition, Vector2Int endPosition){
-            float gcost = EuclidianDistance(currentPosition, startPosition);
-            float hcost = EuclidianDistance(currentPosition, endPosition);
-            return (gcost, hcost, gcost + hcost);
-        }
-
-        public static List<Vector2Int> RetracePath
-
-        public static List<Vector2Int> FindPath(Vector2Int startPosition, Vector2Int endPosition, List<List<int>> map)
+        public static List<PathNode> FindPath(PathNode startPosition, PathNode endPosition)
         {
-            List<Vector2Int> openSet = new List<Vector2Int>();
-            HashSet<Vector2Int> closedSet = new HashSet<Vector2Int>();
+            List<PathNode> openSet = new List<PathNode>();
+            HashSet<PathNode> closedSet = new HashSet<PathNode>();
 
             openSet.Add(startPosition);
 
-            while(openSet.Count > 0)
+            while (openSet.Count > 0)
             {
 
-                Vector2Int currentPosition = openSet[0];
+                PathNode currentNode = openSet[0];
 
-                (var currentGCost, var currentHCost, var currentFCost) = PositionsValues(currentPosition, startPosition, endPosition);
-
-                for(int i = 1; i < openSet.Count; ++i){
-                    (var runningGCost, var runningHCost, var runningFCost) = PositionsValues(openSet[i], startPosition, endPosition);
-
-                    if(runningFCost < currentFCost || runningFCost == currentFCost && runningHCost < currentHCost){
-                        currentPosition = openSet[i];
+                for (int i = 1; i < openSet.Count; ++i)
+                {
+                    PathNode runningNode = openSet[i];
+                    if (runningNode.fCost < currentNode.fCost || runningNode.fCost == currentNode.fCost && runningNode.hCost < currentNode.hCost)
+                    {
+                        currentNode = openSet[i];
                     }
                 }
 
-                openSet.Remove(currentPosition);
-                closedSet.Add(currentPosition);
+                openSet.Remove(currentNode);
+                closedSet.Add(currentNode);
 
-                if(currentPosition == endPosition){
-                    RetracePath(start)
+                if (currentNode == endPosition)
+                {
+                    return RetracePath(startPosition, endPosition);
                 }
 
+                foreach (var neighbour in currentNode.neighbours)
+                {
+                    if (closedSet.Contains(neighbour.node))
+                    {
+                        continue;
+                    }
+
+                    float newMovementCostToNeighbour = currentNode.gCost + neighbour.cost;
+
+                    if (newMovementCostToNeighbour < neighbour.node.gCost || !openSet.Contains(neighbour.node))
+                    {
+                        neighbour.node.gCost = newMovementCostToNeighbour;
+                        neighbour.node.hCost = PathNode.GetDistance(neighbour.node, endPosition);
+                        neighbour.node.parent = currentNode;
+
+                        if (!openSet.Contains(neighbour.node))
+                        {
+                            openSet.Add(neighbour.node);
+                        }
+                    }
+                }
             }
-
-
-
+            return new List<PathNode>();
         }
-
-
-
 
     }
 
