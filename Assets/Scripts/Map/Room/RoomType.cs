@@ -9,6 +9,7 @@
         STORAGE,
         DEFENSE,
         MINING,
-        AIRLOCK
+        AIRLOCK,
+        FACTORY
     }
 }
