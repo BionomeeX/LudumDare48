@@ -7,8 +7,15 @@ namespace Scripts.Map
 {
     public class MapManager : MonoBehaviour
     {
+        public static MapManager S;
+
+        private void Awake()
+        {
+            S = this;
+        }
+
         private List<List<TileState>> _mapPathfinding = new List<List<TileState>>();
-        private List<ARoom> _mapRooms = new List<ARoom>();
+        public List<ARoom> MapRooms = new List<ARoom>();
 
         [Header("Rooms")]
         [SerializeField]
@@ -36,7 +43,6 @@ namespace Scripts.Map
             for (int y = 0; y < baseDiscoveredSize; y++)
             {
                 List<TileState> _elems = new List<TileState>();
-                List<ARoom> _elements = new List<ARoom>();
                 for (int x = 0; x < baseDiscoveredSize; x++)
                 {
                     _elems.Add(TileState.EMPTY);
@@ -74,9 +80,9 @@ namespace Scripts.Map
                 default:
                     throw new System.ArgumentException("Invalid room type " + type.ToString(), nameof(type));
             }
-            _mapRooms.Add(newRoom);
+            MapRooms.Add(newRoom);
 
-            var go = Instantiate(room, position + new Vector2(1f, -size.y), Quaternion.identity);
+            var go = Instantiate(room, new Vector2(position.x, -position.y) + new Vector2(1f, -size.y), Quaternion.identity);
             go.transform.parent = _mapTransform;
 
             for (int y = position.y; y < position.y + size.y; y++)
@@ -122,7 +128,7 @@ namespace Scripts.Map
 
         private IEnumerator BuildRoom(ARoom room)
         {
-            var sign = Instantiate(_constructionSign, (Vector3)((Vector2)room.Position) + new Vector3(room.Size.x / 2, -room.Size.y / 2f, -1f), Quaternion.identity);
+            var sign = Instantiate(_constructionSign, (Vector3)(new Vector2(room.Position.x, -room.Position.y)) + new Vector3(room.Size.x / 2, -room.Size.y / 2f, -1f), Quaternion.identity);
             yield return new WaitForSeconds(3f);
             room.IsBuilt = true;
             Destroy(sign);
