@@ -8,18 +8,18 @@ namespace Scripts.Map.Room
         {
             Size = size;
             Position = position;
-            _isBuilt = false;
+            IsBuilt = false;
+
+            RoomUp = null;
+            RoomDown = null;
+            RoomLeft = null;
+            RoomRight = null;
         }
 
-        private bool _isBuilt;
-        public Vector2Int Size {
-            private set;
-            get;
-        }
+        public bool IsBuilt { set; get; }
+        public Vector2Int Size { private set; get; }
+        public Vector2Int Position { private set; get; }
 
-        public Vector2Int Position {
-            private set;
-            get;
-        }
+        public ARoom RoomUp, RoomDown, RoomLeft, RoomRight;
     }
 }

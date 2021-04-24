@@ -718,6 +718,7 @@ MonoBehaviour:
     Size: {x: 2, y: 3}
   _corridor: {fileID: 1917970693088605037, guid: 66b959472c569f74bba447159cfb2f0e, type: 3}
   _elevator: {fileID: 952793276}
+  _constructionSign: {fileID: 8695930291489931896, guid: f7e7142116be43b4296ab540c1ba3588, type: 3}
 --- !u!1 &2082698107
 GameObject:
   m_ObjectHideFlags: 0

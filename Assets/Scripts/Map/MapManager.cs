@@ -1,4 +1,5 @@
 using Scripts.Map.Room;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +25,12 @@ namespace Scripts.Map
         [SerializeField]
         private GameObject _elevator;
 
+        [Header("Other")]
+        [SerializeField]
+        private GameObject _constructionSign;
+
+        private EntryZone _entry = new EntryZone();
+
         private void Start()
         {
             // Base zone discovered
@@ -42,21 +49,27 @@ namespace Scripts.Map
                 _mapPathNodes.Add(_elements);
             }
             AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION);
-            AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION);
+            //AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION);
         }
 
         public void AddRoom(Vector2Int position, Vector2Int size, GameObject room, RoomType type, ARoom parentRoom)
         {
-
+            ARoom newRoom;
             switch (type)
             {
                 case RoomType.RECEPTION:
-                    _mapRooms.Add(new ReceptionRoom(size, position));
+                    newRoom = new ReceptionRoom(size, position)
+                    {
+                        RoomUp = new EntryZone()
+                    };
+                    _entry.RoomDown = newRoom;
+
                     break;
 
                 default:
                     throw new System.ArgumentException("Invalid room type " + type.ToString(), nameof(type));
             }
+            _mapRooms.Add(newRoom);
 
             var go = Instantiate(room, position + new Vector2(1f, -size.y), Quaternion.identity);
             go.transform.parent = _mapTransform;
@@ -109,6 +122,15 @@ namespace Scripts.Map
                 __mapPathNodes[position.y][position.x].neighbours.Add(_mapPathNodes[position.y + 1][position.x]);
             }
 
+            StartCoroutine(BuildRoom(newRoom));
+        }
+
+        private IEnumerator BuildRoom(ARoom room)
+        {
+            var sign = Instantiate(_constructionSign, (Vector3)((Vector2)room.Position) + new Vector3(room.Size.x / 2, -room.Size.y / 2f, -1f), Quaternion.identity);
+            yield return new WaitForSeconds(3f);
+            room.IsBuilt = true;
+            Destroy(sign);
         }
 
         private List<(int, int, Color)> _debugExploration = new List<(int, int, Color)>();
