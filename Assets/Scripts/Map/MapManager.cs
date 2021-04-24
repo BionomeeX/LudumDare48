@@ -84,6 +84,7 @@ namespace Scripts.Map
 
             var go = Instantiate(room, new Vector2(position.x, -position.y) + new Vector2(1f, -size.y), Quaternion.identity);
             go.transform.parent = _mapTransform;
+            newRoom.GameObject = go;
 
             for (int y = position.y; y < position.y + size.y; y++)
             {

@@ -23,6 +23,8 @@ namespace Scripts.Map.Room
 
         public ARoom RoomUp, RoomDown, RoomLeft, RoomRight;
 
+        public GameObject GameObject;
+
         public ARoom[] GetNeighborhood()
         {
             List<ARoom> rooms = new List<ARoom>();
@@ -39,6 +41,11 @@ namespace Scripts.Map.Room
         public static float GetDistance(ARoom a, ARoom b)
         {
             return Vector2Int.Distance(a.Position, b.Position);
+        }
+
+        public override string ToString()
+        {
+            return $"Room {Size.x}_{Size.y} at ({Position.x};{Position.y})";
         }
     }
 }
