@@ -16,7 +16,7 @@ namespace Scripts.Map
         [SerializeField]
         private GameObject _receptionRoom;
         [SerializeField]
-        private GameObject[] _rooms;
+        private RoomInfo[] _rooms;
         [SerializeField]
         private GameObject _corridor;
         [SerializeField]
@@ -36,29 +36,27 @@ namespace Scripts.Map
                 }
                 _mapPathfinding.Add(_elems);
             }
-            AddRoom(new Vector2Int(5, 0), _receptionRoom, RoomType.RECEPTION);
+            AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), _receptionRoom, RoomType.RECEPTION);
         }
 
-        public void AddRoom(Vector2Int _position, GameObject room, RoomType type)
+        public void AddRoom(Vector2Int position, Vector2Int size, GameObject room, RoomType type)
         {
-            var size = new Vector2Int(Mathf.RoundToInt(room.transform.localScale.x), Mathf.RoundToInt(room.transform.localScale.y));
             switch (type)
             {
                 case RoomType.RECEPTION:
-                    _mapRooms.Add(new ReceptionRoom(size, _position));
+                    _mapRooms.Add(new ReceptionRoom(size, position));
                     break;
 
                 default:
                     throw new System.ArgumentException("Invalid room type " + type.ToString(), nameof(type));
             }
 
-            var offset = new Vector2(1f, 0f);
-            var go = Instantiate(room, _position + offset, Quaternion.identity);
+            var go = Instantiate(room, position + new Vector2(1f, -size.y), Quaternion.identity);
             go.transform.parent = _mapTransform;
 
-            for (int y = _position.y; y < _position.y + size.y; y++)
+            for (int y = position.y; y < position.y + size.y; y++)
             {
-                for (int x = _position.x; x < _position.x + size.x; x++)
+                for (int x = position.x; x < position.x + size.x; x++)
                 {
                     SetTileStatus(x, y, TileState.OCCUPIED);
                 }

@@ -229,7 +229,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 381843095}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 2, z: 0}
+  m_LocalPosition: {x: 6, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 952793277}
@@ -705,10 +705,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f55d37fa830a37f49851f875c14c9c4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mapTransform: {fileID: 0}
-  _receptionRoom: {fileID: 6670836246444985893, guid: d115e56f7c00318498062ba212ea0235, type: 3}
-  _rooms: []
-  _corridor: {fileID: 2819433113555285117, guid: 8b5080dcfa919884b87ce62372b1fa5b, type: 3}
+  _mapTransform: {fileID: 952793277}
+  _receptionRoom: {fileID: 7917132105373856882, guid: 88ae41c23d15ea841888feb93566e28c, type: 3}
+  _rooms:
+  - GameObject: {fileID: 7917132105373856882, guid: 88ae41c23d15ea841888feb93566e28c, type: 3}
+    Size: {x: 1, y: 2}
+  - GameObject: {fileID: 2514209979806591841, guid: 65a1d1faf8064314d898ce254b28b89f, type: 3}
+    Size: {x: 1, y: 3}
+  - GameObject: {fileID: 8322689454127169940, guid: d115e56f7c00318498062ba212ea0235, type: 3}
+    Size: {x: 2, y: 2}
+  - GameObject: {fileID: 8974266133367059421, guid: 62fe6f650e677a042a11d11d72f7e9cd, type: 3}
+    Size: {x: 2, y: 3}
+  _corridor: {fileID: 1917970693088605037, guid: 66b959472c569f74bba447159cfb2f0e, type: 3}
   _elevator: {fileID: 952793276}
 --- !u!1 &2082698107
 GameObject:
