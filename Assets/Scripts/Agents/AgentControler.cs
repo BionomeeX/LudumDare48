@@ -33,7 +33,12 @@ namespace Scripts.Agents
 
         public void MoveToRoom(ARoom target)
         {
-
+            _currentRoom = target;
+            transform.position = new Vector3(
+                _currentRoom.Position.x + 0.5f,
+                _currentRoom.Position.y + 0.1f,
+                0f
+            );
         }
 
         private void ChooseAction( /*??*/ )
@@ -191,6 +196,7 @@ namespace Scripts.Agents
             }
             else
             {
+                // we stopped moving ...
                 _targetRoom = null;
             }
             //
