@@ -230,7 +230,7 @@ namespace Scripts.Map
 
             if (!hasCommandant)
             {
-                StartCoroutine(BuildRoom(newRoom, roomBuilt, newRoom));
+                StartCoroutine(BuildRoom(newRoom, roomBuilt));
             }
             else
             {
@@ -246,19 +246,31 @@ namespace Scripts.Map
                 {
                     allRequirements.AddRange(ConfigManager.S.Config.RequirementPerBloc);
                 }
-                newRoom.Requirement = new Requirement(Enumerable.Repeat(ConfigManager.S.Config.RequirementPerBloc, newRoom.Size.x * newRoom.Size.y).SelectMany(x => x).ToArray());
+                newRoom.Requirement = new Requirement(newRoom, Enumerable.Repeat(ConfigManager.S.Config.RequirementPerBloc, newRoom.Size.x * newRoom.Size.y).SelectMany(x => x).ToArray());
             }
 
             return newRoom;
         }
 
-        private IEnumerator BuildRoom(ARoom room, Action<ARoom> roomBuilt, ARoom newRoom)
+
+        public void BuildRoomExt(ARoom room)
+        {
+            StartCoroutine(BuildRoom(room, null));
+        }
+        private IEnumerator BuildRoom(ARoom room, Action<ARoom> roomBuilt)
         {
             var sign = Instantiate(_constructionSign, (Vector3)(new Vector2(room.Position.x, -room.Position.y)) + new Vector3(room.Size.x / 2, -room.Size.y / 2f, -1f), Quaternion.identity);
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(ConfigManager.S.Config.BuildingTime);
             room.IsBuilt = true;
             Destroy(sign);
-            roomBuilt?.Invoke(newRoom);
+            roomBuilt?.Invoke(room);
+            EventManager.S.NotifyManager(Events.Event.RoomCreated, room);
+            if (room.Sign != null)
+            {
+                Destroy(room.Sign);
+                room.Sign = null;
+            }
+            room.Requirement = null;
         }
 
         public void DiscoverTile(int x, int y)

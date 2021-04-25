@@ -1,6 +1,4 @@
 using Scripts.Map;
-using Scripts.Events;
-using System.Collections;
 using System.Collections.Generic;
 using Scripts.Map.Room;
 using Scripts.Resources;

@@ -16,6 +16,7 @@ namespace Scripts.ScriptableObjects
         public int NbOfResourcePerTransportation;
         [Tooltip("Resources required to build one bloc (ex: a room of 2x1 need twice the requirement)")]
         public ResourceInfo[] RequirementPerBloc;
+        public float BuildingTime;
 
         [Header("Exploration")]
         public float SubmarineSpeed;
