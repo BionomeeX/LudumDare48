@@ -18,7 +18,9 @@ namespace Scripts.Resources
         [SerializeField]
         private Text _resourcesText;
 
-        List<ResourceStock> _stocks = new List<ResourceStock>();
+        private List<ResourceStock> _stocks = new List<ResourceStock>();
+        public void AddStock(ResourceStock s)
+            => _stocks.Add(s);
 
         private void Start()
         {
@@ -44,7 +46,7 @@ namespace Scripts.Resources
                     else _allResources.Add(r.Item2, (r.Item3, r.Item3));
                 }
             }
-            _resourcesText.text = "Resources:\n" + string.Join("\n", _allResources.Select(x => $"{x.Key}: {x.Value.Item1} ({x.Value.Item2})"));
+            _resourcesText.text = "Resources:\n" + string.Join("\n", _allResources.Select(x => $"{x.Key}: {x.Value.Item1} ({x.Value.Item1 - x.Value.Item2})"));
         }
     }
 }
