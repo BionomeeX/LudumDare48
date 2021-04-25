@@ -1,4 +1,5 @@
 ﻿using Scripts.ScriptableObjects;
+using Scripts.UI.RoomUI;
 using UnityEngine;
 
 namespace Scripts.Map.Room.ModulableRoom
@@ -18,5 +19,11 @@ namespace Scripts.Map.Room.ModulableRoom
 
         public override GameObject GetDescriptionPanel()
             => UIRoom.S._uiStorage;
+
+        public override void SetupConfigPanel(GameObject go)
+        {
+            var c = go.GetComponent<StorageUI>();
+            c.StorageInfoText.text = $"Space Taken: {Stock.GetSizeTaken()} / {Stock.MaxSize}";
+        }
     }
 }

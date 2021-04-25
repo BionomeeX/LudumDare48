@@ -1,5 +1,7 @@
 ﻿using Scripts.ScriptableObjects;
+using Scripts.UI.RoomUI;
 using System.Linq;
+using UnityEngine;
 
 namespace Scripts.Map.Room.ModulableRoom
 {
@@ -15,5 +17,14 @@ namespace Scripts.Map.Room.ModulableRoom
 
         public override string GetDescription()
             => "Your new agents will come here first";
+
+        public override GameObject GetDescriptionPanel()
+            => UIRoom.S._receptionStorage;
+
+        public override void SetupConfigPanel(GameObject go)
+        {
+            var c = go.GetComponent<ReceptionUI>();
+            c.StorageInfoText.text = $"Space Taken: {Stock.GetSizeTaken()} / {Stock.MaxSize}";
+        }
     }
 }

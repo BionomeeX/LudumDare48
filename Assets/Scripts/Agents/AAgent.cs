@@ -13,7 +13,7 @@ namespace Scripts.Agents
 
         protected int _id;
 
-        private Dictionary<ResourcesType, int> _inventory;
+        private Dictionary<ResourceType, int> _inventory;
 
         public static int IdRef = 0;
         private ARoom _currentRoom;
@@ -35,7 +35,7 @@ namespace Scripts.Agents
         {
             _childClassName = childClassName;
             _id = ++IdRef;
-            _inventory = new Dictionary<ResourcesType, int>();
+            _inventory = new Dictionary<ResourceType, int>();
 
         }
         public abstract void OnEventReceived(Events.Event e, object o);
