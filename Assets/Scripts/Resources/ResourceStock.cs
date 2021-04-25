@@ -8,6 +8,7 @@ namespace Scripts.Resources
         public ResourceStock(GenericRoom r)
         {
             Room = r;
+            ResourcesManager.S.AddStock(this);
         }
 
         public GenericRoom Room;
