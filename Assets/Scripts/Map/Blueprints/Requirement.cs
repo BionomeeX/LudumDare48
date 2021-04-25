@@ -77,5 +77,14 @@ namespace Scripts.Map.Blueprints
             }
             return allResources.Select(x => (x.Key, x.Value)).ToArray();
         }
+
+        public void ResetAll()
+        {
+            foreach (var r in _reserved)
+            {
+                _waiting.Add((r.Value.Item1, r.Value.Item2));
+            }
+            _reserved = new Dictionary<int, (ResourceType, int)>();
+        }
     }
 }

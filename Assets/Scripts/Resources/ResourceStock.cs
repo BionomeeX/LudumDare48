@@ -125,5 +125,15 @@ namespace Scripts.Resources
                 _reservedAdd.Remove(id);
             }
         }
+
+        public void ResetAll()
+        {
+            foreach (var r in _reserved)
+            {
+                _resources.Add(r.Value.Item1, r.Value.Item2);
+            }
+            _reserved = new Dictionary<int, (ResourceType, int)>();
+            _reservedAdd = new Dictionary<int, (ResourceType, int)>();
+        }
     }
 }
