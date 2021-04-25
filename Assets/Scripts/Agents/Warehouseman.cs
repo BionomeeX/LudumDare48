@@ -4,6 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Scripts.Map.Room;
 using Scripts.Resources;
+using System.Linq;
+using Scripts.ScriptableObjects;
+
 
 namespace Scripts.Agents
 {
@@ -34,6 +37,10 @@ namespace Scripts.Agents
                         ));
                     }
                 }
+            }
+            if (e == Events.Event.RoomDestroyed)
+            {
+                // oups
             }
         }
 
@@ -101,6 +108,25 @@ namespace Scripts.Agents
 
         private bool CheckIfTurretNeedResource()
         {
+            // Get list of all turrets that need ressources
+            List<ARoom> turrets = MapManager.S.GetAllTurrets().Where(t => t.NeedRessource(ResourceType.AMMO)).ToList();
+
+            // for each turret, pathfind and sort by distance
+            List<(List<Map.ARoom> path, float distance)> orderedTurretPaths = turrets.Select(
+                t => Astar.FindPath(_currentRoom, t)
+            ).Select(
+                path => (path, Astar.ComputePathWeight(path))
+            ).OrderBy(pf => pf.Item2).ToList();
+
+            // Lock the turret for filling and reserve the first one
+            ARoom turretTarget = orderedTurretPaths[0];
+
+            List<ARoom> stocks = MapManager.S.GetAllStockRoom().Where(s => ((GenericRoom)s).RoomType.Stock.CheckResourceByType(ResourceType.AMMO));
+
+
+
+            //
+
             return false;
         }
         private bool CheckIfFactoryNeedResource()
@@ -111,18 +137,22 @@ namespace Scripts.Agents
         private bool CheckIfBlueprintNeedResource()
         {
             // check if there any blueprints
+            List<ARoom> blueprints = MapManager.S.GetAllAccessibleBlueprint().Select(
+                b => Astar.FindPath(_currentRoom, b)
+            ).Select(
+                path => (path, Astar.ComputePathWeight(path))
+            ).OrderBy(pf => pf.Item2).ToList();
 
             // if there is, reserve a block and ask for its needed resources
+            if (blueprints.Count == 0)
+            {
+                return false;
+            }
 
-            // ask every stocks their amount for the resource
+            _actions.Clear();
 
-            // do a pathfinding to each stock
 
-            // sort each stocks by distance
-
-            // for each stock generate a path finding from each stocks to the next
-
-            return false;
+            return true;
         }
         private bool CheckIfHighPriorityStockNeedResource()
         {
@@ -141,6 +171,51 @@ namespace Scripts.Agents
             return false;
         }
 
+        private void FindPathForResource(ResourceType resource, int amount, int priority)
+        // hypothesis:
+        // 1) inventory is empty
+        // 2) actions list is empty
+        {
+            var stocks = MapManager.S.GetAllStockRoom().Select(
+                room => (room, ((GenericRoom)s).RoomType.Stock.CheckResourceByType(resource))
+            ).Where(
+                roomAmount => roomAmount.Item2 > 0
+            ).Select(
+                roomAmount => (roomAmount.Item1, roomAmount.Item2, Astar.FindPath(_currentRoom, roomAmount.Item1))
+            ).Select(
+                rap => (rap.Item1, rap.Item2, rap.Item3, Astar.ComputePathWeight(rap.Item3))
+            ).OrderBy(
+                rapw => rapw.Item4
+            ).ToList();
+
+            // go in ascending order to fill my inventory
+            int myamount = ConfigManager.S.Config.NbOfResourcePerTransportation;
+            bool first = true;
+            foreach (var rapw in stocks)
+            {
+                if (rapw.Item2 >= myamount)
+                {
+                    ((GenericRoom)rapw.Item1).RoomType.Stock.ReserveResource(resource, myamount, _id);
+                    _actions.Add((first ? rapw.Item3 : Astar.FindPath(_actions.Last().path.Last(), rapw.Item1), Action.TakeRessource));
+                    return;
+                }
+                else
+                {
+                    ((GenericRoom)rapw.Item1).RoomType.Stock.ReserveResource(resource, rapw.Item2, _id);
+                    myamount -= rapw.Item2;
+                    _actions.Add((first ? rapw.Item3 : Astar.FindPath(_actions.Last().path.Last(), rapw.Item1), Action.TakeRessource));
+                    first = false;
+                }
+            }
+            if (myamount > 0)
+            {
+                // failled to get all resources => we empty everything
+                foreach(var action in _actions){
+                    ((GenericRoom)action.path.Last()).RoomType.Stock.CancelAllReservations(_id);
+                }
+                _actions.Clear();
+            }
+        }
 
     }
 }
