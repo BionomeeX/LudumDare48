@@ -9,5 +9,11 @@ namespace Scripts.Map.Room
 
         public override float GetCost()
             => .1f;
+
+        public override string GetName()
+            => "Corridor";
+
+        public override string GetDescription()
+            => "Long corridor allowing you to move from one room to another";
     }
 }

@@ -18,9 +18,13 @@ namespace Scripts.UI
         [SerializeField]
         private Texture2D[] _textures;
 
+        [SerializeField]
+        private ExplanationPanel _explanationPanelScript;
+
         private void Start()
         {
             _buildPanel.SetActive(false);
+            _explanationPanelScript.gameObject.SetActive(false);
         }
 
         public void ToggleBuildPanel()
@@ -41,6 +45,19 @@ namespace Scripts.UI
             {
                 Cursor.SetCursor(type == 0 ? _textures[0] : _textures[type - 2], Vector2.zero, CursorMode.Auto);
             }
+        }
+
+        public void OnBuildHoverEnter(int id)
+        {
+            var elem = ModularRoomFactory.BuildModularRoom((RoomType)id);
+            _explanationPanelScript.gameObject.SetActive(true);
+            _explanationPanelScript.Name.text = elem.GetName();
+            _explanationPanelScript.Description.text = elem.GetDescription();
+        }
+
+        public void OnBuildHoverExit()
+        {
+            _explanationPanelScript.gameObject.SetActive(false);
         }
 
         private GenericRoom clicked = null;

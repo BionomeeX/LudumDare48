@@ -17,6 +17,9 @@ namespace Scripts.Map.Room
             RoomRight = null;
         }
 
+        public abstract string GetName();
+        public abstract string GetDescription();
+
         public bool IsBuilt { set; get; }
         public Vector2Int Size { private set; get; }
         public Vector2Int Position { private set; get; }
