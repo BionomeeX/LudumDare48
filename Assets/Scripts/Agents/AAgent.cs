@@ -86,15 +86,16 @@ namespace Scripts.Agents
                 -_currentRoom.Position.y + 0.1f,
                 0f
             );
-            DoNextAction();
         }
 
         public Action MoveOrGetAction()
         {
             if (_actions.Count > 0)
             {
+                Debug.Log("Move");
                 if (_actions[0].path.Count > 0)
                 {
+                    Debug.Log("  to : " + _actions[0].path[0].Position.x + ", " + _actions[0].path[0].Position.y);
                     MoveTo(_actions[0].path[0]);
                     _actions[0].path.RemoveAt(0);
                     return Action.Move;
@@ -113,7 +114,7 @@ namespace Scripts.Agents
 
 
         public abstract void DoSpecialAction(Action action);
-        public abstract void ChooseAction();
+        public abstract bool ChooseAction();
 
         public void DoNextAction()
         {
@@ -125,9 +126,11 @@ namespace Scripts.Agents
             }
             if (action == Action.Idle)
             {
-                //ChooseAction();
-                IsIdle = true;
-                return;
+                if (!ChooseAction())
+                {
+                    IsIdle = true;
+                    return;
+                }
             }
             DoNextAction();
         }

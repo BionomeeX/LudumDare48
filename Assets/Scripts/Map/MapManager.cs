@@ -78,7 +78,14 @@ namespace Scripts.Map
                 foreach (var res in ConfigManager.S.Config.StartingResources)
                 {
                     ((GenericRoom)r).RoomType.Stock.AddResource(res.Type, res.Amount);
+
                 }
+
+                var warehouseman = Instantiate(_warehousePrefab, r.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
+                EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
+
+                var commandant = Instantiate(_commandantPrefab, r.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
+                EventManager.S.Subscribe(commandant.GetComponent<Commandant>());
             }, false);
 
             ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, firstRoom, null, false);
@@ -87,11 +94,7 @@ namespace Scripts.Map
 
             ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom, null, false);
 
-            var warehouseman = Instantiate(_warehousePrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
-            EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
 
-            var commandant = Instantiate(_commandantPrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
-            EventManager.S.Subscribe(commandant.GetComponent<Commandant>());
 
         }
 
@@ -140,7 +143,9 @@ namespace Scripts.Map
 
         public List<ARoom> GetAllStockRoom()
         {
-            List<ARoom> result = new List<ARoom>();
+            List<ARoom> result = MapRooms.Where(
+                r => r is GenericRoom gRoom && gRoom.RoomType.Stock != null
+            ).ToList();
             return result;
         }
 
