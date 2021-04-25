@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,27 +18,33 @@ namespace Scripts.Resources
         [SerializeField]
         private Text _resourcesText;
 
-        Dictionary<ResourceType, int> _resources = new Dictionary<ResourceType, int>();
+        List<ResourceStock> _stocks = new List<ResourceStock>();
 
         private void Start()
         {
-            _resources.Add(ResourceType.IRON, 100);
             UpdateUI();
         }
 
-        private void UpdateUI()
-        {
-            _resourcesText.text = "Resources:\n" + string.Join("\n", _resources.Select(x => x.Key + ": " + x.Value));
-        }
+        public ReadOnlyCollection<ResourceStock> GetResourceStocks(Vector2 myPos)
+            => _stocks.AsReadOnly();
 
-        public bool ConsumeResource(ResourceType type, int amount)
+        public void UpdateUI()
         {
-            if (!_resources.ContainsKey(type) || _resources[type] < amount)
+            Dictionary<ResourceType, (int, int)> _allResources = new Dictionary<ResourceType, (int, int)>();
+            foreach (var s in _stocks)
             {
-                return false;
+                foreach (var r in s._resources)
+                {
+                    if (_allResources.ContainsKey(r.Key)) _allResources[r.Key] = (_allResources[r.Key].Item1 + r.Value, _allResources[r.Key].Item2);
+                    else _allResources.Add(r.Key, (r.Value, 0));
+                }
+                foreach (var r in s._reserved)
+                {
+                    if (_allResources.ContainsKey(r.Item2)) _allResources[r.Item2] = (_allResources[r.Item2].Item1 + r.Item3, _allResources[r.Item2].Item2 + r.Item3);
+                    else _allResources.Add(r.Item2, (r.Item3, r.Item3));
+                }
             }
-            _resources[type] -= amount;
-            return true;
+            _resourcesText.text = "Resources:\n" + string.Join("\n", _allResources.Select(x => $"{x.Key}: {x.Value.Item1} ({x.Value.Item2})"));
         }
     }
 }

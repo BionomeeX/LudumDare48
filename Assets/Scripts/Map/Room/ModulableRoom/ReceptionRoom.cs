@@ -1,16 +1,16 @@
 ﻿namespace Scripts.Map.Room.ModulableRoom
 {
-    public class FactoryRoom : AModulableRoom
+    public class ReceptionRoom : AModulableRoom
     {
-        public FactoryRoom(GenericRoom r) : base()
+        public ReceptionRoom(GenericRoom r) : base()
         {
             Stock = new Resources.ResourceStock(r);
         }
 
         public override string GetName()
-            => "Factory";
+            => "Reception";
 
         public override string GetDescription()
-            => "Convert your ores into refined resources";
+            => "Your new agents will come here first";
     }
 }

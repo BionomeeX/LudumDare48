@@ -1,4 +1,7 @@
 using Scripts.Map.Room;
+using Scripts.Map.Room.ModulableRoom;
+using Scripts.Resources;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,28 +60,34 @@ namespace Scripts.Map
                 _mapPathfinding.Add(_elems);
             }
 
-            ARoom firstRoom = AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.RECEPTION, _entry);
+            ARoom firstRoom = AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.RECEPTION, _entry, (r) =>
+            {
+                ((GenericRoom)r).RoomType.Stock.AddResource(ResourceType.IRON, 100);
+            });
 
-            ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, firstRoom);
+            ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, firstRoom, null);
 
-            ARoom thirdRoom = AddRoom(new Vector2Int(9, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, secondRoom);
+            ARoom thirdRoom = AddRoom(new Vector2Int(9, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, secondRoom, null);
 
-            ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom);
+            ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom, null);
 
             Instantiate(_aiPrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
         }
 
-        public ARoom AddRoom(Vector2Int position, Vector2Int size, GameObject room, RoomType type, ARoom parentRoom)
+        public ARoom AddRoom(Vector2Int position, Vector2Int size, GameObject room, RoomType type, ARoom parentRoom, Action<ARoom> roomBuilt)
         {
             ARoom newRoom;
             switch (type)
             {
                 case RoomType.RECEPTION:
-                    newRoom = new ReceptionRoom(size, position);
-                    break;
-
                 case RoomType.EMPTY:
-                    newRoom = new GenericRoom(size, position);
+                    var gRoom = new GenericRoom(size, position);
+                    if (type == RoomType.RECEPTION)
+                    {
+                        gRoom.RoomType = new ReceptionRoom(gRoom);
+                        gRoom.RoomType.Stock.Room = gRoom;
+                    }
+                    newRoom = gRoom;
                     break;
 
                 case RoomType.CORRIDOR:
@@ -86,7 +95,7 @@ namespace Scripts.Map
                     break;
 
                 default:
-                    throw new System.ArgumentException("Invalid room type " + type.ToString(), nameof(type));
+                    throw new ArgumentException("Invalid room type " + type.ToString(), nameof(type));
             }
             MapRooms.Add(newRoom);
 
@@ -142,17 +151,18 @@ namespace Scripts.Map
             //     // newRoom.RoomUp = new GenericRoom(size, position + Vector2Int.up);
             // }
 
-            // StartCoroutine(BuildRoom(newRoom));
+            StartCoroutine(BuildRoom(newRoom, roomBuilt, newRoom));
 
             return newRoom;
         }
 
-        private IEnumerator BuildRoom(ARoom room)
+        private IEnumerator BuildRoom(ARoom room, Action<ARoom> roomBuilt, ARoom newRoom)
         {
             var sign = Instantiate(_constructionSign, (Vector3)(new Vector2(room.Position.x, -room.Position.y)) + new Vector3(room.Size.x / 2, -room.Size.y / 2f, -1f), Quaternion.identity);
             yield return new WaitForSeconds(3f);
             room.IsBuilt = true;
             Destroy(sign);
+            roomBuilt?.Invoke(newRoom);
         }
 
         private List<(int, int, Color)> _debugExploration = new List<(int, int, Color)>();

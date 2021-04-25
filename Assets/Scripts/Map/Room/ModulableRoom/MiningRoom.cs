@@ -2,6 +2,11 @@
 {
     public class MiningRoom : AModulableRoom
     {
+        public MiningRoom(GenericRoom r) : base()
+        {
+            Stock = new Resources.ResourceStock(r);
+        }
+
         public override string GetName()
             => "Mining";
 
