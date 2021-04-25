@@ -107,5 +107,23 @@ namespace Scripts.Resources
             _reserved.Remove(id);
             return elem;
         }
+
+        /// <summary>
+        /// Cancel all reservations, need to be called if an agent can no longer complete his reservations
+        /// </summary>
+        /// <param name="id">ID of the agent</param>
+        public void CancelAllReservations(int id)
+        {
+            if (_reserved.ContainsKey(id))
+            {
+                var elem = _reserved[id];
+                _resources.Add(elem.Item1, elem.Item2);
+                _reserved.Remove(id);
+            }
+            if (_reservedAdd.ContainsKey(id))
+            {
+                _reservedAdd.Remove(id);
+            }
+        }
     }
 }
