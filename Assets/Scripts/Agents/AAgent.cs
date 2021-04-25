@@ -13,14 +13,14 @@ namespace Scripts.Agents
 
         protected int _id;
 
-        private Dictionary<ResourcesType, int> _inventory;
+        protected Dictionary<ResourceType, int> _inventory;
 
         public static int IdRef = 0;
-        private ARoom _currentRoom;
+        protected ARoom _currentRoom;
 
         private string _childClassName;
 
-        private List<(List<ARoom> path, Action action)> _actions;
+        protected List<(List<ARoom> path, Action action)> _actions;
 
         public enum Action
         {
@@ -93,6 +93,15 @@ namespace Scripts.Agents
                 _inventory[resourceAndAmount.resourceType] += resourceAndAmount.amount;
             }
         }
+
+        public void DropRessource()
+        {
+            // check what ressources the current room need
+            //List<(ResourceType type, int amount)> needs = new List<(ResourceType type, int amount)>();
+            // ???????????????????????????????
+        }
+
+
 
     }
 
