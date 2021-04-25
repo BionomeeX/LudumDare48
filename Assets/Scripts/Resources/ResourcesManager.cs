@@ -42,8 +42,8 @@ namespace Scripts.Resources
                 }
                 foreach (var r in s._reserved)
                 {
-                    if (_allResources.ContainsKey(r.Item2)) _allResources[r.Item2] = (_allResources[r.Item2].Item1 + r.Item3, _allResources[r.Item2].Item2 + r.Item3);
-                    else _allResources.Add(r.Item2, (r.Item3, r.Item3));
+                    if (_allResources.ContainsKey(r.Value.Item1)) _allResources[r.Value.Item1] = (_allResources[r.Value.Item1].Item1 + r.Value.Item2, _allResources[r.Value.Item1].Item2 + r.Value.Item2);
+                    else _allResources.Add(r.Value.Item1, (r.Value.Item2, r.Value.Item2));
                 }
             }
             _resourcesText.text = "Resources:\n" + string.Join("\n", _allResources.Select(x => $"{x.Key}: {x.Value.Item1} ({x.Value.Item1 - x.Value.Item2})"));

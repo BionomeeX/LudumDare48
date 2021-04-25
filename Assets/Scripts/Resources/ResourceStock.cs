@@ -1,4 +1,5 @@
 ﻿using Scripts.Map.Room;
+using System;
 using System.Collections.Generic;
 
 namespace Scripts.Resources
@@ -18,7 +19,7 @@ namespace Scripts.Resources
 
         // Resources reserved by an agent
         // (agent id, type of resource, number of resource reserved)
-        public List<(int, ResourceType, int)> _reserved = new List<(int, ResourceType, int)>();
+        public Dictionary<int, (ResourceType, int)> _reserved = new Dictionary<int, (ResourceType, int)>();
 
         /// <summary>
         ///  Add a resource to the stock
@@ -55,8 +56,24 @@ namespace Scripts.Resources
         /// <remarks>You must call GetResources beforehand to be sure if there is enough resource!</remarks>
         public void ReserveResource(ResourceType type, int amount, int id)
         {
-            _reserved.Add((id, type, amount));
+            if (_reserved.ContainsKey(id))
+            {
+                throw new InvalidOperationException(id + " already have a resource reserved here");
+            }
+            _reserved.Add(id, (type, amount));
             _resources[type] -= amount;
+        }
+
+        /// <summary>
+        /// Called when an agent want to get a resource he previously reserved
+        /// </summary>
+        public (ResourceType, int) GetResource(int id)
+        {
+            if (!_reserved.ContainsKey(id))
+            {
+                throw new ArgumentException("There is no resource reserved for " + id, nameof(id));
+            }
+            return _reserved[id];
         }
     }
 }
