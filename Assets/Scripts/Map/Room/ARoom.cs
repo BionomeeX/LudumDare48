@@ -30,6 +30,8 @@ namespace Scripts.Map.Room
 
         public GameObject GameObject;
 
+        public GameObject Sign;
+
         public ARoom[] GetNeighborhood()
         {
             List<ARoom> rooms = new List<ARoom>();

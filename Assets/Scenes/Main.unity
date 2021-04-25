@@ -2011,7 +2011,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mapTransform: {fileID: 952793277}
   ReceptionRoom: {fileID: 7917132105373856882, guid: 88ae41c23d15ea841888feb93566e28c, type: 3}
-  _rooms:
+  Rooms:
   - GameObject: {fileID: 7917132105373856882, guid: 88ae41c23d15ea841888feb93566e28c, type: 3}
     Size: {x: 2, y: 1}
   - GameObject: {fileID: 2514209979806591841, guid: 65a1d1faf8064314d898ce254b28b89f, type: 3}
@@ -2023,7 +2023,7 @@ MonoBehaviour:
   Corridor: {fileID: 3153340296566217181, guid: 793c1afd15fab094db64b538936590a3, type: 3}
   _elevator: {fileID: 952793276}
   _constructionSign: {fileID: 8695930291489931896, guid: f7e7142116be43b4296ab540c1ba3588, type: 3}
-  _blueprintSign: {fileID: 0}
+  _blueprintSign: {fileID: 8695930291489931896, guid: 4198db51ac5b8714298278fbcb32f3c1, type: 3}
   _aiPrefab: {fileID: 5267582097250314843, guid: 51f737aa78f6b41409ddd64189c23158, type: 3}
   _debugText: {fileID: 5892347979112899441, guid: 9b7634ae3b63b786fa7610ab5991f996, type: 3}
 --- !u!114 &1930794181
@@ -2080,7 +2080,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _uiStorage: {fileID: 3304247741130620652, guid: 624cbf4e7b68f81409d44bee94dd74de, type: 3}
   _receptionStorage: {fileID: 3304247741130620652, guid: 5eaf9542c6093c34c9c8f54bd76fe694, type: 3}
-  _uiStoragePriority: {fileID: 0}
+  _uiStoragePriority: {fileID: 5634858518709175697, guid: 843570c0d0b93084f859ecb292459ec7, type: 3}
 --- !u!114 &1930794184
 MonoBehaviour:
   m_ObjectHideFlags: 0

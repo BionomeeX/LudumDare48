@@ -100,11 +100,12 @@ namespace Scripts.Agents
                         true
                     )
                 );
+                var randRoom = MapManager.S.Rooms[Random.Range(0, MapManager.S.Rooms.Length)];
                 roomList.Add(
                     MapManager.S.AddRoom(
                         new Vector2Int(roomList[1].Position.x + ((choice == 0) ? +roomList[1].Size.x : -2), roomList[1].Position.y),
-                        new Vector2Int(1, 1),
-                        MapManager.S.ReceptionRoom,
+                        randRoom.Size,
+                        randRoom.GameObject,
                         RoomType.EMPTY,
                         roomList[1],
                         null,
