@@ -31,7 +31,7 @@ namespace Scripts.Map
         [SerializeField]
         public GameObject ReceptionRoom;
         [SerializeField]
-        private RoomInfo[] _rooms;
+        public RoomInfo[] Rooms;
         [SerializeField]
         public GameObject Corridor;
         [SerializeField]
@@ -118,7 +118,13 @@ namespace Scripts.Map
 
         public List<ARoom> GetAllAccessibleBlueprint()
         {
-            List<ARoom> result = new List<ARoom>();
+            var result = MapRooms.Where(
+                r => r.Requirement != null
+            ).Where(
+                // check that at least one neighbor is not a blueprint
+                r => r.GetNeighborhood().ToList().Where(nr => nr.Requirement == null).Count() > 0
+            ).ToList();
+
             return result;
         }
 

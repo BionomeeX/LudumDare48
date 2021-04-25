@@ -79,8 +79,7 @@ namespace Scripts.Agents
         public void TakeRessource()
         {
             // get the ResourceStock assiociated with the current room
-            ResourceStock rs = ((GenericRoom)_currentRoom).RoomType.Stock;
-            var resourceAndAmount = rs.GetResource(_id);
+            var resourceAndAmount = ((GenericRoom)_currentRoom).RoomType.Stock.GetResource(_id);
             if (!_inventory.ContainsKey(resourceAndAmount.resourceType))
             {
                 _inventory.Add(
@@ -109,19 +108,19 @@ namespace Scripts.Agents
         private bool CheckIfTurretNeedResource()
         {
             // Get list of all turrets that need ressources
-            List<ARoom> turrets = MapManager.S.GetAllTurrets().Where(t => t.NeedRessource(ResourceType.AMMO)).ToList();
+            // List<ARoom> turrets = MapManager.S.GetAllTurrets().Where(t => t.NeedRessource(ResourceType.AMMO)).ToList();
 
-            // for each turret, pathfind and sort by distance
-            List<(List<Map.ARoom> path, float distance)> orderedTurretPaths = turrets.Select(
-                t => Astar.FindPath(_currentRoom, t)
-            ).Select(
-                path => (path, Astar.ComputePathWeight(path))
-            ).OrderBy(pf => pf.Item2).ToList();
+            // // for each turret, pathfind and sort by distance
+            // List<(List<Map.ARoom> path, float distance)> orderedTurretPaths = turrets.Select(
+            //     t => Astar.FindPath(_currentRoom, t)
+            // ).Select(
+            //     path => (path, Astar.ComputePathWeight(path))
+            // ).OrderBy(pf => pf.Item2).ToList();
 
-            // Lock the turret for filling and reserve the first one
-            ARoom turretTarget = orderedTurretPaths[0];
+            // // Lock the turret for filling and reserve the first one
+            // ARoom turretTarget = orderedTurretPaths[0];
 
-            List<ARoom> stocks = MapManager.S.GetAllStockRoom().Where(s => ((GenericRoom)s).RoomType.Stock.CheckResourceByType(ResourceType.AMMO));
+            // List<ARoom> stocks = MapManager.S.GetAllStockRoom().Where(s => ((GenericRoom)s).RoomType.Stock.CheckResourceByType(ResourceType.AMMO));
 
 
 
@@ -137,22 +136,34 @@ namespace Scripts.Agents
         private bool CheckIfBlueprintNeedResource()
         {
             // check if there any blueprints
-            List<ARoom> blueprints = MapManager.S.GetAllAccessibleBlueprint().Select(
+            var blueprints = MapManager.S.GetAllAccessibleBlueprint().Select(
                 b => Astar.FindPath(_currentRoom, b)
             ).Select(
                 path => (path, Astar.ComputePathWeight(path))
             ).OrderBy(pf => pf.Item2).ToList();
 
             // if there is, reserve a block and ask for its needed resources
-            if (blueprints.Count == 0)
+            if (blueprints.Count != 0)
             {
-                return false;
+                foreach (var blueprint in blueprints)
+                {
+                    // check the ressource needed for the blueprint
+                    List<(ResourceType type, int amount)> resourcesNeeded = blueprint.path.Last().Requirement.GetRequirements().ToList();
+                    foreach (var resourceAmount in resourcesNeeded)
+                    {
+                        if (FindPathForResource(resourceAmount.type, resourceAmount.amount, 0))
+                        {
+                            // add path from the last element to the blueprint
+                            _actions.Add(
+                                (Astar.FindPath(_actions.Last().path.Last(), blueprint.path.Last()), Action.DropRessource)
+                            );
+                            return true;
+                        }
+                    }
+                }
             }
 
-            _actions.Clear();
-
-
-            return true;
+            return false;
         }
         private bool CheckIfHighPriorityStockNeedResource()
         {
@@ -171,13 +182,13 @@ namespace Scripts.Agents
             return false;
         }
 
-        private void FindPathForResource(ResourceType resource, int amount, int priority)
+        private bool FindPathForResource(ResourceType resource, int amount, int priority)
         // hypothesis:
         // 1) inventory is empty
         // 2) actions list is empty
         {
             var stocks = MapManager.S.GetAllStockRoom().Select(
-                room => (room, ((GenericRoom)s).RoomType.Stock.CheckResourceByType(resource))
+                room => (room, ((GenericRoom)room).RoomType.Stock.CheckResourceByType(resource))
             ).Where(
                 roomAmount => roomAmount.Item2 > 0
             ).Select(
@@ -197,7 +208,7 @@ namespace Scripts.Agents
                 {
                     ((GenericRoom)rapw.Item1).RoomType.Stock.ReserveResource(resource, myamount, _id);
                     _actions.Add((first ? rapw.Item3 : Astar.FindPath(_actions.Last().path.Last(), rapw.Item1), Action.TakeRessource));
-                    return;
+                    return true;
                 }
                 else
                 {
@@ -210,11 +221,14 @@ namespace Scripts.Agents
             if (myamount > 0)
             {
                 // failled to get all resources => we empty everything
-                foreach(var action in _actions){
+                foreach (var action in _actions)
+                {
                     ((GenericRoom)action.path.Last()).RoomType.Stock.CancelAllReservations(_id);
                 }
                 _actions.Clear();
+                return false;
             }
+            return true;
         }
 
     }

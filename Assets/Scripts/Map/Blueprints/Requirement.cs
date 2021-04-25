@@ -25,7 +25,7 @@ namespace Scripts.Map.Blueprints
             }
         }
 
-        public ReadOnlyCollection<(ResourceType, int)> GetRequirements()
+        public ReadOnlyCollection<(ResourceType type, int amount)> GetRequirements()
             => _waiting.AsReadOnly();
 
         /// <summary>
