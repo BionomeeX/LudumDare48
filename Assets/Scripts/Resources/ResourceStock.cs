@@ -41,7 +41,7 @@ namespace Scripts.Resources
         /// Ask the stock if a resource is available
         /// </summary>
         /// <returns>The max amount of the resource that is available</returns>
-        public int GetResources(ResourceType type)
+        public int CheckResourceBtType(ResourceType type)
         {
             if (!_resources.ContainsKey(type)) // Not available
             {
@@ -73,7 +73,9 @@ namespace Scripts.Resources
             {
                 throw new ArgumentException("There is no resource reserved for " + id, nameof(id));
             }
-            return _reserved[id];
+            var elem = _reserved[id];
+            _reserved.Remove(id);
+            return elem;
         }
     }
 }
