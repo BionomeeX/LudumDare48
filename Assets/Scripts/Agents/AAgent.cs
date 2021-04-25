@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Scripts.Map;
 using Scripts.Map.Room;
+using Scripts.Resources;
 
 
 namespace Scripts.Agents
@@ -20,7 +21,7 @@ namespace Scripts.Agents
             Move,
             TakeRessource,
             DropRessource,
-
+            GenerateBlueprint,
         }
         public enum Event
         {
@@ -30,9 +31,13 @@ namespace Scripts.Agents
             EnemySpotted,
             Attacked,
             EnemyDead,
+            MoveFinished,
         }
 
         public abstract void OnEventReceived(Event e);
+
+
+        // private abstract void
 
         public void MoveTo(ARoom room)
         {
@@ -66,7 +71,7 @@ namespace Scripts.Agents
 
         public void TakeRessource()
         {
-            RessourceStock rs = _currentRoom.RessourceStock;
+            ResourceStock rs = _currentRoom.ResourceStock;
 
         }
 
