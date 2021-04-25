@@ -6,13 +6,15 @@ namespace Scripts.Resources
 {
     public class ResourceStock
     {
-        public ResourceStock(GenericRoom r)
+        public ResourceStock(GenericRoom r, int maxSize)
         {
             Room = r;
+            MaxSize = maxSize;
             ResourcesManager.S.AddStock(this);
         }
 
         public GenericRoom Room;
+        public int MaxSize;
 
         // All resources available
         public Dictionary<ResourceType, int> _resources = new Dictionary<ResourceType, int>();

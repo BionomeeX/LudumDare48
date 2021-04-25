@@ -1,10 +1,12 @@
-﻿namespace Scripts.Map.Room.ModulableRoom
+﻿using Scripts.ScriptableObjects;
+
+namespace Scripts.Map.Room.ModulableRoom
 {
     public class MiningRoom : AModulableRoom
     {
         public MiningRoom(GenericRoom r) : base()
         {
-            Stock = new Resources.ResourceStock(r);
+            Stock = new Resources.ResourceStock(r, ConfigManager.S.Config.MiningStorageMaxSize);
         }
 
         public override string GetName()

@@ -6,6 +6,6 @@ namespace Scripts.UI
     public class ExplanationPanel : MonoBehaviour
     {
         public Text Name, Description;
+        public GameObject DetailPanel;
     }
-
 }
