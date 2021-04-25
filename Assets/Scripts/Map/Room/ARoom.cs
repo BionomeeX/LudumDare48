@@ -3,8 +3,10 @@ using UnityEngine;
 
 namespace Scripts.Map.Room
 {
+    [System.Serializable]
     public abstract class ARoom
     {
+
         public ARoom(Vector2Int size, Vector2Int position)
         {
             Size = size;
