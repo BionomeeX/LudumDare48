@@ -13,14 +13,14 @@ namespace Scripts.Agents
 
         protected int _id;
 
-        private Dictionary<ResourceType, int> _inventory;
+        protected Dictionary<ResourceType, int> _inventory;
 
         public static int IdRef = 0;
-        private ARoom _currentRoom;
+        protected ARoom _currentRoom;
 
         private string _childClassName;
 
-        private List<(List<ARoom> path, Action action)> _actions;
+        protected List<(List<ARoom> path, Action action)> _actions;
 
         public enum Action
         {
@@ -57,6 +57,7 @@ namespace Scripts.Agents
                 -_currentRoom.Position.y + 0.1f,
                 0f
             );
+            DoNextAction();
         }
 
         public Action MoveOrGetAction()
@@ -79,19 +80,20 @@ namespace Scripts.Agents
             return Action.Idle;
         }
 
-        public void TakeRessource()
-        {
-            // get the ResourceStock assiociated with the current room
-            ResourceStock rs = ((GenericRoom)_currentRoom).RoomType.Stock;
-            var resourceAndAmount = rs.GetResource(_id);
-            if(!_inventory.ContainsKey(resourceAndAmount.resourceType)) {
-                _inventory.Add(
-                    resourceAndAmount.resourceType,
-                    resourceAndAmount.amount
-                );
-            } else {
-                _inventory[resourceAndAmount.resourceType] += resourceAndAmount.amount;
+
+
+        public abstract void DoSpecialAction(Action action);
+        public abstract void ChooseAction();
+
+        public void DoNextAction(){
+            Action action = MoveOrGetAction();
+            if(action != Action.Move && action != Action.Idle) {
+                DoSpecialAction(action);
             }
+            if(action == Action.Idle){
+                ChooseAction();
+            }
+            DoNextAction();
         }
 
     }
