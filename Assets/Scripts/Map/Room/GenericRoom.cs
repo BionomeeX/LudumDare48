@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Scripts.Map.Room.ModulableRoom;
+using UnityEngine;
 
 namespace Scripts.Map.Room
 {
@@ -6,12 +7,12 @@ namespace Scripts.Map.Room
     {
         public GenericRoom(Vector2Int size, Vector2Int position) : base(size, position)
         {
-            RoomType = RoomType.EMPTY;
+            RoomType = new EmptyRoom();
         }
 
         public override float GetCost()
             => 1f;
 
-        public RoomType RoomType;
+        public AModulableRoom RoomType;
     }
 }

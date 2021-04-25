@@ -1,5 +1,6 @@
 using Scripts.Map;
 using Scripts.Map.Room;
+using Scripts.Map.Room.ModulableRoom;
 using System.Linq;
 using UnityEngine;
 
@@ -58,17 +59,21 @@ namespace Scripts.UI
                     return pos2d.x > x.GameObject.transform.position.x - xSize && pos2d.x < x.GameObject.transform.position.x + xSize
                     && pos2d.y > x.GameObject.transform.position.y && pos2d.y < x.GameObject.transform.position.y + x.Size.y;
                 }) as GenericRoom;
+                if (clicked != null && !clicked.RoomType.IsEmpty())
+                {
+                    clicked = null;
+                }
             }
             if (Input.GetMouseButtonUp(0) && clicked != null && clicked.IsBuilt)
             {
-                clicked.RoomType = _currentSelection.Value;
+                clicked.RoomType = ModularRoomFactory.BuildModularRoom(_currentSelection.Value);
                 foreach (var renderer in clicked.GameObject.GetComponentsInChildren<MeshRenderer>())
                 {
                     if (_debugMaterial == null)
                     {
                         _debugMaterial = renderer.material;
                     }
-                    renderer.material = clicked.RoomType == RoomType.EMPTY ? _debugMaterial : _materials[(int)clicked.RoomType - 3];
+                    renderer.material = _materials[(int)_currentSelection.Value - 3];
                 }
                 clicked = null;
             }
