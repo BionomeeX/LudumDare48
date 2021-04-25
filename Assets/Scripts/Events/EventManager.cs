@@ -1,4 +1,5 @@
 using Scripts.Enemies;
+using Scripts.Exploration;
 using Scripts.Map;
 using Scripts.Map.Room;
 using UnityEngine;
@@ -19,6 +20,10 @@ namespace Scripts.Events
             if (e == Event.BlueprintDrawn)
             {
                 EnemyManager.S.RecalculateZone();
+            }
+            else if (e == Event.RoomSetType)
+            {
+                SubmarineManager.S.UpdateRoom((GenericRoom)o);
             }
         }
 

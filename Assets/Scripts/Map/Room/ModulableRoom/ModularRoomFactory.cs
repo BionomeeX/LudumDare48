@@ -10,7 +10,7 @@
                     return new StorageRoom(r);
 
                 case RoomType.AIRLOCK:
-                    return new AirlockRoom();
+                    return new AirlockRoom(r.Size.x * r.Size.y);
 
                 case RoomType.DEFENSE:
                     return new DefenseRoom();

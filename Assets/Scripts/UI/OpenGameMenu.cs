@@ -1,3 +1,5 @@
+using Scripts.Events;
+using Scripts.Exploration;
 using Scripts.Map;
 using Scripts.Map.Room;
 using Scripts.Map.Room.ModulableRoom;
@@ -9,7 +11,9 @@ namespace Scripts.UI
     public class OpenGameMenu : MonoBehaviour
     {
         [SerializeField]
-        private GameObject _buildPanel;
+        private GameObject _buildPanel, _explorationPanel;
+
+        private ExplorationPanel _explorationPanelScript;
 
         [SerializeField]
         private Material[] _materials;
@@ -27,13 +31,27 @@ namespace Scripts.UI
         private void Start()
         {
             _buildPanel.SetActive(false);
+            _explorationPanel.SetActive(false);
             _explanationPanelScript.gameObject.SetActive(false);
             _roomInfo.gameObject.SetActive(false);
+
+            _explorationPanelScript = _explorationPanel.GetComponent<ExplorationPanel>();
         }
 
         public void ToggleBuildPanel()
         {
+            _explorationPanel.SetActive(false);
             _buildPanel.SetActive(!_buildPanel.activeInHierarchy);
+        }
+
+        public void ToggleExplorationPanel()
+        {
+            _buildPanel.SetActive(false);
+            _explorationPanel.SetActive(!_explorationPanel.activeInHierarchy);
+            if (_explorationPanel.activeInHierarchy)
+            {
+                _explorationPanelScript.Enable();
+            }
         }
 
         private RoomType? _currentSelection;
@@ -134,12 +152,17 @@ namespace Scripts.UI
                     }
                     renderer.material = _materials[(int)_currentSelection.Value - 3];
                 }
+                EventManager.S.NotifyManager(Events.Event.RoomSetType, clicked);
                 clicked = null;
                 SetCurrentBuild(-1);
             }
-            if (Input.GetMouseButtonDown(1) && _currentSelection != null) // Reset selection
+            if (Input.GetMouseButtonDown(1)) // Reset selection
             {
-                SetCurrentBuild(-1);
+                if (_currentSelection != null)
+                {
+                    SetCurrentBuild(-1);
+                }
+                SubmarineManager.S.RemoveSubmarinePlacementMode();
             }
         }
     }

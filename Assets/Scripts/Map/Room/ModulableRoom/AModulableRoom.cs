@@ -19,6 +19,9 @@ namespace Scripts.Map.Room.ModulableRoom
         public virtual void SetupConfigPanel(GameObject go)
             => throw new NotImplementedException();
 
+        public virtual bool IsAirlock()
+            => false;
+
         public ResourceStock Stock;
     }
 }
