@@ -13,6 +13,12 @@ namespace Scripts.Map.Room
         public override float GetCost()
             => 1f;
 
+        public override string GetName()
+            => RoomType.GetName();
+
+        public override string GetDescription()
+            => RoomType.GetDescription();
+
         public AModulableRoom RoomType;
     }
 }

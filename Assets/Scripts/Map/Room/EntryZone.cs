@@ -9,5 +9,11 @@ namespace Scripts.Map.Room
 
         public override float GetCost()
             => 100f;
+
+        public override string GetName()
+            => "Entry zone";
+
+        public override string GetDescription()
+            => null; // This room isn't clickable so the description will never be seen
     }
 }

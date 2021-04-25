@@ -9,5 +9,11 @@ namespace Scripts.Map.Room
 
         public override float GetCost()
             => 1f;
+
+        public override string GetName()
+            => "Reception";
+
+        public override string GetDescription()
+            => "Your new agents will come here first";
     }
 }
