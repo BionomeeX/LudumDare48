@@ -6,5 +6,6 @@ namespace Scripts.UI.RoomUI
     public class StorageUI : MonoBehaviour
     {
         public Text StorageInfoText;
+        public GameObject PriorityContainer;
     }
 }

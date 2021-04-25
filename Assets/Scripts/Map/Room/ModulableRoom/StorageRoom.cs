@@ -24,6 +24,10 @@ namespace Scripts.Map.Room.ModulableRoom
         {
             var c = go.GetComponent<StorageUI>();
             c.StorageInfoText.text = $"Space Taken: {Stock.GetSizeTaken()} / {Stock.MaxSize}";
+            for (int i = 0; i < c.PriorityContainer.transform.childCount; i++)
+            {
+                
+            }
         }
     }
 }
