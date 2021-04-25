@@ -1,3 +1,4 @@
+using Scripts.Enemies;
 using Scripts.Map;
 using Scripts.Map.Room;
 using UnityEngine;
@@ -15,7 +16,10 @@ namespace Scripts.Events
 
         public void NotifyManager(Event e, object o)
         {
-
+            if (e == Event.BlueprintDrawn)
+            {
+                EnemyManager.S.RecalculateZone();
+            }
         }
 
         public void ResetAll()
