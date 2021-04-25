@@ -1731,6 +1731,7 @@ MonoBehaviour:
   _elevator: {fileID: 952793276}
   _constructionSign: {fileID: 8695930291489931896, guid: f7e7142116be43b4296ab540c1ba3588, type: 3}
   _aiPrefab: {fileID: 5267582097250314843, guid: 51f737aa78f6b41409ddd64189c23158, type: 3}
+  _debugText: {fileID: 5892347979112899441, guid: 9b7634ae3b63b786fa7610ab5991f996, type: 3}
 --- !u!114 &1930794181
 MonoBehaviour:
   m_ObjectHideFlags: 0
