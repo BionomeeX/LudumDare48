@@ -13,5 +13,6 @@ namespace Scripts.Events
         Attacked,
         EnemyDead,
         MoveFinished,
+        RoomSetType // Set the type of a room (factory, storage...)
     }
 }

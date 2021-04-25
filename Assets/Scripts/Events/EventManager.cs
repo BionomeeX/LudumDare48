@@ -1,4 +1,5 @@
 using Scripts.Enemies;
+using Scripts.Exploration;
 using Scripts.Map;
 using Scripts.Map.Room;
 using UnityEngine;
@@ -33,6 +34,10 @@ namespace Scripts.Events
                 foreach(var agent in _agents){
                     agent.OnEventReceived(e, o);
                 }
+            }
+            else if (e == Event.RoomSetType)
+            {
+                SubmarineManager.S.UpdateRoom((GenericRoom)o);
             }
         }
 
