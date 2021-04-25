@@ -8,10 +8,15 @@ using Scripts.Resources;
 
 namespace Scripts.Agents
 {
-    public abstract class AAgent
+    public abstract class AAgent : MonoBehaviour
     {
 
+        protected int _id;
+
+        public static int IdRef = 0;
         private ARoom _currentRoom;
+
+        private string _childClassName;
 
         private List<(List<ARoom> path, Action action)> _actions;
 
@@ -27,6 +32,7 @@ namespace Scripts.Agents
         {
             BlueprintDrawn,
             BlueprintFinished,
+            MasterBlueprintFinished,
             RoomCreated,
             EnemySpotted,
             Attacked,
@@ -34,8 +40,20 @@ namespace Scripts.Agents
             MoveFinished,
         }
 
-        public abstract void OnEventReceived(Event e);
+        public AAgent(string childClassName)
+        {
+            _childClassName = childClassName;
+            _id = ++IdRef;
 
+        }
+        public abstract void OnEventReceived(Event e, object o);
+        protected abstract void DoStartAction();
+
+        public void Start()
+        {
+            name = _childClassName + " " + _id;
+            DoStartAction();
+        }
 
         // private abstract void
 
@@ -71,7 +89,7 @@ namespace Scripts.Agents
 
         public void TakeRessource()
         {
-            ResourceStock rs = _currentRoom.ResourceStock;
+            //ResourceStock rs = _currentRoom.ResourceStock;
 
         }
 
