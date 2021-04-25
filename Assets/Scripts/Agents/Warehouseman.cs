@@ -68,8 +68,6 @@ namespace Scripts.Agents
             }
         }
 
-        public
-
         public void TakeRessource()
         {
             // get the ResourceStock assiociated with the current room
