@@ -12,5 +12,6 @@ namespace Scripts.Map.Room
         }
 
         public GameObject _uiStorage, _receptionStorage;
+        public GameObject _uiStoragePriority;
     }
 }

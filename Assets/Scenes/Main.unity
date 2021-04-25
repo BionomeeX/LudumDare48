@@ -2080,6 +2080,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _uiStorage: {fileID: 3304247741130620652, guid: 624cbf4e7b68f81409d44bee94dd74de, type: 3}
   _receptionStorage: {fileID: 3304247741130620652, guid: 5eaf9542c6093c34c9c8f54bd76fe694, type: 3}
+  _uiStoragePriority: {fileID: 0}
 --- !u!114 &1930794184
 MonoBehaviour:
   m_ObjectHideFlags: 0
