@@ -1,6 +1,7 @@
 ﻿using Scripts.Map.Room;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Scripts.Resources
 {
@@ -15,6 +16,9 @@ namespace Scripts.Resources
 
         public GenericRoom Room;
         public int MaxSize;
+
+        public int GetSizeTaken()
+            => _resources.Select(x => x.Value).Sum();
 
         // All resources available
         public Dictionary<ResourceType, int> _resources = new Dictionary<ResourceType, int>();

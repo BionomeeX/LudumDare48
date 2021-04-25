@@ -114,7 +114,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Free Space: 0 / 0'
+  m_Text: 'Space Taken: 0 / 0'
 --- !u!1 &3304247741130620652
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,6 +125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3304247741130620653}
   - component: {fileID: 3304247741130620654}
+  - component: {fileID: 7472534330339957028}
   m_Layer: 5
   m_Name: StorageDetails
   m_TagString: Untagged
@@ -183,6 +184,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7472534330339957028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3304247741130620652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b128c3ad1d6c21448b37f1c7aa29a74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StorageInfoText: {fileID: 3304247741050348045}
 --- !u!1 &3304247741246180160
 GameObject:
   m_ObjectHideFlags: 0

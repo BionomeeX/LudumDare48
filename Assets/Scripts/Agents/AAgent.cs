@@ -35,7 +35,7 @@ namespace Scripts.Agents
         {
             _childClassName = childClassName;
             _id = ++IdRef;
-            _inventory = new Dictionary<ResourcesType, int>();
+            _inventory = new Dictionary<ResourceType, int>();
 
         }
         public abstract void OnEventReceived(Events.Event e, object o);

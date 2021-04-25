@@ -109,6 +109,7 @@ namespace Scripts.UI
                                 var pT = (RectTransform)_roomInfo.DetailPanel.transform;
                                 t.sizeDelta = Vector2.zero;
                                 t.position = pT.position;
+                                gRoom.RoomType.SetupConfigPanel(go);
                             }
                         }
                         _roomInfo.gameObject.SetActive(true);
