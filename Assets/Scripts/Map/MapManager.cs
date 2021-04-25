@@ -63,10 +63,10 @@ namespace Scripts.Map
         {
             // Base zone discovered
             const int baseDiscoveredSize = 80;
-            for (int y = 0; y < baseDiscoveredSize; y++)
+            for (int y = 0; y < ConfigManager.S.Config.BaseSurfaceEmpty.y; y++)
             {
                 List<TileState> _elems = new List<TileState>();
-                for (int x = 0; x < baseDiscoveredSize; x++)
+                for (int x = 0; x < ConfigManager.S.Config.BaseSurfaceEmpty.x; x++)
                 {
                     _elems.Add(TileState.EMPTY);
                 }
@@ -275,14 +275,21 @@ namespace Scripts.Map
 
         public void DiscoverTile(int x, int y)
         {
-            for (int i = _mapPathfinding.Count; i <= y; i++)
+            if (x < 0 || y < 0)
             {
-                _mapPathfinding.Add(new List<TileState>());
+                return;
             }
-            var list = _mapPathfinding[y];
-            for (int i = list.Count; i <= x; i++)
+            if (y >= _mapPathfinding.Count || x >= _mapPathfinding[y].Count)
             {
-                list.Add(TileState.NOT_DISCOVERED);
+                for (int i = _mapPathfinding.Count; i <= y; i++)
+                {
+                    _mapPathfinding.Add(new List<TileState>());
+                }
+                var list = _mapPathfinding[y];
+                for (int i = list.Count; i <= x; i++)
+                {
+                    list.Add(TileState.NOT_DISCOVERED);
+                }
             }
             if (_mapPathfinding[y][x] == TileState.NOT_DISCOVERED)
             {

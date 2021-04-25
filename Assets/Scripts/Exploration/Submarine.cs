@@ -53,8 +53,15 @@ namespace Scripts.Exploration
                 else
                 {
                     _rb.velocity =
-                        (objective.Value - (Vector2)transform.position) * ConfigManager.S.Config.SubmarineSpeed;
-                    MapManager.S.DiscoverTile(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(-transform.position.y));
+                        (objective.Value - (Vector2)transform.position).normalized * ConfigManager.S.Config.SubmarineSpeed;
+                    var r = ConfigManager.S.Config.SubmarineRadius;
+                    for (int x = -r; x <= r; x++)
+                    {
+                        for (int y = -r; y <= r; y++)
+                        {
+                            MapManager.S.DiscoverTile(Mathf.RoundToInt(transform.position.x) + x, Mathf.RoundToInt(-transform.position.y) + y);
+                        }
+                    }
                 }
             }
         }

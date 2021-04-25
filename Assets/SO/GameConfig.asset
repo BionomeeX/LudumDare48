@@ -27,4 +27,6 @@ MonoBehaviour:
   - Type: 1
     Amount: 5
   BuildingTime: 2
-  SubmarineSpeed: 1
+  SubmarineSpeed: 2
+  SubmarineRadius: 5
+  BaseSurfaceEmpty: {x: 20, y: 10}
