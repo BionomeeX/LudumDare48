@@ -77,7 +77,9 @@ namespace Scripts.Map
                 case RoomType.EMPTY:
                     newRoom = new GenericRoom(size, position);
                     break;
-
+                case RoomType.CORRIDOR:
+                    newRoom = new Corridor(size, position);
+                    break;
                 default:
                     throw new System.ArgumentException("Invalid room type " + type.ToString(), nameof(type));
             }
