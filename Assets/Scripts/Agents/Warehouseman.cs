@@ -1,6 +1,8 @@
 using Scripts.Map;
 using Scripts.Events;
-
+using System.Collections;
+using System.Collections.Generic;
+using Scripts.Map.Room;
 
 namespace Scripts.Agents
 {
@@ -25,10 +27,10 @@ namespace Scripts.Agents
                     _actions[0].path.Insert(0, _currentRoom);
                     foreach (var action in _actions)
                     {
-                        newactions.Add(
+                        newactions.Add((
                             Astar.FindPath(action.path[0], action.path[action.path.Count - 1]),
                             action.action
-                        );
+                        ));
                     }
                 }
             }
