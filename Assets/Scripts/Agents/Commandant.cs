@@ -19,7 +19,8 @@ namespace Scripts.Agents
 
         }
 
-        protected override void DoStartAction(){
+        protected override void DoStartAction()
+        {
             GenerateNewMasterBlueprint();
         }
 
@@ -119,6 +120,14 @@ namespace Scripts.Agents
 
                 EventManager.S.NotifyManager(Events.Event.BlueprintDrawn, this);
             }
+        }
+
+        public override void ChooseAction()
+        {
+        }
+
+        public override void DoSpecialAction(Action action)
+        {
         }
 
         public override void OnEventReceived(Events.Event e, object o)
