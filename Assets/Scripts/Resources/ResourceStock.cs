@@ -20,12 +20,36 @@ namespace Scripts.Resources
         public int GetSizeTaken()
             => _resources.Select(x => x.Value).Sum();
 
+        public int GetSizeTakenWithReservation()
+            => GetSizeTaken() + _reservedAdd.Select(x => x.Value.Item2).Sum();
+
         // All resources available
         public Dictionary<ResourceType, int> _resources = new Dictionary<ResourceType, int>();
 
         // Resources reserved by an agent
         // (agent id, type of resource, number of resource reserved)
         public Dictionary<int, (ResourceType, int)> _reserved = new Dictionary<int, (ResourceType, int)>();
+        public Dictionary<int, (ResourceType, int)> _reservedAdd = new Dictionary<int, (ResourceType, int)>();
+
+        public void ReserveAddResource(int id, ResourceType type, int amount)
+        {
+            if (_reservedAdd.ContainsKey(id))
+            {
+                throw new InvalidOperationException(id + " already have a resource reserved here");
+            }
+            _reservedAdd.Add(id, (type, amount));
+        }
+
+        public void AddResourceFromReservation(int id)
+        {
+            if (!_reservedAdd.ContainsKey(id))
+            {
+                throw new ArgumentException("There is no resource reserved for " + id, nameof(id));
+            }
+            var elem = _reservedAdd[id];
+            AddResource(elem.Item1, elem.Item2);
+            _reservedAdd.Remove(id);
+        }
 
         /// <summary>
         ///  Add a resource to the stock
