@@ -1,17 +1,19 @@
-using UnityEditor;
 using Scripts.Map;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
+
 public class RoomDebugEditor : EditorWindow
 {
-
     [MenuItem("Window/RoomDebug")]
     public static void ShowWindow()
     {
-        EditorWindow.GetWindow(typeof(RoomDebugEditor));
+        GetWindow(typeof(RoomDebugEditor));
     }
 
     private void OnGUI()
     {
-        //MapManager.S.MapRooms
+        EditorGUI.TextArea(new Rect(), string.Join("\n", MapManager.S.MapRooms.Select(x => x.ToString())));
     }
 
 }
