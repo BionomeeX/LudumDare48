@@ -46,6 +46,16 @@ namespace Scripts.Map
             return path;
         }
 
+        public static float ComputePathWeight(List<ARoom> path)
+        {
+            float result = 0;
+            foreach (var room in path)
+            {
+                result += room.GetCost();
+            }
+            return result;
+        }
+
         public static List<ARoom> FindPath(ARoom startPosition, ARoom endPosition)
         {
             if (startPosition == endPosition)

@@ -11,6 +11,8 @@ namespace Scripts.Map.Room
             S = this;
         }
 
-        public GameObject _uiStorage;
+        public GameObject _uiBlueprint;
+        public GameObject _uiStorage, _receptionStorage;
+        public GameObject _uiStoragePriority;
     }
 }

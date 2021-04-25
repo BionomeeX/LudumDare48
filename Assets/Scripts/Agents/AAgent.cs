@@ -13,14 +13,14 @@ namespace Scripts.Agents
 
         protected int _id;
 
-        private Dictionary<ResourcesType, int> _inventory;
+        protected Dictionary<ResourceType, int> _inventory;
 
         public static int IdRef = 0;
-        private ARoom _currentRoom;
+        protected ARoom _currentRoom;
 
         private string _childClassName;
 
-        private List<(List<ARoom> path, Action action)> _actions;
+        protected List<(List<ARoom> path, Action action)> _actions;
 
         public enum Action
         {
@@ -35,7 +35,7 @@ namespace Scripts.Agents
         {
             _childClassName = childClassName;
             _id = ++IdRef;
-            _inventory = new Dictionary<ResourcesType, int>();
+            _inventory = new Dictionary<ResourceType, int>();
 
         }
         public abstract void OnEventReceived(Events.Event e, object o);
@@ -44,10 +44,37 @@ namespace Scripts.Agents
         public void Start()
         {
             name = _childClassName + " " + _id;
+            _actions = new List<(List<ARoom> path, Action action)>();
+            WhereAmI();
             DoStartAction();
         }
 
-        // private abstract void
+        private void WhereAmI()
+        {
+            if (_currentRoom == null)
+            {
+                Debug.Log("  Checking for room");
+                Debug.Log("  My pos : " + transform.position.x + ", " + transform.position.y);
+                foreach (var room in MapManager.S.MapRooms)
+                {
+                    Debug.Log("    Room pos :");
+                    Debug.Log("      (" + room.Position.x + ", " + room.Position.y + ") (" + (room.Position.x + room.Size.x) + ", " + (room.Position.y + room.Size.y) + ")");
+
+                    if (transform.position.x >= room.Position.x && transform.position.x <= room.Position.x + room.Size.x &&
+                       -transform.position.y >= room.Position.y && -transform.position.y <= room.Position.y + room.Size.y
+                    )
+                    {
+                        _currentRoom = room;
+                        break;
+                    }
+                }
+                // if _currentRoom is still null ... we are in the water !
+                if (_currentRoom == null)
+                {
+                    Debug.Log("  Still no room => aborting");
+                }
+            }
+        }
 
         public void MoveTo(ARoom room)
         {
@@ -57,6 +84,7 @@ namespace Scripts.Agents
                 -_currentRoom.Position.y + 0.1f,
                 0f
             );
+            DoNextAction();
         }
 
         public Action MoveOrGetAction()
@@ -79,19 +107,24 @@ namespace Scripts.Agents
             return Action.Idle;
         }
 
-        public void TakeRessource()
+
+
+        public abstract void DoSpecialAction(Action action);
+        public abstract void ChooseAction();
+
+        public void DoNextAction()
         {
-            // get the ResourceStock assiociated with the current room
-            ResourceStock rs = ((GenericRoom)_currentRoom).RoomType.Stock;
-            var resourceAndAmount = rs.GetResource(_id);
-            if(!_inventory.ContainsKey(resourceAndAmount.resourceType)) {
-                _inventory.Add(
-                    resourceAndAmount.resourceType,
-                    resourceAndAmount.amount
-                );
-            } else {
-                _inventory[resourceAndAmount.resourceType] += resourceAndAmount.amount;
+            Action action = MoveOrGetAction();
+            if (action != Action.Move && action != Action.Idle)
+            {
+                DoSpecialAction(action);
             }
+            if (action == Action.Idle)
+            {
+                //ChooseAction();
+                return;
+            }
+            DoNextAction();
         }
 
     }

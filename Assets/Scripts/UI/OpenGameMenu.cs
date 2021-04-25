@@ -99,9 +99,11 @@ namespace Scripts.UI
                             Destroy(_roomInfo.DetailPanel.transform.GetChild(0).gameObject);
                         }
                         var gRoom = room as GenericRoom;
-                        if (gRoom != null)
+                        if (gRoom != null || room.Requirement != null)
                         {
-                            var p = gRoom.RoomType.GetDescriptionPanel();
+                            var p = room.Requirement == null
+                                ? gRoom.RoomType.GetDescriptionPanel()
+                                : room.GetDescriptionPanel();
                             if (p != null)
                             {
                                 var go = Instantiate(p, _roomInfo.DetailPanel.transform);
@@ -109,6 +111,8 @@ namespace Scripts.UI
                                 var pT = (RectTransform)_roomInfo.DetailPanel.transform;
                                 t.sizeDelta = Vector2.zero;
                                 t.position = pT.position;
+                                if (room.Requirement == null) gRoom.RoomType.SetupConfigPanel(go);
+                                else room.SetupConfigPanel(go);
                             }
                         }
                         _roomInfo.gameObject.SetActive(true);

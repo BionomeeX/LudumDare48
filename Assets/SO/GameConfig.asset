@@ -18,3 +18,11 @@ MonoBehaviour:
   StartingResources:
   - Type: 0
     Amount: 100
+  - Type: 1
+    Amount: 50
+  NbOfResourcePerTransportation: 5
+  RequirementPerBloc:
+  - Type: 0
+    Amount: 10
+  - Type: 1
+    Amount: 5

@@ -5,6 +5,7 @@ using Scripts.ScriptableObjects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -30,7 +31,7 @@ namespace Scripts.Map
         [SerializeField]
         public GameObject ReceptionRoom;
         [SerializeField]
-        private RoomInfo[] _rooms;
+        public RoomInfo[] Rooms;
         [SerializeField]
         public GameObject Corridor;
         [SerializeField]
@@ -44,7 +45,11 @@ namespace Scripts.Map
         private GameObject _blueprintSign;
 
         [SerializeField]
-        private GameObject _aiPrefab;
+        private GameObject _commandantPrefab;
+
+        [SerializeField]
+        private GameObject _warehousePrefab;
+
 
         private EntryZone _entry = new EntryZone();
 
@@ -80,7 +85,8 @@ namespace Scripts.Map
 
             ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom, null, false);
 
-            Instantiate(_aiPrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
+            Instantiate(_commandantPrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
+            Instantiate(_warehousePrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
 
         }
 
@@ -101,6 +107,36 @@ namespace Scripts.Map
                 }
             }
             return true;
+        }
+
+        public List<ARoom> GetAllTurrets()
+        {
+            List<ARoom> result = new List<ARoom>();
+            return result;
+        }
+
+        public List<ARoom> GetAllFactory()
+        {
+            List<ARoom> result = new List<ARoom>();
+            return result;
+        }
+
+        public List<ARoom> GetAllAccessibleBlueprint()
+        {
+            var result = MapRooms.Where(
+                r => r.Requirement != null
+            ).Where(
+                // check that at least one neighbor is not a blueprint
+                r => r.GetNeighborhood().ToList().Where(nr => nr.Requirement == null).Count() > 0
+            ).ToList();
+
+            return result;
+        }
+
+        public List<ARoom> GetAllStockRoom()
+        {
+            List<ARoom> result = new List<ARoom>();
+            return result;
         }
 
         public ARoom AddRoom(
@@ -140,7 +176,7 @@ namespace Scripts.Map
             go.transform.parent = _mapTransform;
             newRoom.GameObject = go;
 
-            if (Application.isEditor)
+            if (Application.isEditor) // Editor debug
             {
                 var dText = Instantiate(_debugText, go.transform.position + Vector3.up * 0.5f, Quaternion.identity);
                 dText.GetComponent<TextMesh>().text = "(" + newRoom.Position.x + ", " + newRoom.Position.y + ")";
@@ -185,6 +221,22 @@ namespace Scripts.Map
             if (!hasCommandant)
             {
                 StartCoroutine(BuildRoom(newRoom, roomBuilt, newRoom));
+            }
+            else
+            {
+                newRoom.Sign =
+                    Instantiate(
+                        _blueprintSign,
+                        (Vector3)(new Vector2(newRoom.Position.x, -newRoom.Position.y))
+                        + new Vector3(newRoom.Size.x / 2f, -newRoom.Size.y / 2f, -1f),
+                        Quaternion.identity);
+                List<ResourceInfo> allRequirements = new List<ResourceInfo>();
+                int nbBlocks = newRoom.Size.x * newRoom.Size.y;
+                for (int i = 0; i < nbBlocks; i++)
+                {
+                    allRequirements.AddRange(ConfigManager.S.Config.RequirementPerBloc);
+                }
+                newRoom.Requirement = new Requirement(Enumerable.Repeat(ConfigManager.S.Config.RequirementPerBloc, newRoom.Size.x * newRoom.Size.y).SelectMany(x => x).ToArray());
             }
 
             return newRoom;
