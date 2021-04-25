@@ -50,7 +50,7 @@ namespace Scripts.Map.Room
 
         public override string ToString()
         {
-            return $"Room {Size.x}_{Size.y} at ({Position.x};{Position.y})";
+            return $"Room {Size.x}_{Size.y} at ({Position.x};{Position.y}) num neighbor : {GetNeighborhood().Length}";
         }
     }
 }

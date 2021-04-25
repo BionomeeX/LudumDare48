@@ -139,10 +139,11 @@ namespace Scripts.Agents
                     Debug.Log("  Currently Building");
                     if (_roomPath.Count > 0)
                     {
-                        Debug.Log("    Still Moving");
                         // still moving
+                        var room = _roomPath[0];
+                        Debug.Log("    Still Moving to (" + room.Position.x + ", " + room.Position.y + ")");
                         // Go to next room
-                        MoveToRoom(_roomPath[0]);
+                        MoveToRoom(room);
                         _roomPath.RemoveAt(0);
                     }
                     else
@@ -158,51 +159,41 @@ namespace Scripts.Agents
                             // 75% expand corridor
                             {
                                 Debug.Log("        Expanding corridor");
-                                float rnd = Random.Range(0f, 1f);
-                                if (rnd < 0.5f)
-                                // 50% same direction
+                                Debug.Log("          In the same direction");
+                                ARoom corridor = null;
+                                if (_currentRoom.RoomLeft != null)
+                                // we are going from left to right
                                 {
-                                    Debug.Log("          In the same direction");
-                                    if (_currentRoom.RoomRight == null)
-                                    // we are going from left to right
-                                    {
-                                        var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x + 1, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
-                                    }
-                                    else
-                                    // right to left
-                                    {
-                                        var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x - 1, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
-                                    }
-                                }
-                                else if (rnd < 0.75f)
-                                // 25% top
-                                {
-                                    Debug.Log("          To the top");
-                                    var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x, _currentRoom.Position.y + 1), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
+                                    corridor = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x + 1, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
                                 }
                                 else
-                                // 25% bottom
+                                // right to left
                                 {
-                                    Debug.Log("          To the bottom");
-                                    var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x, _currentRoom.Position.y - 1), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
+                                    corridor = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x - 1, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
                                 }
+                                _targetRoom = corridor;
+                                _roomPath = Astar.FindPath(_currentRoom, _targetRoom);
                             }
                             else
                             // 25% build a room
                             {
                                 Debug.Log("        Build a new room");
-                                if (_currentRoom.RoomRight == null)
+                                ARoom room = null;
+                                if (_currentRoom.RoomLeft != null)
                                 // we are going from left to right
                                 {
                                     Debug.Log("          To the right");
-                                    var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x + 1, _currentRoom.Position.y), new Vector2Int(2, 1), MapManager.S.ReceptionRoom, RoomType.EMPTY, _currentRoom);
+                                    room = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x + 1, _currentRoom.Position.y), new Vector2Int(2, 1), MapManager.S.ReceptionRoom, RoomType.EMPTY, _currentRoom);
                                 }
                                 else
                                 // right to left
                                 {
                                     Debug.Log("          To the left");
-                                    var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x - 2, _currentRoom.Position.y), new Vector2Int(2, 1), MapManager.S.ReceptionRoom, RoomType.EMPTY, _currentRoom);
+                                    room = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x - 2, _currentRoom.Position.y), new Vector2Int(2, 1), MapManager.S.ReceptionRoom, RoomType.EMPTY, _currentRoom);
                                 }
+                                _currentAction = Action.Idle;
+                                _targetRoom = room;
+                                _roomPath = Astar.FindPath(_currentRoom, _targetRoom);
                             }
                         }
                         else
@@ -229,17 +220,19 @@ namespace Scripts.Agents
                                 // add to the right
                                 {
                                     Debug.Log("          to the right");
-                                    var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x + _currentRoom.Size.x, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
+                                    var corridor = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x + _currentRoom.Size.x, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
+                                    _targetRoom = corridor;
+                                    _roomPath = Astar.FindPath(_currentRoom, _targetRoom);
                                 }
                                 else
                                 // add to the left
                                 {
                                     Debug.Log("          to the left");
-                                    var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x - 1, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
+                                    var corridor = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x - 1, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
+                                    _targetRoom = corridor;
+                                    _roomPath = Astar.FindPath(_currentRoom, _targetRoom);
                                 }
                             }
-
-                            _currentAction = Action.Idle;
                         }
                     }
                 }

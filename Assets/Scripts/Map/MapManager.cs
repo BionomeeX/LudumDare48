@@ -109,13 +109,13 @@ namespace Scripts.Map
             }
 
             // check where the parent room come from
-            if (position.x > parentRoom.Position.x + parentRoom.Size.x)
+            if (position.x >= parentRoom.Position.x + parentRoom.Size.x)
             // Comming from left
             {
                 parentRoom.RoomRight = newRoom;
                 newRoom.RoomLeft = parentRoom;
             }
-            else if (position.x + size.x < parentRoom.Position.x)
+            else if (position.x + size.x <= parentRoom.Position.x)
             // Comming from right
             {
                 parentRoom.RoomLeft = newRoom;
@@ -123,7 +123,7 @@ namespace Scripts.Map
             }
 
             // Special case for Y => Only 1x1 connection from top <-> bottom from now
-            else if (position.y > parentRoom.Position.y)
+            else if (position.y >= parentRoom.Position.y)
             // Comming from bottom
             {
                 parentRoom.RoomUp = newRoom;
@@ -135,6 +135,12 @@ namespace Scripts.Map
                 parentRoom.RoomDown = newRoom;
                 newRoom.RoomUp = parentRoom;
             }
+
+            // if room is at the top, we can't build up
+            // if (position.y == 0)
+            // {
+            //     // newRoom.RoomUp = new GenericRoom(size, position + Vector2Int.up);
+            // }
 
             // StartCoroutine(BuildRoom(newRoom));
 

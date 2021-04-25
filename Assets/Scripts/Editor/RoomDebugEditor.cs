@@ -13,7 +13,13 @@ public class RoomDebugEditor : EditorWindow
 
     private void OnGUI()
     {
-        EditorGUI.TextArea(new Rect(), string.Join("\n", MapManager.S.MapRooms.Select(x => x.ToString())));
+        if (MapManager.S == null)
+        {
+            return;
+        }
+        // EditorGUI.TextArea(new Rect(), "AAAA");
+        // Debug.Log("AAAA");
+        EditorGUI.TextArea(new Rect(0, 0, 500, 500), string.Join("\n", MapManager.S.MapRooms.Select(x => x.ToString())));
     }
 
 }
