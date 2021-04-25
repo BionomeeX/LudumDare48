@@ -7,6 +7,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Scripts.Events;
+using Scripts.Agents;
+
 
 
 namespace Scripts.Map
@@ -85,8 +88,11 @@ namespace Scripts.Map
 
             ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom, null, false);
 
-            Instantiate(_commandantPrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
-            Instantiate(_warehousePrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
+            var warehouseman = Instantiate(_warehousePrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
+            EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
+
+            var commandant = Instantiate(_commandantPrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
+            EventManager.S.Subscribe(commandant.GetComponent<Commandant>());
 
         }
 

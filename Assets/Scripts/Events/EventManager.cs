@@ -2,6 +2,9 @@ using Scripts.Enemies;
 using Scripts.Map;
 using Scripts.Map.Room;
 using UnityEngine;
+using Scripts.Agents;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Scripts.Events
 {
@@ -9,16 +12,27 @@ namespace Scripts.Events
     {
         public static EventManager S;
 
+        private List<AAgent> _agents;
         private void Awake()
         {
             S = this;
+            _agents = new List<AAgent>();
+        }
+
+        public void Subscribe(AAgent agent){
+            Debug.Log("Subscribe : " + agent.name);
+            _agents.Add(agent);
         }
 
         public void NotifyManager(Event e, object o)
         {
             if (e == Event.BlueprintDrawn)
             {
+                Debug.Log("Blueprint Drawn event received");
                 EnemyManager.S.RecalculateZone();
+                foreach(var agent in _agents){
+                    agent.OnEventReceived(e, o);
+                }
             }
         }
 

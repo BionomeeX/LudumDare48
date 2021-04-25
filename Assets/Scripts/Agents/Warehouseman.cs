@@ -6,6 +6,7 @@ using Scripts.Map.Room;
 using Scripts.Resources;
 using System.Linq;
 using Scripts.ScriptableObjects;
+using UnityEngine;
 
 
 namespace Scripts.Agents
@@ -42,6 +43,16 @@ namespace Scripts.Agents
             {
                 // oups
             }
+            if (e == Events.Event.BlueprintDrawn)
+            {
+                Debug.Log("Blueprint Drawn event received for warehouseman");
+                if (IsIdle)
+                {
+                    Debug.Log("I'm available");
+                    ChooseAction();
+                    DoNextAction();
+                }
+            }
         }
 
         public override void ChooseAction()
@@ -56,6 +67,7 @@ namespace Scripts.Agents
             }
             if (CheckIfBlueprintNeedResource())
             {
+                Debug.Log("CheckIfBlueprint !");
                 return;
             }
             if (CheckIfHighPriorityStockNeedResource())
@@ -135,6 +147,7 @@ namespace Scripts.Agents
 
         private bool CheckIfBlueprintNeedResource()
         {
+            Debug.Log("Any blueprints need some loving ?");
             // check if there any blueprints
             var blueprints = MapManager.S.GetAllAccessibleBlueprint().Select(
                 b => Astar.FindPath(_currentRoom, b)
@@ -142,17 +155,21 @@ namespace Scripts.Agents
                 path => (path, Astar.ComputePathWeight(path))
             ).OrderBy(pf => pf.Item2).ToList();
 
+            Debug.Log("blueprints found : " + blueprints.Count);
             // if there is, reserve a block and ask for its needed resources
-            if (blueprints.Count != 0)
+            if (blueprints.Count > 0)
             {
                 foreach (var blueprint in blueprints)
                 {
                     // check the ressource needed for the blueprint
                     List<(ResourceType type, int amount)> resourcesNeeded = blueprint.path.Last().Requirement.GetRequirements().ToList();
+                    Debug.Log("Resources needed : " + resourcesNeeded.Count);
                     foreach (var resourceAmount in resourcesNeeded)
                     {
+                        Debug.Log("  Need " + resourceAmount.amount);
                         if (FindPathForResource(resourceAmount.type, resourceAmount.amount, 0))
                         {
+                            // register
                             // add path from the last element to the blueprint
                             _actions.Add(
                                 (Astar.FindPath(_actions.Last().path.Last(), blueprint.path.Last()), Action.DropRessource)
@@ -162,7 +179,7 @@ namespace Scripts.Agents
                     }
                 }
             }
-
+            Debug.Log("No resources for the blueprints ...");
             return false;
         }
         private bool CheckIfHighPriorityStockNeedResource()

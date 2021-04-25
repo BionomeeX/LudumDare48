@@ -22,6 +22,8 @@ namespace Scripts.Agents
 
         protected List<(List<ARoom> path, Action action)> _actions;
 
+        protected bool IsIdle = false;
+
         public enum Action
         {
             Idle,
@@ -104,6 +106,7 @@ namespace Scripts.Agents
                     return action;
                 }
             }
+            Debug.Log(this.name + " is Idle");
             return Action.Idle;
         }
 
@@ -114,6 +117,7 @@ namespace Scripts.Agents
 
         public void DoNextAction()
         {
+            IsIdle = false;
             Action action = MoveOrGetAction();
             if (action != Action.Move && action != Action.Idle)
             {
@@ -122,6 +126,7 @@ namespace Scripts.Agents
             if (action == Action.Idle)
             {
                 //ChooseAction();
+                IsIdle = true;
                 return;
             }
             DoNextAction();
