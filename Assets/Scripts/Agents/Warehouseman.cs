@@ -36,12 +36,80 @@ namespace Scripts.Agents
             }
         }
 
-        protected override void DoStartAction()
+        public override void ChooseAction()
         {
-
+            if (CheckIfTurretNeedResource())
+            {
+                return;
+            }
+            if (CheckIfFactoryNeedResource())
+            {
+                return;
+            }
+            if (CheckIfBlueprintNeedResource())
+            {
+                return;
+            }
+            if (CheckIfHighPriorityStockNeedResource())
+            {
+                return;
+            }
         }
 
-        private void CheckIfBlueprintNeedResource()
+        public override void DoSpecialAction(Action action)
+        {
+            if (action == Action.TakeRessource)
+            {
+                TakeRessource();
+            }
+            if (action == Action.DropRessource)
+            {
+                DropRessource();
+            }
+        }
+
+        public
+
+        public void TakeRessource()
+        {
+            // get the ResourceStock assiociated with the current room
+            ResourceStock rs = ((GenericRoom)_currentRoom).RoomType.Stock;
+            var resourceAndAmount = rs.GetResource(_id);
+            if (!_inventory.ContainsKey(resourceAndAmount.resourceType))
+            {
+                _inventory.Add(
+                    resourceAndAmount.resourceType,
+                    resourceAndAmount.amount
+                );
+            }
+            else
+            {
+                _inventory[resourceAndAmount.resourceType] += resourceAndAmount.amount;
+            }
+        }
+
+        public void DropRessource()
+        {
+            // check what ressources the current room need
+            //List<(ResourceType type, int amount)> needs = new List<(ResourceType type, int amount)>();
+            // ???????????????????????????????
+        }
+
+        protected override void DoStartAction()
+        {
+            DoNextAction();
+        }
+
+        private bool CheckIfTurretNeedResource()
+        {
+            return false;
+        }
+        private bool CheckIfFactoryNeedResource()
+        {
+            return false;
+        }
+
+        private bool CheckIfBlueprintNeedResource()
         {
             // check if there any blueprints
 
@@ -55,10 +123,9 @@ namespace Scripts.Agents
 
             // for each stock generate a path finding from each stocks to the next
 
-
+            return false;
         }
-
-        private void CheckIfHighPriorityStockNeedResource()
+        private bool CheckIfHighPriorityStockNeedResource()
         {
             // get list of nonfull stocks
 
@@ -72,7 +139,9 @@ namespace Scripts.Agents
 
             // if miner or stock, reserve as output
 
+            return false;
         }
+
 
     }
 }

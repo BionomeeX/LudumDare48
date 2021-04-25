@@ -57,6 +57,7 @@ namespace Scripts.Agents
                 -_currentRoom.Position.y + 0.1f,
                 0f
             );
+            DoNextAction();
         }
 
         public Action MoveOrGetAction()
@@ -79,29 +80,21 @@ namespace Scripts.Agents
             return Action.Idle;
         }
 
-        public void TakeRessource()
-        {
-            // get the ResourceStock assiociated with the current room
-            ResourceStock rs = ((GenericRoom)_currentRoom).RoomType.Stock;
-            var resourceAndAmount = rs.GetResource(_id);
-            if(!_inventory.ContainsKey(resourceAndAmount.resourceType)) {
-                _inventory.Add(
-                    resourceAndAmount.resourceType,
-                    resourceAndAmount.amount
-                );
-            } else {
-                _inventory[resourceAndAmount.resourceType] += resourceAndAmount.amount;
+
+
+        public abstract void DoSpecialAction(Action action);
+        public abstract void ChooseAction();
+
+        public void DoNextAction(){
+            Action action = MoveOrGetAction();
+            if(action != Action.Move && action != Action.Idle) {
+                DoSpecialAction(action);
             }
+            if(action == Action.Idle){
+                ChooseAction();
+            }
+            DoNextAction();
         }
-
-        public void DropRessource()
-        {
-            // check what ressources the current room need
-            //List<(ResourceType type, int amount)> needs = new List<(ResourceType type, int amount)>();
-            // ???????????????????????????????
-        }
-
-
 
     }
 
