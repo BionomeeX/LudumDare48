@@ -1384,7 +1384,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _warningText: {fileID: 702030159}
-  _panelButtons: {fileID: 0}
+  _panelButtons: {fileID: 370721267}
 --- !u!1 &699549637
 GameObject:
   m_ObjectHideFlags: 0
@@ -2090,6 +2090,8 @@ GameObject:
   - component: {fileID: 1270761613}
   - component: {fileID: 1270761612}
   - component: {fileID: 1270761614}
+  - component: {fileID: 1270761615}
+  - component: {fileID: 1270761616}
   m_Layer: 0
   m_Name: Submarine
   m_TagString: Untagged
@@ -2175,8 +2177,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 417979bd94af7de4cbd4129aab025365, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Objective: {x: 0, y: 0}
-  _flagIcon: {fileID: 0}
+--- !u!61 &1270761615
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270761611}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.14141273, y: 2.008893}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 35.079998, y: 24.802656}
+    newSize: {x: 35.079998, y: 24.802656}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 26.689873, y: 12.241144}
+  m_EdgeRadius: 0
+--- !u!50 &1270761616
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270761611}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &1329308764
 GameObject:
   m_ObjectHideFlags: 0
@@ -2189,7 +2236,6 @@ GameObject:
   - component: {fileID: 1329308769}
   - component: {fileID: 1329308768}
   - component: {fileID: 1329308767}
-  - component: {fileID: 1329308766}
   m_Layer: 5
   m_Name: Flag
   m_TagString: Untagged
@@ -2216,51 +2262,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1329308766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1329308764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1930794181}
-          m_TargetAssemblyTypeName: Scripts.UI.OpenGameMenu, Assembly-CSharp
-          m_MethodName: OnBuildHoverEnter
-          m_Mode: 3
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 3
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 1
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1930794181}
-          m_TargetAssemblyTypeName: Scripts.UI.OpenGameMenu, Assembly-CSharp
-          m_MethodName: OnBuildHoverExit
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 3
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &1329308767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2305,10 +2306,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1930794181}
-        m_TargetAssemblyTypeName: Scripts.UI.OpenGameMenu, Assembly-CSharp
-        m_MethodName: SetCurrentBuild
-        m_Mode: 3
+      - m_Target: {fileID: 1930794186}
+        m_TargetAssemblyTypeName: Scripts.Exploration.SubmarineManager, Assembly-CSharp
+        m_MethodName: PlaceFlag
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2564,7 +2565,6 @@ GameObject:
   - component: {fileID: 1760757421}
   - component: {fileID: 1760757420}
   - component: {fileID: 1760757419}
-  - component: {fileID: 1760757418}
   m_Layer: 5
   m_Name: Return
   m_TagString: Untagged
@@ -2591,51 +2591,6 @@ RectTransform:
   m_AnchoredPosition: {x: 50, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1760757418
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1760757416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1930794181}
-          m_TargetAssemblyTypeName: Scripts.UI.OpenGameMenu, Assembly-CSharp
-          m_MethodName: OnBuildHoverEnter
-          m_Mode: 3
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 3
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - eventID: 1
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1930794181}
-          m_TargetAssemblyTypeName: Scripts.UI.OpenGameMenu, Assembly-CSharp
-          m_MethodName: OnBuildHoverExit
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 3
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &1760757419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2680,10 +2635,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1930794181}
-        m_TargetAssemblyTypeName: Scripts.UI.OpenGameMenu, Assembly-CSharp
-        m_MethodName: SetCurrentBuild
-        m_Mode: 3
+      - m_Target: {fileID: 1930794186}
+        m_TargetAssemblyTypeName: Scripts.Exploration.SubmarineManager, Assembly-CSharp
+        m_MethodName: RemoveFlag
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2712,7 +2667,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 82f0148380adab24c87d25d733353df4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: da3f5d1f6aaf76d46ab722462bc8f6ba, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2999,8 +2954,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 278d7aa70c83c3a4ab4132ce41e70bf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Objective: {x: 0, y: 0}
-  _flagIcon: {fileID: 0}
+  _flagPrefab: {fileID: 2055516050663532707, guid: 97b0ea7e2b726014295a08fe5d2d7f71, type: 3}
+  _flagIcon: {fileID: 2800000, guid: 71ffde5cef16f8747bb5d13349e7b6f6, type: 3}
 --- !u!1 &2002968864
 GameObject:
   m_ObjectHideFlags: 0

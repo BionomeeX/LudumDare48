@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Scripts.Events
 {
     public enum Event

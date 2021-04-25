@@ -26,3 +26,4 @@ MonoBehaviour:
     Amount: 10
   - Type: 1
     Amount: 5
+  SubmarineSpeed: 1
