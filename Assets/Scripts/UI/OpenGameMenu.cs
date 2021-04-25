@@ -69,6 +69,20 @@ namespace Scripts.UI
             }
         }
 
+        public void OnFlagSetHover()
+        {
+            _explanationPanelScript.gameObject.SetActive(true);
+            _explanationPanelScript.Name.text = "Set destination";
+            _explanationPanelScript.Description.text = "Set where your submarines need to go";
+        }
+
+        public void OnFlagUnsetHover()
+        {
+            _explanationPanelScript.gameObject.SetActive(true);
+            _explanationPanelScript.Name.text = "Retreat";
+            _explanationPanelScript.Description.text = "Send your submarines back to the base";
+        }
+
         public void OnBuildHoverEnter(int id)
         {
             var elem = ModularRoomFactory.BuildModularRoom((RoomType)id, null);
