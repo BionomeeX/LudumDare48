@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Scripts.Map.Blueprints;
+using Scripts.UI.RoomUI;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Scripts.Map.Room
@@ -19,8 +22,26 @@ namespace Scripts.Map.Room
             RoomRight = null;
         }
 
-        public abstract string GetName();
-        public abstract string GetDescription();
+        public string GetName()
+        {
+            if (Requirement != null)
+                return "Blueprint";
+            if (!IsBuilt)
+                return "Construction";
+            return GetNameInternal();
+        }
+
+        public string GetDescription()
+        {
+            if (Requirement != null)
+                return "The room was ordered by a commander and is waiting for its materials";
+            if (!IsBuilt)
+                return "The room is being build";
+            return GetDescriptionInternal();
+        }
+
+        protected abstract string GetNameInternal();
+        protected abstract string GetDescriptionInternal();
 
         public bool IsBuilt { set; get; }
         public Vector2Int Size { private set; get; }
@@ -31,6 +52,8 @@ namespace Scripts.Map.Room
         public GameObject GameObject;
 
         public GameObject Sign;
+
+        public Requirement Requirement;
 
         public ARoom[] GetNeighborhood()
         {
@@ -53,6 +76,18 @@ namespace Scripts.Map.Room
         public override string ToString()
         {
             return $"Room {Size.x}_{Size.y} at ({Position.x};{Position.y}) num neighbor : {GetNeighborhood().Length}";
+        }
+
+        public GameObject GetDescriptionPanel()
+            => UIRoom.S._uiBlueprint;
+
+        public void SetupConfigPanel(GameObject go)
+        {
+            var c = go.GetComponent<ReceptionUI>();
+            c.StorageInfoText.text = string.Join("\n", Requirement.GetMissingResources().Select((x) =>
+            {
+                return x.Item1 + ": " + x.Item2;
+            }));
         }
     }
 }

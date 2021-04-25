@@ -3,6 +3,7 @@ using Scripts.ScriptableObjects;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Scripts.Map.Blueprints
 {
@@ -10,7 +11,18 @@ namespace Scripts.Map.Blueprints
     {
         public Requirement(ResourceInfo[] resources)
         {
-
+            foreach (var r in resources)
+            {
+                int amount = r.Amount;
+                do
+                {
+                    var nb = amount > ConfigManager.S.Config.NbOfResourcePerTransportation
+                        ? ConfigManager.S.Config.NbOfResourcePerTransportation
+                        : amount;
+                    _waiting.Add((r.Type, nb));
+                    amount -= nb;
+                } while (amount > 0);
+            }
         }
 
         public ReadOnlyCollection<(ResourceType, int)> GetRequirements()
@@ -49,5 +61,21 @@ namespace Scripts.Map.Blueprints
 
         List<(ResourceType, int)> _waiting = new List<(ResourceType, int)>();
         Dictionary<int, (ResourceType, int)> _reserved = new Dictionary<int, (ResourceType, int)>();
+
+        public (ResourceType, int)[] GetMissingResources()
+        {
+            Dictionary<ResourceType, int> allResources = new Dictionary<ResourceType, int>();
+            foreach (var r in _waiting)
+            {
+                if (allResources.ContainsKey(r.Item1)) allResources[r.Item1] += r.Item2;
+                else allResources.Add(r.Item1, r.Item2);
+            }
+            foreach (var r in _reserved.Values)
+            {
+                if (allResources.ContainsKey(r.Item1)) allResources[r.Item1] += r.Item2;
+                else allResources.Add(r.Item1, r.Item2);
+            }
+            return allResources.Select(x => (x.Key, x.Value)).ToArray();
+        }
     }
 }

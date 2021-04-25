@@ -2079,6 +2079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e32a36c7bde792479ca4e506fb30260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _uiBlueprint: {fileID: 3304247741130620652, guid: 96441b10eed703d43918d1330e80c0eb, type: 3}
   _uiStorage: {fileID: 3304247741130620652, guid: 624cbf4e7b68f81409d44bee94dd74de, type: 3}
   _receptionStorage: {fileID: 3304247741130620652, guid: 5eaf9542c6093c34c9c8f54bd76fe694, type: 3}
   _uiStoragePriority: {fileID: 5634858518709175697, guid: 843570c0d0b93084f859ecb292459ec7, type: 3}
