@@ -2857,8 +2857,8 @@ MonoBehaviour:
   _elevator: {fileID: 952793276}
   _constructionSign: {fileID: 8695930291489931896, guid: f7e7142116be43b4296ab540c1ba3588, type: 3}
   _blueprintSign: {fileID: 8695930291489931896, guid: 4198db51ac5b8714298278fbcb32f3c1, type: 3}
-  _commandantPrefab: {fileID: 0}
-  _warehousePrefab: {fileID: 0}
+  _commandantPrefab: {fileID: 5267582097250314843, guid: 51f737aa78f6b41409ddd64189c23158, type: 3}
+  _warehousePrefab: {fileID: 2632654527748137793, guid: 5c322d1ecd95e6c27a02da7ea502f907, type: 3}
   _debugText: {fileID: 5892347979112899441, guid: 9b7634ae3b63b786fa7610ab5991f996, type: 3}
 --- !u!114 &1930794181
 MonoBehaviour:
