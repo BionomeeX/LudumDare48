@@ -69,7 +69,6 @@ namespace Scripts.Map
                 for (int x = 0; x < baseDiscoveredSize; x++)
                 {
                     _elems.Add(TileState.EMPTY);
-                    _debugExploration.Add((x, y, Color.white));
                 }
                 _mapPathfinding.Add(_elems);
             }
@@ -192,7 +191,7 @@ namespace Scripts.Map
             {
                 for (int x = position.x; x < position.x + size.x; x++)
                 {
-                    SetTileStatus(x, y, TileState.OCCUPIED);
+                    _mapPathfinding[y][x] = TileState.OCCUPIED;
                 }
             }
 
@@ -257,34 +256,40 @@ namespace Scripts.Map
             roomBuilt?.Invoke(newRoom);
         }
 
-        private List<(int, int, Color)> _debugExploration = new List<(int, int, Color)>();
-        private List<(Vector2Int, Vector2Int, Color)> _debugLinks = new List<(Vector2Int, Vector2Int, Color)>();
-        private void SetTileStatus(int x, int y, TileState state)
+        public void DiscoverTile(int x, int y)
         {
-            _mapPathfinding[y][x] = state;
-            switch (state)
+            for (int i = _mapPathfinding.Count; i <= y; i++)
             {
-                case TileState.EMPTY:
-                    _debugExploration.Add((x, y, Color.white));
-                    break;
-
-                case TileState.OCCUPIED:
-                    _debugExploration.Add((x, y, Color.red));
-                    break;
+                _mapPathfinding.Add(new List<TileState>());
+            }
+            var list = _mapPathfinding[y];
+            for (int i = list.Count; i <= x; i++)
+            {
+                list.Add(TileState.NOT_DISCOVERED);
+            }
+            if (_mapPathfinding[y][x] == TileState.NOT_DISCOVERED)
+            {
+                _mapPathfinding[y][x] = TileState.EMPTY;
             }
         }
 
         private void OnDrawGizmos()
         {
-            foreach (var d in _debugExploration)
+            for (int y = 0; y < _mapPathfinding.Count; y++)
             {
-                Gizmos.color = d.Item3;
-                var x = d.Item1;
-                var y = -d.Item2;
-                Gizmos.DrawLine(new Vector2(x, y), new Vector2(x, y - 1f));
-                Gizmos.DrawLine(new Vector2(x, y), new Vector2(x + 1f, y));
-                Gizmos.DrawLine(new Vector2(x + 1f, y), new Vector2(x + 1f, y - 1f));
-                Gizmos.DrawLine(new Vector2(x, y - 1f), new Vector2(x + 1f, y - 1f));
+                for (int x = 0; x < _mapPathfinding[y].Count; x++)
+                {
+                    var elem = _mapPathfinding[y][x];
+                    if (elem == TileState.NOT_DISCOVERED)
+                    {
+                        continue;
+                    }
+                    Gizmos.color = elem == TileState.EMPTY ? Color.white : Color.red;
+                    Gizmos.DrawLine(new Vector2(x, -y), new Vector2(x, -y - 1f));
+                    Gizmos.DrawLine(new Vector2(x, -y), new Vector2(x + 1f, -y));
+                    Gizmos.DrawLine(new Vector2(x + 1f, -y), new Vector2(x + 1f, -y - 1f));
+                    Gizmos.DrawLine(new Vector2(x, -y - 1f), new Vector2(x + 1f, -y - 1f));
+                }
             }
         }
     }

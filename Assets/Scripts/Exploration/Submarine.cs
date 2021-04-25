@@ -1,4 +1,5 @@
-﻿using Scripts.Map.Room.ModulableRoom;
+﻿using Scripts.Map;
+using Scripts.Map.Room.ModulableRoom;
 using Scripts.ScriptableObjects;
 using UnityEngine;
 
@@ -47,8 +48,14 @@ namespace Scripts.Exploration
             }
             if (objective != null)
             {
-                _rb.velocity =
-                    (objective.Value - (Vector2)transform.position) * ConfigManager.S.Config.SubmarineSpeed;
+                if (Vector2.Distance(transform.position, objective.Value) < 1f)
+                    _rb.velocity = Vector2.zero;
+                else
+                {
+                    _rb.velocity =
+                        (objective.Value - (Vector2)transform.position) * ConfigManager.S.Config.SubmarineSpeed;
+                    MapManager.S.DiscoverTile(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(-transform.position.y));
+                }
             }
         }
     }
