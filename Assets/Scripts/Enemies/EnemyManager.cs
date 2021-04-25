@@ -7,6 +7,13 @@ namespace Scripts.Enemies
 {
     public class EnemyManager : MonoBehaviour
     {
+        public static EnemyManager S;
+
+        private void Awake()
+        {
+            S = this;
+        }
+
         private List<int> _baseZone = new List<int>();
 
         private void Start()
@@ -16,16 +23,16 @@ namespace Scripts.Enemies
 
         public void RecalculateZone()
         {
+            _baseZone = new List<int>();
             var rooms = MapManager.S.MapRooms;
             int minY = rooms.Max(x => x.Position.y + x.Size.y);
             for (int y = 0; y < minY; y++)
             {
                 var r = rooms
                     .Where((x) => {
-                        return y >= x.Position.y && y <= x.Position.y + x.Size.y;
+                        return y >= x.Position.y && y < x.Position.y + x.Size.y;
                     })
                     .Max(x => x.Position.x + x.Size.x);
-                Debug.Log(r);
                 _baseZone.Add(r);
             }
         }
