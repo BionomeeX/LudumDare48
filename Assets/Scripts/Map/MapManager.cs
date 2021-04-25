@@ -39,6 +39,9 @@ namespace Scripts.Map
 
         private EntryZone _entry = new EntryZone();
 
+        [SerializeField]
+        private GameObject _debugText;
+
         private void Start()
         {
             // Base zone discovered
@@ -77,9 +80,11 @@ namespace Scripts.Map
                 case RoomType.EMPTY:
                     newRoom = new GenericRoom(size, position);
                     break;
+
                 case RoomType.CORRIDOR:
                     newRoom = new Corridor(size, position);
                     break;
+
                 default:
                     throw new System.ArgumentException("Invalid room type " + type.ToString(), nameof(type));
             }
@@ -88,6 +93,12 @@ namespace Scripts.Map
             var go = Instantiate(room, new Vector2(position.x, -position.y) + new Vector2(1f, -size.y), Quaternion.identity);
             go.transform.parent = _mapTransform;
             newRoom.GameObject = go;
+
+            if (Application.isEditor)
+            {
+                var dText = Instantiate(_debugText, go.transform.position + Vector3.up * 0.5f, Quaternion.identity);
+                dText.GetComponent<TextMesh>().text = "(" + newRoom.Position.x + ", " + newRoom.Position.y + ")";
+            }
 
             for (int y = position.y; y < position.y + size.y; y++)
             {
@@ -125,7 +136,7 @@ namespace Scripts.Map
                 newRoom.RoomUp = parentRoom;
             }
 
-            StartCoroutine(BuildRoom(newRoom));
+            // StartCoroutine(BuildRoom(newRoom));
 
             return newRoom;
         }

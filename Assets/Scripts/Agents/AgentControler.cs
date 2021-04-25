@@ -85,7 +85,7 @@ namespace Scripts.Agents
 
                     float actionChoice = Random.Range(0f, 1f);
 
-                    if (actionChoice < 0.1f)
+                    if (actionChoice < 0.9f)
                     // 10% chance build a new room
                     {
                         Debug.Log("    Will Build");
@@ -94,7 +94,7 @@ namespace Scripts.Agents
                         List<(ARoom room, float weight)> choices = new List<(ARoom room, float weight)>();
                         foreach (ARoom room in MapManager.S.MapRooms)
                         {
-                            if (room.GetNeighborhood().Length > 0)
+                            if (room.RoomLeft == null || room.RoomRight == null)
                             {
                                 choices.Add((room, (float)room.Position.x + 3 * room.Position.y));
                             }
@@ -121,7 +121,7 @@ namespace Scripts.Agents
                             _targetRoom = choices[i].room;
                             // 2) set the path to the target room
                             _roomPath = Astar.FindPath(_currentRoom, _targetRoom);
-
+                            Debug.Log("    Going to room (" + _targetRoom.Position.x + ", " + _targetRoom.Position.y + ") to build");
                             _currentAction = Action.Building;
                         }
                     }
@@ -130,7 +130,7 @@ namespace Scripts.Agents
                         // move to a random room
                         _targetRoom = MapManager.S.MapRooms[Random.Range(0, MapManager.S.MapRooms.Count)];
                         _roomPath = Astar.FindPath(_currentRoom, _targetRoom);
-                        Debug.Log("    Going to room (" + _targetRoom.Position.x + ", " + _targetRoom.Position.y + ") to build");
+                        Debug.Log("    Going to room (" + _targetRoom.Position.x + ", " + _targetRoom.Position.y + ")");
                     }
 
                 }
@@ -157,10 +157,12 @@ namespace Scripts.Agents
                             if (Random.Range(0f, 1f) < 0.75f)
                             // 75% expand corridor
                             {
+                                Debug.Log("        Expanding corridor");
                                 float rnd = Random.Range(0f, 1f);
                                 if (rnd < 0.5f)
                                 // 50% same direction
                                 {
+                                    Debug.Log("          In the same direction");
                                     if (_currentRoom.RoomRight == null)
                                     // we are going from left to right
                                     {
@@ -175,25 +177,30 @@ namespace Scripts.Agents
                                 else if (rnd < 0.75f)
                                 // 25% top
                                 {
+                                    Debug.Log("          To the top");
                                     var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x, _currentRoom.Position.y + 1), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
                                 }
                                 else
                                 // 25% bottom
                                 {
+                                    Debug.Log("          To the bottom");
                                     var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x, _currentRoom.Position.y - 1), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
                                 }
                             }
                             else
                             // 25% build a room
                             {
+                                Debug.Log("        Build a new room");
                                 if (_currentRoom.RoomRight == null)
                                 // we are going from left to right
                                 {
+                                    Debug.Log("          To the right");
                                     var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x + 1, _currentRoom.Position.y), new Vector2Int(2, 1), MapManager.S.ReceptionRoom, RoomType.EMPTY, _currentRoom);
                                 }
                                 else
                                 // right to left
                                 {
+                                    Debug.Log("          To the left");
                                     var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x - 2, _currentRoom.Position.y), new Vector2Int(2, 1), MapManager.S.ReceptionRoom, RoomType.EMPTY, _currentRoom);
                                 }
                             }
@@ -213,17 +220,23 @@ namespace Scripts.Agents
                                 directions.Add(1);
                             }
 
-                            // choose one
-                            int choice = Random.Range(0, directions.Count);
-                            if (choice == 0)
-                            // add to the right
+                            if (directions.Count > 0)
                             {
-                                var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x + _currentRoom.Size.x + 1, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
-                            }
-                            else
-                            // add to the left
-                            {
-                                var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x - 1, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
+                                Debug.Log("        Building Corridor");
+                                // choose one
+                                int choice = directions[Random.Range(0, directions.Count)];
+                                if (choice == 0)
+                                // add to the right
+                                {
+                                    Debug.Log("          to the right");
+                                    var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x + _currentRoom.Size.x, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
+                                }
+                                else
+                                // add to the left
+                                {
+                                    Debug.Log("          to the left");
+                                    var _ = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x - 1, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom);
+                                }
                             }
 
                             _currentAction = Action.Idle;
@@ -233,8 +246,10 @@ namespace Scripts.Agents
                 else if (_roomPath.Count > 0)
                 {
                     Debug.Log("  Currently Moving");
+                    var room = _roomPath[0];
+                    Debug.Log("    to (" + room.Position.x + ", " + room.Position.y + ")");
                     // we are moving
-                    MoveToRoom(_roomPath[0]);
+                    MoveToRoom(room);
                     _roomPath.RemoveAt(0);
                 }
                 else
@@ -244,9 +259,8 @@ namespace Scripts.Agents
                     _targetRoom = null;
                     _currentAction = Action.Idle;
                 }
-                //
                 Debug.Log("ChooseAction End, starting anew ...");
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.1f);
                 // ChooseAction();
             }
         }

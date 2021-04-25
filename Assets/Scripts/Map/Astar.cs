@@ -9,9 +9,11 @@ namespace Scripts.Map
     public class Astar
     {
 
-        public class Node {
+        public class Node
+        {
 
-            public Node(ARoom node){
+            public Node(ARoom node)
+            {
                 this.currentNode = node;
             }
             public ARoom currentNode;
@@ -46,6 +48,11 @@ namespace Scripts.Map
 
         public static List<ARoom> FindPath(ARoom startPosition, ARoom endPosition)
         {
+            if (startPosition == endPosition)
+            {
+                return new List<ARoom>();
+            }
+
             List<Node> openSet = new List<Node>();
             HashSet<Node> closedSet = new HashSet<Node>();
 
