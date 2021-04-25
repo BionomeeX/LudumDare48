@@ -1,12 +1,10 @@
 using Scripts.Map.Room;
 using Scripts.Map.Room.ModulableRoom;
-using Scripts.Resources;
+using Scripts.ScriptableObjects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Scripts.Agents;
-using Scripts.Map.Blueprints;
 
 
 namespace Scripts.Map
@@ -69,7 +67,10 @@ namespace Scripts.Map
 
             ARoom firstRoom = AddRoom(new Vector2Int(5, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.RECEPTION, _entry, (r) =>
             {
-                ((GenericRoom)r).RoomType.Stock.AddResource(ResourceType.IRON, 100);
+                foreach (var res in ConfigManager.S.Config.StartingResources)
+                {
+                    ((GenericRoom)r).RoomType.Stock.AddResource(res.Type, res.Amount);
+                }
             }, false);
 
             ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, firstRoom, null, false);

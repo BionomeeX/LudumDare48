@@ -1,4 +1,6 @@
 ﻿using Scripts.Resources;
+using System;
+using UnityEngine;
 
 namespace Scripts.Map.Room.ModulableRoom
 {
@@ -10,6 +12,12 @@ namespace Scripts.Map.Room.ModulableRoom
         public abstract string GetName();
 
         public abstract string GetDescription();
+
+        public virtual GameObject GetDescriptionPanel()
+            => null;
+
+        public virtual void SetupConfigPanel(GameObject go)
+            => throw new NotImplementedException();
 
         public ResourceStock Stock;
     }

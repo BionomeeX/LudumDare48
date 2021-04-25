@@ -43,7 +43,7 @@ namespace Scripts.Agents
 
         private void Start()
         {
-            StartCoroutine(ChooseAction());
+           // StartCoroutine(ChooseAction());
         }
 
 

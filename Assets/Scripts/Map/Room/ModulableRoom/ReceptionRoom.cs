@@ -1,10 +1,13 @@
-﻿namespace Scripts.Map.Room.ModulableRoom
+﻿using Scripts.ScriptableObjects;
+using System.Linq;
+
+namespace Scripts.Map.Room.ModulableRoom
 {
     public class ReceptionRoom : AModulableRoom
     {
         public ReceptionRoom(GenericRoom r) : base()
         {
-            Stock = new Resources.ResourceStock(r);
+            Stock = new Resources.ResourceStock(r, ConfigManager.S.Config.StartingResources.Select(x => x.Amount).Sum());
         }
 
         public override string GetName()
