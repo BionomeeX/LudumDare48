@@ -5,6 +5,8 @@ using Scripts.Map;
 using Scripts.Map.Room;
 using UnityEngine;
 using Scripts.Map.Blueprints;
+using Scripts.Events;
+
 
 namespace Scripts.Agents
 {
@@ -113,12 +115,14 @@ namespace Scripts.Agents
                     roomList.Select(room => new Blueprint(room)).ToList(),
                     _id
                 ));
+
+                EventManager.S.NotifyManager(Events.Event.BlueprintDrawn, this);
             }
         }
 
-        public override void OnEventReceived(Event e, object o)
+        public override void OnEventReceived(Events.Event e, object o)
         {
-            if (e == Event.MasterBlueprintFinished)
+            if (e == Events.Event.MasterBlueprintFinished)
             {
                 MasterBlueprint mbp = (MasterBlueprint)o;
 

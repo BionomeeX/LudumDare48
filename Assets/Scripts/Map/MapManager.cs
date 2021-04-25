@@ -82,6 +82,25 @@ namespace Scripts.Map
 
         }
 
+        public bool CanIBuildHere(Vector2Int position, Vector2Int size)
+        {
+            if (position.x < 0 || position.y - size.y < 0)
+            {
+                return false;
+            }
+            for (int line = 0; line < size.y; ++line)
+            {
+                for (int col = 0; col < size.x; ++col)
+                {
+                    if (_mapPathfinding[position.x + line][position.y + col] == TileState.OCCUPIED)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         public ARoom AddRoom(
             Vector2Int position,
             Vector2Int size,

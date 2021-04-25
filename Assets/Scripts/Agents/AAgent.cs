@@ -4,7 +4,7 @@ using UnityEngine;
 using Scripts.Map;
 using Scripts.Map.Room;
 using Scripts.Resources;
-
+using Scripts.Events;
 
 namespace Scripts.Agents
 {
@@ -12,6 +12,8 @@ namespace Scripts.Agents
     {
 
         protected int _id;
+
+        private Dictionary<ResourcesType, int> _inventory;
 
         public static int IdRef = 0;
         private ARoom _currentRoom;
@@ -28,25 +30,15 @@ namespace Scripts.Agents
             DropRessource,
             GenerateBlueprint,
         }
-        public enum Event
-        {
-            BlueprintDrawn,
-            BlueprintFinished,
-            MasterBlueprintFinished,
-            RoomCreated,
-            EnemySpotted,
-            Attacked,
-            EnemyDead,
-            MoveFinished,
-        }
 
         public AAgent(string childClassName)
         {
             _childClassName = childClassName;
             _id = ++IdRef;
+            _inventory = new Dictionary<ResourcesType, int>();
 
         }
-        public abstract void OnEventReceived(Event e, object o);
+        public abstract void OnEventReceived(Events.Event e, object o);
         protected abstract void DoStartAction();
 
         public void Start()
@@ -89,8 +81,17 @@ namespace Scripts.Agents
 
         public void TakeRessource()
         {
-            //ResourceStock rs = _currentRoom.ResourceStock;
-
+            // get the ResourceStock assiociated with the current room
+            ResourceStock rs = ((GenericRoom)_currentRoom).RoomType.Stock;
+            var resourceAndAmount = rs.GetResource(_id);
+            if(!_inventory.ContainsKey(resourceAndAmount.resourceType)) {
+                _inventory.Add(
+                    resourceAndAmount.resourceType,
+                    resourceAndAmount.amount
+                );
+            } else {
+                _inventory[resourceAndAmount.resourceType] += resourceAndAmount.amount;
+            }
         }
 
     }

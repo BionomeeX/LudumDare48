@@ -1,3 +1,6 @@
+using Scripts.Events;
+
+
 namespace Scripts.Agents
 {
 
@@ -9,7 +12,7 @@ namespace Scripts.Agents
 
         }
 
-        public override void OnEventReceived(Event e, object o)
+        public override void OnEventReceived(Events.Event e, object o)
         {
             return;
         }

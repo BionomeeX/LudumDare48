@@ -67,7 +67,7 @@ namespace Scripts.Resources
         /// <summary>
         /// Called when an agent want to get a resource he previously reserved
         /// </summary>
-        public (ResourceType, int) GetResource(int id)
+        public (ResourceType resourceType, int amount) GetResource(int id)
         {
             if (!_reserved.ContainsKey(id))
             {
