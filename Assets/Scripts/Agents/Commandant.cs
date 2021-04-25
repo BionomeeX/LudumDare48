@@ -122,8 +122,9 @@ namespace Scripts.Agents
             }
         }
 
-        public override void ChooseAction()
+        public override bool ChooseAction()
         {
+            return false;
         }
 
         public override void DoSpecialAction(Action action)

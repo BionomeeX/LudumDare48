@@ -55,25 +55,26 @@ namespace Scripts.Agents
             }
         }
 
-        public override void ChooseAction()
+        public override bool ChooseAction()
         {
             if (CheckIfTurretNeedResource())
             {
-                return;
+                return true;
             }
             if (CheckIfFactoryNeedResource())
             {
-                return;
+                return true;
             }
             if (CheckIfBlueprintNeedResource())
             {
                 Debug.Log("CheckIfBlueprint !");
-                return;
+                return true;
             }
             if (CheckIfHighPriorityStockNeedResource())
             {
-                return;
+                return true;
             }
+            return false;
         }
 
         public override void DoSpecialAction(Action action)
@@ -110,6 +111,8 @@ namespace Scripts.Agents
             // check what ressources the current room need
             //List<(ResourceType type, int amount)> needs = new List<(ResourceType type, int amount)>();
             // ???????????????????????????????
+            _inventory.Clear();
+            _currentRoom.Requirement.CompleteReservation(_id);
         }
 
         protected override void DoStartAction()
@@ -162,20 +165,47 @@ namespace Scripts.Agents
                 foreach (var blueprint in blueprints)
                 {
                     // check the ressource needed for the blueprint
-                    List<(ResourceType type, int amount)> resourcesNeeded = blueprint.path.Last().Requirement.GetRequirements().ToList();
+                    ARoom room = null;
+                    if (blueprint.path.Count > 0)
+                    {
+                        room = blueprint.path.Last();
+                    }
+                    else
+                    {
+                        room = _currentRoom;
+                    }
+                    List<(ResourceType type, int amount)> resourcesNeeded = room.Requirement.GetRequirements().ToList();
                     Debug.Log("Resources needed : " + resourcesNeeded.Count);
+                    int i = 0;
                     foreach (var resourceAmount in resourcesNeeded)
                     {
                         Debug.Log("  Need " + resourceAmount.amount);
                         if (FindPathForResource(resourceAmount.type, resourceAmount.amount, 0))
                         {
-                            // register
+                            // register to the blueprint
+                            room.Requirement.Reserve(_id, i);
                             // add path from the last element to the blueprint
+                            Debug.Log("Found path : " + _actions.Count);
+
+                            List<ARoom> additionalPath = new List<ARoom>();
+                            if (_actions.Last().path.Count > 0)
+                            {
+                                additionalPath = Astar.FindPath(_actions.Last().path.Last(), room);
+                            }
+                            else
+                            {
+                                additionalPath = Astar.FindPath(_currentRoom, room);
+                            }
+
+                            // var additionalPath = Astar.FindPath(_actions.Last().path.Last(), blueprint.path.Last());
+
+                            Debug.Log("additionalPath : " + additionalPath.Count);
                             _actions.Add(
-                                (Astar.FindPath(_actions.Last().path.Last(), blueprint.path.Last()), Action.DropRessource)
+                                (additionalPath, Action.DropRessource)
                             );
                             return true;
                         }
+                        ++i;
                     }
                 }
             }
@@ -204,11 +234,23 @@ namespace Scripts.Agents
         // 1) inventory is empty
         // 2) actions list is empty
         {
-            var stocks = MapManager.S.GetAllStockRoom().Select(
+            var stocksrooms = MapManager.S.GetAllStockRoom().ToList();
+            Debug.Log("stocksRooms : " + stocksrooms.Count);
+
+            var ra = stocksrooms.Select(
                 room => (room, ((GenericRoom)room).RoomType.Stock.CheckResourceByType(resource))
-            ).Where(
+            ).ToList();
+            Debug.Log("stocksRooms 2 : " + ra.Count);
+            foreach (var el in ra)
+            {
+                Debug.Log("  " + el.Item2);
+            }
+
+            var raw = ra.Where(
                 roomAmount => roomAmount.Item2 > 0
-            ).Select(
+            ).ToList();
+
+            var stocks = raw.Select(
                 roomAmount => (roomAmount.Item1, roomAmount.Item2, Astar.FindPath(_currentRoom, roomAmount.Item1))
             ).Select(
                 rap => (rap.Item1, rap.Item2, rap.Item3, Astar.ComputePathWeight(rap.Item3))
@@ -216,6 +258,7 @@ namespace Scripts.Agents
                 rapw => rapw.Item4
             ).ToList();
 
+            Debug.Log("Stocks found : " + stocks.Count);
             // go in ascending order to fill my inventory
             int myamount = ConfigManager.S.Config.NbOfResourcePerTransportation;
             bool first = true;
@@ -224,13 +267,52 @@ namespace Scripts.Agents
                 if (rapw.Item2 >= myamount)
                 {
                     ((GenericRoom)rapw.Item1).RoomType.Stock.ReserveResource(resource, myamount, _id);
-                    _actions.Add((first ? rapw.Item3 : Astar.FindPath(_actions.Last().path.Last(), rapw.Item1), Action.TakeRessource));
+                    // generate a path
+                    // if first -> from here to there
+                    List<ARoom> path = new List<ARoom>();
+
+                    if (first)
+                    {
+                        path = rapw.Item3;
+                    }
+                    else
+                    {
+                        if (_actions.Last().path.Count > 0)
+                        {
+                            path = Astar.FindPath(_actions.Last().path.Last(), rapw.Item1);
+                        }
+                        else
+                        {
+                            path = Astar.FindPath(_currentRoom, rapw.Item1);
+                        }
+                    }
+
+                    _actions.Add((path, Action.TakeRessource));
                     return true;
                 }
                 else
                 {
                     ((GenericRoom)rapw.Item1).RoomType.Stock.ReserveResource(resource, rapw.Item2, _id);
                     myamount -= rapw.Item2;
+                    // generate a path
+                    // if first -> from here to there
+                    List<ARoom> path = new List<ARoom>();
+
+                    if (first)
+                    {
+                        path = rapw.Item3;
+                    }
+                    else
+                    {
+                        if (_actions.Last().path.Count > 0)
+                        {
+                            path = Astar.FindPath(_actions.Last().path.Last(), rapw.Item1);
+                        }
+                        else
+                        {
+                            path = Astar.FindPath(_currentRoom, rapw.Item1);
+                        }
+                    }
                     _actions.Add((first ? rapw.Item3 : Astar.FindPath(_actions.Last().path.Last(), rapw.Item1), Action.TakeRessource));
                     first = false;
                 }

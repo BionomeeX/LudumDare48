@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+
 
 namespace Scripts.Resources
 {
@@ -75,6 +77,7 @@ namespace Scripts.Resources
         {
             if (!_resources.ContainsKey(type)) // Not available
             {
+                Debug.Log("Ressource not available !!");
                 return 0;
             }
             return _resources[type];
@@ -92,6 +95,7 @@ namespace Scripts.Resources
             }
             _reserved.Add(id, (type, amount));
             _resources[type] -= amount;
+            ResourcesManager.S.UpdateUI();
         }
 
         /// <summary>
@@ -105,6 +109,7 @@ namespace Scripts.Resources
             }
             var elem = _reserved[id];
             _reserved.Remove(id);
+            ResourcesManager.S.UpdateUI();
             return elem;
         }
 
@@ -124,6 +129,7 @@ namespace Scripts.Resources
             {
                 _reservedAdd.Remove(id);
             }
+            ResourcesManager.S.UpdateUI();
         }
 
         public void ResetAll()
@@ -134,6 +140,7 @@ namespace Scripts.Resources
             }
             _reserved = new Dictionary<int, (ResourceType, int)>();
             _reservedAdd = new Dictionary<int, (ResourceType, int)>();
+            ResourcesManager.S.UpdateUI();
         }
     }
 }
