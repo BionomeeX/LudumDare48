@@ -5,6 +5,7 @@ using Scripts.ScriptableObjects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -164,7 +165,7 @@ namespace Scripts.Map
             go.transform.parent = _mapTransform;
             newRoom.GameObject = go;
 
-            if (Application.isEditor)
+            if (Application.isEditor) // Editor debug
             {
                 var dText = Instantiate(_debugText, go.transform.position + Vector3.up * 0.5f, Quaternion.identity);
                 dText.GetComponent<TextMesh>().text = "(" + newRoom.Position.x + ", " + newRoom.Position.y + ")";
@@ -209,6 +210,22 @@ namespace Scripts.Map
             if (!hasCommandant)
             {
                 StartCoroutine(BuildRoom(newRoom, roomBuilt, newRoom));
+            }
+            else
+            {
+                newRoom.Sign =
+                    Instantiate(
+                        _blueprintSign,
+                        (Vector3)(new Vector2(newRoom.Position.x, -newRoom.Position.y))
+                        + new Vector3(newRoom.Size.x / 2f, -newRoom.Size.y / 2f, -1f),
+                        Quaternion.identity);
+                List<ResourceInfo> allRequirements = new List<ResourceInfo>();
+                int nbBlocks = newRoom.Size.x * newRoom.Size.y;
+                for (int i = 0; i < nbBlocks; i++)
+                {
+                    allRequirements.AddRange(ConfigManager.S.Config.RequirementPerBloc);
+                }
+                newRoom.Requirement = new Requirement(Enumerable.Repeat(ConfigManager.S.Config.RequirementPerBloc, newRoom.Size.x * newRoom.Size.y).SelectMany(x => x).ToArray());
             }
 
             return newRoom;
