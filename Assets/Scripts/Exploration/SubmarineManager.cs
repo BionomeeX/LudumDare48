@@ -1,4 +1,5 @@
-﻿using Scripts.Map.Room;
+﻿using Scripts.Events;
+using Scripts.Map.Room;
 using Scripts.Map.Room.ModulableRoom;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,6 +61,7 @@ namespace Scripts.Exploration
             if (_flagInstance != null)
             {
                 Destroy(_flagInstance);
+                EventManager.S.NotifyManager(Events.Event.ExplorationFlagUnset, null);
             }
         }
 
@@ -76,6 +78,7 @@ namespace Scripts.Exploration
                     _flagInstance = Instantiate(_flagPrefab);
                 }
                 _flagInstance.transform.position = pos;
+                EventManager.S.NotifyManager(Events.Event.ExplorationFlagSet, null);
                 RemoveSubmarinePlacementMode();
             }
         }

@@ -6,6 +6,7 @@ using UnityEngine;
 using Scripts.Agents;
 using System.Collections;
 using System.Collections.Generic;
+using Scripts.Sounds;
 
 namespace Scripts.Events
 {
@@ -39,6 +40,7 @@ namespace Scripts.Events
             {
                 SubmarineManager.S.UpdateRoom((GenericRoom)o);
             }
+            AudioManager.S.ReceiveEvent(e);
         }
 
         public void ResetAll()
