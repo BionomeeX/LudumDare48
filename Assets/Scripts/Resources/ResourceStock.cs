@@ -43,7 +43,7 @@ namespace Scripts.Resources
         /// Ask the stock if a resource is available
         /// </summary>
         /// <returns>The max amount of the resource that is available</returns>
-        public int CheckResourceBtType(ResourceType type)
+        public int CheckResourceByType(ResourceType type)
         {
             if (!_resources.ContainsKey(type)) // Not available
             {

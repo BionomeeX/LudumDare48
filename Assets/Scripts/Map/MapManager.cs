@@ -1,11 +1,11 @@
 using Scripts.Map.Room;
 using Scripts.Map.Room.ModulableRoom;
-using Scripts.Resources;
 using Scripts.ScriptableObjects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 namespace Scripts.Map
 {
@@ -20,6 +20,7 @@ namespace Scripts.Map
 
         private List<List<TileState>> _mapPathfinding = new List<List<TileState>>();
         public List<ARoom> MapRooms = new List<ARoom>();
+        public List<MasterBlueprint> MapMasterBlueprints = new List<MasterBlueprint>();
 
         [Header("Rooms")]
         [SerializeField]
@@ -37,6 +38,9 @@ namespace Scripts.Map
         [Header("Other")]
         [SerializeField]
         private GameObject _constructionSign;
+
+        [SerializeField]
+        private GameObject _blueprintSign;
 
         [SerializeField]
         private GameObject _aiPrefab;
@@ -67,18 +71,27 @@ namespace Scripts.Map
                 {
                     ((GenericRoom)r).RoomType.Stock.AddResource(res.Type, res.Amount);
                 }
-            });
+            }, false);
 
-            ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, firstRoom, null);
+            ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, firstRoom, null, false);
 
-            ARoom thirdRoom = AddRoom(new Vector2Int(9, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, secondRoom, null);
+            ARoom thirdRoom = AddRoom(new Vector2Int(9, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, secondRoom, null, false);
 
-            ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom, null);
+            ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom, null, false);
 
             Instantiate(_aiPrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
+
         }
 
-        public ARoom AddRoom(Vector2Int position, Vector2Int size, GameObject room, RoomType type, ARoom parentRoom, Action<ARoom> roomBuilt)
+        public ARoom AddRoom(
+            Vector2Int position,
+            Vector2Int size,
+            GameObject room,
+            RoomType type,
+            ARoom parentRoom,
+            Action<ARoom> roomBuilt,
+            bool hasCommandant
+        )
         {
             ARoom newRoom;
             switch (type)
@@ -149,13 +162,10 @@ namespace Scripts.Map
                 newRoom.RoomUp = parentRoom;
             }
 
-            // if room is at the top, we can't build up
-            // if (position.y == 0)
-            // {
-            //     // newRoom.RoomUp = new GenericRoom(size, position + Vector2Int.up);
-            // }
-
-            StartCoroutine(BuildRoom(newRoom, roomBuilt, newRoom));
+            if (!hasCommandant)
+            {
+                StartCoroutine(BuildRoom(newRoom, roomBuilt, newRoom));
+            }
 
             return newRoom;
         }
