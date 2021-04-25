@@ -28,8 +28,11 @@ namespace Scripts.Map
         [SerializeField]
         private Transform _mapTransform;
 
+        [SerializeField]
         public GameObject ReceptionRoom;
-        public RoomInfo[] Rooms;
+        [SerializeField]
+        private RoomInfo[] _rooms;
+        [SerializeField]
         public GameObject Corridor;
         [SerializeField]
         private GameObject _elevator;
@@ -101,6 +104,30 @@ namespace Scripts.Map
             return true;
         }
 
+        public List<ARoom> GetAllTurrets()
+        {
+            List<ARoom> result = new List<ARoom>();
+            return result;
+        }
+
+        public List<ARoom> GetAllFactory()
+        {
+            List<ARoom> result = new List<ARoom>();
+            return result;
+        }
+
+        public List<ARoom> GetAllAccessibleBlueprint()
+        {
+            List<ARoom> result = new List<ARoom>();
+            return result;
+        }
+
+        public List<ARoom> GetAllStockRoom()
+        {
+            List<ARoom> result = new List<ARoom>();
+            return result;
+        }
+
         public ARoom AddRoom(
             Vector2Int position,
             Vector2Int size,
@@ -152,7 +179,6 @@ namespace Scripts.Map
                 }
             }
 
-            #region RoomParent
             // check where the parent room come from
             if (position.x >= parentRoom.Position.x + parentRoom.Size.x)
             // Comming from left
@@ -180,7 +206,6 @@ namespace Scripts.Map
                 parentRoom.RoomDown = newRoom;
                 newRoom.RoomUp = parentRoom;
             }
-            #endregion RoomParent
 
             if (!hasCommandant)
             {

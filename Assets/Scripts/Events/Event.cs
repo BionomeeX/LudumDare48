@@ -8,6 +8,7 @@ namespace Scripts.Events
         BlueprintFinished,
         MasterBlueprintFinished,
         RoomCreated,
+        RoomDestroyed,
         EnemySpotted,
         Attacked,
         EnemyDead,
