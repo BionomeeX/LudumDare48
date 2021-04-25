@@ -2,12 +2,12 @@
 {
     public class ModularRoomFactory
     {
-        public static AModulableRoom BuildModularRoom(RoomType rType)
+        public static AModulableRoom BuildModularRoom(RoomType rType, GenericRoom r)
         {
             switch (rType)
             {
                 case RoomType.STORAGE:
-                    return new StorageRoom();
+                    return new StorageRoom(r);
 
                 case RoomType.AIRLOCK:
                     return new AirlockRoom();
@@ -16,10 +16,10 @@
                     return new DefenseRoom();
 
                 case RoomType.FACTORY:
-                    return new FactoryRoom();
+                    return new FactoryRoom(r);
 
                 case RoomType.MINING:
-                    return new MiningRoom();
+                    return new MiningRoom(r);
 
                 case RoomType.EMPTY:
                     return new EmptyRoom();

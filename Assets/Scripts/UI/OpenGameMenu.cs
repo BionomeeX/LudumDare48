@@ -49,7 +49,7 @@ namespace Scripts.UI
 
         public void OnBuildHoverEnter(int id)
         {
-            var elem = ModularRoomFactory.BuildModularRoom((RoomType)id);
+            var elem = ModularRoomFactory.BuildModularRoom((RoomType)id, null);
             _explanationPanelScript.gameObject.SetActive(true);
             _explanationPanelScript.Name.text = elem.GetName();
             _explanationPanelScript.Description.text = elem.GetDescription();
@@ -83,7 +83,7 @@ namespace Scripts.UI
             }
             if (Input.GetMouseButtonUp(0) && clicked != null && clicked.IsBuilt)
             {
-                clicked.RoomType = ModularRoomFactory.BuildModularRoom(_currentSelection.Value);
+                clicked.RoomType = ModularRoomFactory.BuildModularRoom(_currentSelection.Value, clicked);
                 foreach (var renderer in clicked.GameObject.GetComponentsInChildren<MeshRenderer>())
                 {
                     if (_debugMaterial == null)
