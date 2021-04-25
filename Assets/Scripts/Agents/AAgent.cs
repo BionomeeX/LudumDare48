@@ -44,10 +44,37 @@ namespace Scripts.Agents
         public void Start()
         {
             name = _childClassName + " " + _id;
+            _actions = new List<(List<ARoom> path, Action action)>();
+            WhereAmI();
             DoStartAction();
         }
 
-        // private abstract void
+        private void WhereAmI()
+        {
+            if (_currentRoom == null)
+            {
+                Debug.Log("  Checking for room");
+                Debug.Log("  My pos : " + transform.position.x + ", " + transform.position.y);
+                foreach (var room in MapManager.S.MapRooms)
+                {
+                    Debug.Log("    Room pos :");
+                    Debug.Log("      (" + room.Position.x + ", " + room.Position.y + ") (" + (room.Position.x + room.Size.x) + ", " + (room.Position.y + room.Size.y) + ")");
+
+                    if (transform.position.x >= room.Position.x && transform.position.x <= room.Position.x + room.Size.x &&
+                       -transform.position.y >= room.Position.y && -transform.position.y <= room.Position.y + room.Size.y
+                    )
+                    {
+                        _currentRoom = room;
+                        break;
+                    }
+                }
+                // if _currentRoom is still null ... we are in the water !
+                if (_currentRoom == null)
+                {
+                    Debug.Log("  Still no room => aborting");
+                }
+            }
+        }
 
         public void MoveTo(ARoom room)
         {
@@ -85,13 +112,17 @@ namespace Scripts.Agents
         public abstract void DoSpecialAction(Action action);
         public abstract void ChooseAction();
 
-        public void DoNextAction(){
+        public void DoNextAction()
+        {
             Action action = MoveOrGetAction();
-            if(action != Action.Move && action != Action.Idle) {
+            if (action != Action.Move && action != Action.Idle)
+            {
                 DoSpecialAction(action);
             }
-            if(action == Action.Idle){
-                ChooseAction();
+            if (action == Action.Idle)
+            {
+                //ChooseAction();
+                return;
             }
             DoNextAction();
         }

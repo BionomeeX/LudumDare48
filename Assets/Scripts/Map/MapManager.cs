@@ -45,7 +45,11 @@ namespace Scripts.Map
         private GameObject _blueprintSign;
 
         [SerializeField]
-        private GameObject _aiPrefab;
+        private GameObject _commandantPrefab;
+
+        [SerializeField]
+        private GameObject _warehousePrefab;
+
 
         private EntryZone _entry = new EntryZone();
 
@@ -81,7 +85,8 @@ namespace Scripts.Map
 
             ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom, null, false);
 
-            Instantiate(_aiPrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
+            Instantiate(_commandantPrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
+            Instantiate(_warehousePrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
 
         }
 

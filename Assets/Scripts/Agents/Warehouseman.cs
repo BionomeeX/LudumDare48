@@ -11,10 +11,10 @@ using Scripts.ScriptableObjects;
 namespace Scripts.Agents
 {
 
-    class Warehousman : AAgent
+    class Warehouseman : AAgent
     {
 
-        public Warehousman() : base("Warehousman")
+        public Warehouseman() : base("Warehousman")
         {
 
         }
