@@ -55,7 +55,7 @@ MonoBehaviour:
     LayerFrom: 2
     LayerTo: 2
     Material: {fileID: 2100000, guid: 4026d31c398ccf14184ca8ca739ab59f, type: 2}
-  MiningRange: 5
+  MiningRange: 20
   MiningPerFixedUpdate: 4
   LayerYSize: 10
   MinMetalPerLayer: 2
