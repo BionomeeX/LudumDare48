@@ -12,7 +12,7 @@ namespace Scripts.Map.Room
         }
 
         public GameObject _uiBlueprint;
-        public GameObject _uiStorage, _receptionStorage;
+        public GameObject _uiStorage, _receptionStorage, _miningStorage, _factoryStorage;
         public GameObject _uiStoragePriority;
     }
 }

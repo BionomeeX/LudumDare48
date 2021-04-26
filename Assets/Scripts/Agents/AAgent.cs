@@ -4,6 +4,7 @@ using Scripts.Map;
 using Scripts.Map.Room;
 using Scripts.Resources;
 using Scripts.ScriptableObjects;
+using System.Collections;
 
 namespace Scripts.Agents
 {
@@ -48,6 +49,12 @@ namespace Scripts.Agents
             name = _childClassName + " " + _id;
             _actions = new List<(List<ARoom> path, Action action)>();
             WhereAmI();
+            StartCoroutine(FirstAction(Random.Range(.1f, 1f)));
+        }
+
+        public IEnumerator FirstAction(float time)
+        {
+            yield return new WaitForSeconds(time);
             DoStartAction();
         }
 

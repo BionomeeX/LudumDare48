@@ -14,5 +14,6 @@ namespace Scripts.Events
         RoomSetType, // Set the type of a room (factory, storage...)
         ExplorationFlagSet,
         ExplorationFlagUnset,
+        ExplorationNewZone,
     }
 }

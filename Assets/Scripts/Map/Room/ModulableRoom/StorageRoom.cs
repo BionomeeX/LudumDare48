@@ -37,7 +37,7 @@ namespace Scripts.Map.Room.ModulableRoom
         public override void SetupConfigPanel(GameObject go)
         {
             var c = go.GetComponent<StorageUI>();
-            c.StorageInfoText.text = $"Space Taken: {Stock.GetSizeTaken()} / {Stock.MaxSize}";
+            c.StorageInfoText.text = $"Space Taken: {Stock.GetSizeOccupiedWithReservation()} / {Stock.MaxSize}";
             for (int i = 0; i < c.PriorityContainer.transform.childCount; i++)
             {
                 Object.Destroy(c.PriorityContainer.transform.GetChild(i));

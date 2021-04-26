@@ -5,7 +5,7 @@ using Scripts.Resources;
 using System.Linq;
 using Scripts.ScriptableObjects;
 using UnityEngine;
-
+using System.Collections;
 
 namespace Scripts.Agents
 {
@@ -53,10 +53,16 @@ namespace Scripts.Agents
                 if (IsIdle)
                 {
                     Debug.Log("I'm available");
-                    ChooseAction();
-                    DoNextAction();
+                    StartCoroutine(DoNextThing(Random.Range(0.1f, 1f)));
                 }
             }
+        }
+
+        public IEnumerator DoNextThing(float time)
+        {
+            yield return new WaitForSeconds(time);
+            ChooseAction();
+            DoNextAction();
         }
 
         public override bool ChooseAction()

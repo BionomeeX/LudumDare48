@@ -1,4 +1,6 @@
 ﻿using Scripts.Map.Room;
+using Scripts.Map.Room.ModulableRoom;
+using Scripts.Resources;
 using Scripts.ScriptableObjects;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +19,7 @@ namespace Scripts.Extraction
 
         private List<Metal> _metals = new List<Metal>();
 
-        private List<ARoom> _miningRooms = new List<ARoom>();
+        private List<GenericRoom> _miningRooms = new List<GenericRoom>();
 
         [SerializeField]
         private GameObject _metalPrefab;
@@ -29,7 +31,32 @@ namespace Scripts.Extraction
         {
             if (room.RoomType.IsMining())
             {
+                var metals = GetMetalsCloseEnough(room.GameObject.transform.position);
+                if (metals.Length > 0)
+                {
+                    var mr = (MiningRoom)room.RoomType;
+                    mr.CurrentMining = metals[0];
+                    mr.Possibilities = metals;
+                }
                 _miningRooms.Add(room);
+            }
+        }
+
+        int timer = 0;
+        private void FixedUpdate()
+        {
+            timer++;
+            if (timer == ConfigManager.S.Config.MiningPerFixedUpdate)
+            {
+                foreach (var r in _miningRooms)
+                {
+                    if (r.RoomType.Stock.GetSizeTakenWithReservation() < r.RoomType.Stock.MaxSize)
+                    {
+                        r.RoomType.Stock.AddResource(((MiningRoom)r.RoomType).CurrentMining.Type, 1);
+                    }
+                }
+                ResourcesManager.S.UpdateUI();
+                timer = 0;
             }
         }
 
@@ -41,6 +68,15 @@ namespace Scripts.Extraction
                 foreach (var link in GetMetalsCloseEnough(room.GameObject.transform.position))
                 {
                     Gizmos.DrawLine(room.GameObject.transform.position, link.transform.position);
+                }
+            }
+            Gizmos.color = Color.red;
+            foreach (var room in _miningRooms)
+            {
+                var mRoom = (MiningRoom)room.RoomType;
+                if (mRoom.CurrentMining != null)
+                {
+                    Gizmos.DrawLine(room.GameObject.transform.position, mRoom.CurrentMining.transform.position);
                 }
             }
         }
