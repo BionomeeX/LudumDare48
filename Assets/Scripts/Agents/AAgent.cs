@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Scripts.Map;
@@ -84,7 +83,7 @@ namespace Scripts.Agents
             transform.position = new Vector3(
                 _currentRoom.Position.x + 0.5f,
                 -_currentRoom.Position.y + 0.1f,
-                0f
+                transform.position.z
             );
         }
 

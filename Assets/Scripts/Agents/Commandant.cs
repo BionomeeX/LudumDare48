@@ -12,11 +12,8 @@ namespace Scripts.Agents
 
     class Commandant : AAgent
     {
-
         public Commandant() : base("Sub-officer")
-        {
-
-        }
+        { }
 
         protected override void DoStartAction()
         {

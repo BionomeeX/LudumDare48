@@ -80,10 +80,14 @@ namespace Scripts.Map
 
                 }
 
-                var warehouseman = Instantiate(_warehousePrefab, r.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
+                var warehouseman = Instantiate(_warehousePrefab,
+                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
+                    Quaternion.identity);
                 EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
 
-                var commandant = Instantiate(_commandantPrefab, r.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
+                var commandant = Instantiate(_commandantPrefab,
+                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
+                    Quaternion.identity);
                 EventManager.S.Subscribe(commandant.GetComponent<Commandant>());
             }, false);
 
@@ -92,9 +96,6 @@ namespace Scripts.Map
             ARoom thirdRoom = AddRoom(new Vector2Int(9, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, secondRoom, null, false);
 
             ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom, null, false);
-
-
-
         }
 
         public bool CanIBuildHere(Vector2Int position, Vector2Int size)
@@ -184,6 +185,12 @@ namespace Scripts.Map
             var go = Instantiate(room, new Vector2(position.x, -position.y) + new Vector2(1f, -size.y), Quaternion.identity);
             go.transform.parent = _mapTransform;
             newRoom.GameObject = go;
+
+            if (type == RoomType.CORRIDOR)
+            {
+                go.transform.rotation = Quaternion.Euler(22.3f, 0f, -90f);
+                go.transform.position += new Vector3(-.911f, .361f, -.555f);
+            }
 
             if (Application.isEditor) // Editor debug
             {
