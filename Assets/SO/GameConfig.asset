@@ -28,12 +28,12 @@ MonoBehaviour:
     Amount: 75
   - Type: 1
     Amount: 25
-  BuildingTime: 2
-  ChangeBuildElevator: 1
+  BuildingTime: 0.5
+  ChangeBuildElevator: 0
   SubmarineSpeed: 2
   SubmarineRadius: 5
   BaseSurfaceEmpty: {x: 20, y: 10}
-  NpcSpeed: 0.05
+  NpcSpeed: 0.2
   CameraSpeed: 0.2
   MiningResources:
   - Resource: 0
