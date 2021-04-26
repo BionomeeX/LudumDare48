@@ -1,16 +1,14 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Scripts.Map;
 using Scripts.Map.Room;
 using Scripts.Resources;
-using Scripts.Events;
+using Scripts.ScriptableObjects;
 
 namespace Scripts.Agents
 {
     public abstract class AAgent : MonoBehaviour
     {
-
         protected int _id;
 
         protected Dictionary<ResourceType, int> _inventory;
@@ -43,8 +41,10 @@ namespace Scripts.Agents
         public abstract void OnEventReceived(Events.Event e, object o);
         protected abstract void DoStartAction();
 
+        public string ClassName;
         public void Start()
         {
+            ClassName = _childClassName;
             name = _childClassName + " " + _id;
             _actions = new List<(List<ARoom> path, Action action)>();
             WhereAmI();
@@ -78,23 +78,14 @@ namespace Scripts.Agents
             }
         }
 
-        public void MoveTo(ARoom room)
-        {
-            _currentRoom = room;
-            transform.position = new Vector3(
-                _currentRoom.Position.x + 0.5f,
-                -_currentRoom.Position.y + 0.1f,
-                0f
-            );
-            DoNextAction();
-        }
-
         public Action MoveOrGetAction()
         {
             if (_actions.Count > 0)
             {
+                Debug.Log("Move");
                 if (_actions[0].path.Count > 0)
                 {
+                    Debug.Log("  to : " + _actions[0].path[0].Position.x + ", " + _actions[0].path[0].Position.y);
                     MoveTo(_actions[0].path[0]);
                     _actions[0].path.RemoveAt(0);
                     return Action.Move;
@@ -113,7 +104,7 @@ namespace Scripts.Agents
 
 
         public abstract void DoSpecialAction(Action action);
-        public abstract void ChooseAction();
+        public abstract bool ChooseAction();
 
         public void DoNextAction()
         {
@@ -125,11 +116,41 @@ namespace Scripts.Agents
             }
             if (action == Action.Idle)
             {
-                //ChooseAction();
-                IsIdle = true;
-                return;
+                if (!ChooseAction())
+                {
+                    IsIdle = true;
+                    return;
+                }
             }
-            DoNextAction();
+            if (action != Action.Move)
+            {
+                DoNextAction();
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (_objective != null)
+            {
+                transform.position += (_objective.Value - transform.position).normalized * ConfigManager.S.Config.NpcSpeed;
+                if (Vector2.Distance(transform.position, _objective.Value) < .1f)
+                {
+                    Debug.Log("NEXT");
+                    _objective = null;
+                    DoNextAction();
+                }
+            }
+        }
+
+        private Vector3? _objective;
+        public void MoveTo(ARoom room)
+        {
+            _currentRoom = room;
+            _objective = new Vector3(
+                _currentRoom.Position.x + 0.5f,
+                -_currentRoom.Position.y + 0.1f,
+                transform.position.z
+            );
         }
 
     }

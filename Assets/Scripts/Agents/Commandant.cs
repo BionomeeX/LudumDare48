@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Scripts.Map;
@@ -13,11 +12,8 @@ namespace Scripts.Agents
 
     class Commandant : AAgent
     {
-
-        public Commandant() : base("Commandant")
-        {
-
-        }
+        public Commandant() : base("Sub-officer")
+        { }
 
         protected override void DoStartAction()
         {
@@ -122,8 +118,9 @@ namespace Scripts.Agents
             }
         }
 
-        public override void ChooseAction()
+        public override bool ChooseAction()
         {
+            return false;
         }
 
         public override void DoSpecialAction(Action action)

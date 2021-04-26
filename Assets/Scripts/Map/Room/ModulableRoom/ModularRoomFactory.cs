@@ -1,4 +1,6 @@
-﻿namespace Scripts.Map.Room.ModulableRoom
+﻿using UnityEngine;
+
+namespace Scripts.Map.Room.ModulableRoom
 {
     public class ModularRoomFactory
     {
@@ -10,7 +12,9 @@
                     return new StorageRoom(r);
 
                 case RoomType.AIRLOCK:
-                    return new AirlockRoom(r.Size.x * r.Size.y);
+                    if (r == null)
+                        return new AirlockRoom(Vector2Int.zero, 0);
+                    return new AirlockRoom(r.GameObject.transform.position, r.Size.x * r.Size.y);
 
                 case RoomType.DEFENSE:
                     return new DefenseRoom();

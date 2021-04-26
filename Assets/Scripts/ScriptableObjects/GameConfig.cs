@@ -14,8 +14,16 @@ namespace Scripts.ScriptableObjects
         [Header("Construction")]
         [Tooltip("How many resources can an agent move in one travel")]
         public int NbOfResourcePerTransportation;
-
         [Tooltip("Resources required to build one bloc (ex: a room of 2x1 need twice the requirement)")]
         public ResourceInfo[] RequirementPerBloc;
+        public float BuildingTime;
+
+        [Header("Exploration")]
+        public float SubmarineSpeed;
+        public int SubmarineRadius;
+        public Vector2Int BaseSurfaceEmpty;
+
+        [Header("NPC")]
+        public float NpcSpeed;
     }
 }

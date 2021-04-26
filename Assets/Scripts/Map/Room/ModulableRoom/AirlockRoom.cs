@@ -1,12 +1,14 @@
 ﻿using Scripts.Exploration;
+using UnityEngine;
 
 namespace Scripts.Map.Room.ModulableRoom
 {
     public class AirlockRoom : AModulableRoom
     {
-        public AirlockRoom(int size) : base()
+        public AirlockRoom(Vector2 position, int size) : base()
         {
             Emplacements = new Submarine[size];
+            Position = position;
         }
 
         public override string GetName()
@@ -19,5 +21,7 @@ namespace Scripts.Map.Room.ModulableRoom
             => true;
 
         public Submarine[] Emplacements;
+
+        public Vector2 Position;
     }
 }

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Scripts.Events
 {
     public enum Event
@@ -13,6 +11,8 @@ namespace Scripts.Events
         Attacked,
         EnemyDead,
         MoveFinished,
-        RoomSetType // Set the type of a room (factory, storage...)
+        RoomSetType, // Set the type of a room (factory, storage...)
+        ExplorationFlagSet,
+        ExplorationFlagUnset,
     }
 }

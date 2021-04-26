@@ -11,9 +11,10 @@ namespace Scripts.UI
     public class OpenGameMenu : MonoBehaviour
     {
         [SerializeField]
-        private GameObject _buildPanel, _explorationPanel;
+        private GameObject _buildPanel, _explorationPanel, _recruitementPanel;
 
         private ExplorationPanel _explorationPanelScript;
+        private RecruitementPanel _recruitementPanelScript;
 
         [SerializeField]
         private Material[] _materials;
@@ -32,25 +33,40 @@ namespace Scripts.UI
         {
             _buildPanel.SetActive(false);
             _explorationPanel.SetActive(false);
+            _recruitementPanel.SetActive(false);
             _explanationPanelScript.gameObject.SetActive(false);
             _roomInfo.gameObject.SetActive(false);
 
             _explorationPanelScript = _explorationPanel.GetComponent<ExplorationPanel>();
+            _recruitementPanelScript = _recruitementPanel.GetComponent<RecruitementPanel>();
         }
 
         public void ToggleBuildPanel()
         {
             _explorationPanel.SetActive(false);
+            _recruitementPanel.SetActive(false);
             _buildPanel.SetActive(!_buildPanel.activeInHierarchy);
         }
 
         public void ToggleExplorationPanel()
         {
             _buildPanel.SetActive(false);
+            _recruitementPanel.SetActive(false);
             _explorationPanel.SetActive(!_explorationPanel.activeInHierarchy);
             if (_explorationPanel.activeInHierarchy)
             {
                 _explorationPanelScript.Enable();
+            }
+        }
+
+        public void ToggleRecruitementPanel()
+        {
+            _buildPanel.SetActive(false);
+            _explorationPanel.SetActive(false);
+            _recruitementPanel.SetActive(!_recruitementPanel.activeInHierarchy);
+            if (_recruitementPanel.activeInHierarchy)
+            {
+                _recruitementPanelScript.Enable();
             }
         }
 
@@ -67,6 +83,20 @@ namespace Scripts.UI
             {
                 Cursor.SetCursor(type == 0 ? _textures[0] : _textures[type - 2], Vector2.zero, CursorMode.Auto);
             }
+        }
+
+        public void OnFlagSetHover()
+        {
+            _explanationPanelScript.gameObject.SetActive(true);
+            _explanationPanelScript.Name.text = "Set destination";
+            _explanationPanelScript.Description.text = "Set where your submarines need to go";
+        }
+
+        public void OnFlagUnsetHover()
+        {
+            _explanationPanelScript.gameObject.SetActive(true);
+            _explanationPanelScript.Name.text = "Retreat";
+            _explanationPanelScript.Description.text = "Send your submarines back to the base";
         }
 
         public void OnBuildHoverEnter(int id)

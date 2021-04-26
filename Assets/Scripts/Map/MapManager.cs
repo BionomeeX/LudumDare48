@@ -62,14 +62,12 @@ namespace Scripts.Map
         private void Start()
         {
             // Base zone discovered
-            const int baseDiscoveredSize = 80;
-            for (int y = 0; y < baseDiscoveredSize; y++)
+            for (int y = 0; y < ConfigManager.S.Config.BaseSurfaceEmpty.y; y++)
             {
                 List<TileState> _elems = new List<TileState>();
-                for (int x = 0; x < baseDiscoveredSize; x++)
+                for (int x = 0; x < ConfigManager.S.Config.BaseSurfaceEmpty.x; x++)
                 {
                     _elems.Add(TileState.EMPTY);
-                    _debugExploration.Add((x, y, Color.white));
                 }
                 _mapPathfinding.Add(_elems);
             }
@@ -79,7 +77,23 @@ namespace Scripts.Map
                 foreach (var res in ConfigManager.S.Config.StartingResources)
                 {
                     ((GenericRoom)r).RoomType.Stock.AddResource(res.Type, res.Amount);
+
                 }
+
+                var warehouseman = Instantiate(_warehousePrefab,
+                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
+                    Quaternion.identity);
+                EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
+
+                var warehouseman2 = Instantiate(_warehousePrefab,
+                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f + Vector3.right * .1f,
+                    Quaternion.identity);
+                EventManager.S.Subscribe(warehouseman2.GetComponent<Warehouseman>());
+
+                var commandant = Instantiate(_commandantPrefab,
+                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
+                    Quaternion.identity);
+                EventManager.S.Subscribe(commandant.GetComponent<Commandant>());
             }, false);
 
             ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, firstRoom, null, false);
@@ -87,13 +101,6 @@ namespace Scripts.Map
             ARoom thirdRoom = AddRoom(new Vector2Int(9, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, secondRoom, null, false);
 
             ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom, null, false);
-
-            var warehouseman = Instantiate(_warehousePrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
-            EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
-
-            var commandant = Instantiate(_commandantPrefab, firstRoom.GameObject.transform.position + Vector3.up * .5f, Quaternion.identity);
-            EventManager.S.Subscribe(commandant.GetComponent<Commandant>());
-
         }
 
         public bool CanIBuildHere(Vector2Int position, Vector2Int size)
@@ -141,7 +148,9 @@ namespace Scripts.Map
 
         public List<ARoom> GetAllStockRoom()
         {
-            List<ARoom> result = new List<ARoom>();
+            List<ARoom> result = MapRooms.Where(
+                r => r is GenericRoom gRoom && gRoom.RoomType.Stock != null
+            ).ToList();
             return result;
         }
 
@@ -182,6 +191,12 @@ namespace Scripts.Map
             go.transform.parent = _mapTransform;
             newRoom.GameObject = go;
 
+            if (type == RoomType.CORRIDOR)
+            {
+                go.transform.rotation = Quaternion.Euler(22.3f, 0f, -90f);
+                go.transform.position += new Vector3(-.911f, .361f, -.555f);
+            }
+
             if (Application.isEditor) // Editor debug
             {
                 var dText = Instantiate(_debugText, go.transform.position + Vector3.up * 0.5f, Quaternion.identity);
@@ -192,7 +207,7 @@ namespace Scripts.Map
             {
                 for (int x = position.x; x < position.x + size.x; x++)
                 {
-                    SetTileStatus(x, y, TileState.OCCUPIED);
+                    _mapPathfinding[y][x] = TileState.OCCUPIED;
                 }
             }
 
@@ -226,7 +241,7 @@ namespace Scripts.Map
 
             if (!hasCommandant)
             {
-                StartCoroutine(BuildRoom(newRoom, roomBuilt, newRoom));
+                StartCoroutine(BuildRoom(newRoom, roomBuilt));
             }
             else
             {
@@ -242,49 +257,74 @@ namespace Scripts.Map
                 {
                     allRequirements.AddRange(ConfigManager.S.Config.RequirementPerBloc);
                 }
-                newRoom.Requirement = new Requirement(Enumerable.Repeat(ConfigManager.S.Config.RequirementPerBloc, newRoom.Size.x * newRoom.Size.y).SelectMany(x => x).ToArray());
+                newRoom.Requirement = new Requirement(newRoom, Enumerable.Repeat(ConfigManager.S.Config.RequirementPerBloc, newRoom.Size.x * newRoom.Size.y).SelectMany(x => x).ToArray());
             }
 
             return newRoom;
         }
 
-        private IEnumerator BuildRoom(ARoom room, Action<ARoom> roomBuilt, ARoom newRoom)
+
+        public void BuildRoomExt(ARoom room)
+        {
+            StartCoroutine(BuildRoom(room, null));
+        }
+        private IEnumerator BuildRoom(ARoom room, Action<ARoom> roomBuilt)
         {
             var sign = Instantiate(_constructionSign, (Vector3)(new Vector2(room.Position.x, -room.Position.y)) + new Vector3(room.Size.x / 2, -room.Size.y / 2f, -1f), Quaternion.identity);
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(ConfigManager.S.Config.BuildingTime);
             room.IsBuilt = true;
             Destroy(sign);
-            roomBuilt?.Invoke(newRoom);
+            roomBuilt?.Invoke(room);
+            EventManager.S.NotifyManager(Events.Event.RoomCreated, room);
+            if (room.Sign != null)
+            {
+                Destroy(room.Sign);
+                room.Sign = null;
+            }
+            room.Requirement = null;
         }
 
-        private List<(int, int, Color)> _debugExploration = new List<(int, int, Color)>();
-        private List<(Vector2Int, Vector2Int, Color)> _debugLinks = new List<(Vector2Int, Vector2Int, Color)>();
-        private void SetTileStatus(int x, int y, TileState state)
+        public void DiscoverTile(int x, int y)
         {
-            _mapPathfinding[y][x] = state;
-            switch (state)
+            if (x < 0 || y < 0)
             {
-                case TileState.EMPTY:
-                    _debugExploration.Add((x, y, Color.white));
-                    break;
-
-                case TileState.OCCUPIED:
-                    _debugExploration.Add((x, y, Color.red));
-                    break;
+                return;
+            }
+            if (y >= _mapPathfinding.Count || x >= _mapPathfinding[y].Count)
+            {
+                for (int i = _mapPathfinding.Count; i <= y; i++)
+                {
+                    _mapPathfinding.Add(new List<TileState>());
+                }
+                var list = _mapPathfinding[y];
+                for (int i = list.Count; i <= x; i++)
+                {
+                    list.Add(TileState.NOT_DISCOVERED);
+                }
+            }
+            if (_mapPathfinding[y][x] == TileState.NOT_DISCOVERED)
+            {
+                _mapPathfinding[y][x] = TileState.EMPTY;
             }
         }
 
         private void OnDrawGizmos()
         {
-            foreach (var d in _debugExploration)
+            for (int y = 0; y < _mapPathfinding.Count; y++)
             {
-                Gizmos.color = d.Item3;
-                var x = d.Item1;
-                var y = -d.Item2;
-                Gizmos.DrawLine(new Vector2(x, y), new Vector2(x, y - 1f));
-                Gizmos.DrawLine(new Vector2(x, y), new Vector2(x + 1f, y));
-                Gizmos.DrawLine(new Vector2(x + 1f, y), new Vector2(x + 1f, y - 1f));
-                Gizmos.DrawLine(new Vector2(x, y - 1f), new Vector2(x + 1f, y - 1f));
+                for (int x = 0; x < _mapPathfinding[y].Count; x++)
+                {
+                    var elem = _mapPathfinding[y][x];
+                    if (elem == TileState.NOT_DISCOVERED)
+                    {
+                        continue;
+                    }
+                    Gizmos.color = elem == TileState.EMPTY ? Color.white : Color.red;
+                    Gizmos.DrawLine(new Vector2(x, -y), new Vector2(x, -y - 1f));
+                    Gizmos.DrawLine(new Vector2(x, -y), new Vector2(x + 1f, -y));
+                    Gizmos.DrawLine(new Vector2(x + 1f, -y), new Vector2(x + 1f, -y - 1f));
+                    Gizmos.DrawLine(new Vector2(x, -y - 1f), new Vector2(x + 1f, -y - 1f));
+                }
             }
         }
     }

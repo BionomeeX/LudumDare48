@@ -1,4 +1,6 @@
-﻿using Scripts.Resources;
+﻿using Scripts.Events;
+using Scripts.Map.Room;
+using Scripts.Resources;
 using Scripts.ScriptableObjects;
 using System;
 using System.Collections.Generic;
@@ -9,8 +11,11 @@ namespace Scripts.Map.Blueprints
 {
     public class Requirement
     {
-        public Requirement(ResourceInfo[] resources)
+        private ARoom _room;
+
+        public Requirement(ARoom room, ResourceInfo[] resources)
         {
+            _room = room;
             foreach (var r in resources)
             {
                 int amount = r.Amount;
@@ -47,6 +52,11 @@ namespace Scripts.Map.Blueprints
                 throw new ArgumentException("There is no resource reserved for " + id, nameof(id));
             }
             _reserved.Remove(id);
+            if (_waiting.Count == 0 && _reserved.Count == 0) // Room created
+            {
+                EventManager.S.NotifyManager(Event.BlueprintFinished, _room);
+                MapManager.S.BuildRoomExt(_room);
+            }
         }
 
         public void CancelReservation(int id)
