@@ -43,16 +43,16 @@ namespace Scripts.Map.Room.ModulableRoom
         public override void SetupConfigPanel(GameObject go)
         {
             var c = go.GetComponent<FactoryUI>();
-            c.StorageInfoText.text = $"Space Taken: {Stock.GetSizeOccupiedWithReservation()} / {Stock.MaxSize}\nCrafting {Formula.Output}";
+            c.StorageInfoText.text = $"Space Taken:\nIN: {req.GetEndlessReserve()} / {ConfigManager.S.Config.FactoryStorageMaxSize}, OUT: {Stock.GetSizeOccupiedWithReservation()} / {Stock.MaxSize}\nCrafting {Formula.Output}";
             c.BAmmo.onClick.AddListener(new UnityAction(() =>
             {
-                Formula = ConfigManager.S.Config.Formulas[0];
+                Formula = ConfigManager.S.Config.Formulas[1];
                 UpdateReq();
                 OpenGameMenu.S.UpdateRoomInfo();
             }));
             c.BSteel.onClick.AddListener(new UnityAction(() =>
             {
-                Formula = ConfigManager.S.Config.Formulas[1];
+                Formula = ConfigManager.S.Config.Formulas[0];
                 UpdateReq();
                 OpenGameMenu.S.UpdateRoomInfo();
             }));
