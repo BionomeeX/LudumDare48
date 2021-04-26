@@ -530,7 +530,7 @@ namespace Scripts.Map
                 {
                     allRequirements.AddRange(ConfigManager.S.Config.RequirementPerBloc);
                 }
-                newRoom.Requirement = new Requirement(newRoom, Enumerable.Repeat(ConfigManager.S.Config.RequirementPerBloc, newRoom.Size.x * newRoom.Size.y).SelectMany(x => x).ToArray());
+                newRoom.Requirement = new Requirement(newRoom, Enumerable.Repeat(ConfigManager.S.Config.RequirementPerBloc, newRoom.Size.x * newRoom.Size.y).SelectMany(x => x).ToArray(), false);
             }
 
             return newRoom;

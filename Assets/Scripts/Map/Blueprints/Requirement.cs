@@ -12,10 +12,13 @@ namespace Scripts.Map.Blueprints
 {
     public class Requirement
     {
-        private ARoom _room;
+        public ARoom _room;
+        private bool _endlessMode;
+        private Dictionary<ResourceType, int> _endlessReserve = new Dictionary<ResourceType, int>();
 
-        public Requirement(ARoom room, ResourceInfo[] resources)
+        public Requirement(ARoom room, ResourceInfo[] resources, bool isEndless)
         {
+            _endlessMode = isEndless;
             _room = room;
             foreach (var r in resources)
             {
@@ -27,12 +30,16 @@ namespace Scripts.Map.Blueprints
                         : amount;
                     _waiting.Add((r.Type, nb));
                     amount -= nb;
+                    if (_endlessMode && !_endlessReserve.ContainsKey(r.Type))
+                    {
+                        _endlessReserve.Add(r.Type, 0);
+                    }
                 } while (amount > 0);
             }
         }
 
         public ReadOnlyCollection<(ResourceType type, int amount)> GetRequirements()
-            => _waiting.AsReadOnly();
+            => !_endlessMode ? _waiting.AsReadOnly() : GetMissingResources().ToList().AsReadOnly();
 
         /// <summary>
         /// Reserve a requirement
@@ -42,7 +49,10 @@ namespace Scripts.Map.Blueprints
         public void Reserve(int id, int index)
         {
             var elem = _waiting[index];
-            _waiting.RemoveAt(index);
+            if (!_endlessMode)
+            {
+                _waiting.RemoveAt(index);
+            }
             _reserved.Add(id, elem);
         }
 
@@ -52,12 +62,19 @@ namespace Scripts.Map.Blueprints
             {
                 throw new ArgumentException("There is no resource reserved for " + id, nameof(id));
             }
+            var elem = _reserved[id];
             _reserved.Remove(id);
-            if (_waiting.Count == 0 && _reserved.Count == 0) // Room created
+            if (!_endlessMode)
             {
-                EventManager.S.NotifyManager(Event.BlueprintFinished, _room);
-                MapManager.S.BuildRoomExt(_room);
-                // EventManager.S.NotifyManager(Events.Event.BlueprintFinished, _room);
+                if (_waiting.Count == 0 && _reserved.Count == 0) // Room created
+                {
+                    EventManager.S.NotifyManager(Event.BlueprintFinished, _room);
+                    MapManager.S.BuildRoomExt(_room);
+                }
+            }
+            else
+            {
+                _endlessReserve.Add(elem.Item1, elem.Item2);
             }
             OpenGameMenu.S.UpdateRoomInfo();
         }
@@ -67,7 +84,10 @@ namespace Scripts.Map.Blueprints
             if (_reserved.ContainsKey(id))
             {
                 var elem = _reserved[id];
-                _waiting.Add((elem.Item1, elem.Item2));
+                if (!_endlessMode)
+                {
+                    _waiting.Add((elem.Item1, elem.Item2));
+                }
                 _reserved.Remove(id);
             }
         }
@@ -77,25 +97,51 @@ namespace Scripts.Map.Blueprints
 
         public (ResourceType, int)[] GetMissingResources()
         {
-            Dictionary<ResourceType, int> allResources = new Dictionary<ResourceType, int>();
-            foreach (var r in _waiting)
+            if (!_endlessMode)
             {
-                if (allResources.ContainsKey(r.Item1)) allResources[r.Item1] += r.Item2;
-                else allResources.Add(r.Item1, r.Item2);
+                Dictionary<ResourceType, int> allResources = new Dictionary<ResourceType, int>();
+                foreach (var r in _waiting)
+                {
+                    if (allResources.ContainsKey(r.Item1)) allResources[r.Item1] += r.Item2;
+                    else allResources.Add(r.Item1, r.Item2);
+                }
+                foreach (var r in _reserved.Values)
+                {
+                    if (allResources.ContainsKey(r.Item1)) allResources[r.Item1] += r.Item2;
+                    else allResources.Add(r.Item1, r.Item2);
+                }
+                return allResources.Select(x => (x.Key, x.Value)).ToArray();
             }
-            foreach (var r in _reserved.Values)
+            else
             {
-                if (allResources.ContainsKey(r.Item1)) allResources[r.Item1] += r.Item2;
-                else allResources.Add(r.Item1, r.Item2);
+                if (_endlessReserve.Select(x => x.Value).Sum() + 5 >= ConfigManager.S.Config.NbOfResourcePerTransportation)
+                {
+                    return new (ResourceType, int)[0];
+                }
+                var required = _waiting.Select(x => x.Item1).Distinct().ToArray();
+                ResourceType smaller = (ResourceType)(-1);
+                int amount = int.MaxValue;
+                foreach (var r in required)
+                {
+                    var e = _endlessReserve[r];
+                    if (e < amount)
+                    {
+                        smaller = r;
+                        amount = e;
+                    }
+                }
+                return new[] { (smaller, ConfigManager.S.Config.NbOfResourcePerTransportation) };
             }
-            return allResources.Select(x => (x.Key, x.Value)).ToArray();
         }
 
         public void ResetAll()
         {
-            foreach (var r in _reserved)
+            if (!_endlessMode)
             {
-                _waiting.Add((r.Value.Item1, r.Value.Item2));
+                foreach (var r in _reserved)
+                {
+                    _waiting.Add((r.Value.Item1, r.Value.Item2));
+                }
             }
             _reserved = new Dictionary<int, (ResourceType, int)>();
         }
