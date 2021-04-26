@@ -134,9 +134,9 @@ namespace Scripts.UI
                     }
                 }
                 var gRoom = room as GenericRoom;
-                if (gRoom != null || room.Requirement != null)
+                if (gRoom != null || room.IsBuilt)
                 {
-                    var p = room.Requirement == null
+                    var p = room.IsBuilt
                         ? gRoom.RoomType.GetDescriptionPanel()
                         : room.GetDescriptionPanel();
                     if (p != null)
@@ -146,7 +146,7 @@ namespace Scripts.UI
                         var pT = (RectTransform)_roomInfo.DetailPanel.transform;
                         t.sizeDelta = Vector2.zero;
                         t.position = pT.position;
-                        if (room.Requirement == null) gRoom.RoomType.SetupConfigPanel(go);
+                        if (room.IsBuilt) gRoom.RoomType.SetupConfigPanel(go);
                         else room.SetupConfigPanel(go);
                     }
                 }
@@ -191,9 +191,9 @@ namespace Scripts.UI
                             Destroy(_roomInfo.DetailPanel.transform.GetChild(0).gameObject);
                         }
                         var gRoom = room as GenericRoom;
-                        if (gRoom != null || room.Requirement != null)
+                        if (gRoom != null || room.IsBuilt)
                         {
-                            var p = room.Requirement == null
+                            var p = room.IsBuilt
                                 ? gRoom.RoomType.GetDescriptionPanel()
                                 : room.GetDescriptionPanel();
                             if (p != null)
@@ -203,7 +203,7 @@ namespace Scripts.UI
                                 var pT = (RectTransform)_roomInfo.DetailPanel.transform;
                                 t.sizeDelta = Vector2.zero;
                                 t.position = pT.position;
-                                if (room.Requirement == null) gRoom.RoomType.SetupConfigPanel(go);
+                                if (room.IsBuilt) gRoom.RoomType.SetupConfigPanel(go);
                                 else room.SetupConfigPanel(go);
                             }
                         }

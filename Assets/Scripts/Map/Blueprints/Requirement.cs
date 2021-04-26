@@ -95,6 +95,9 @@ namespace Scripts.Map.Blueprints
         List<(ResourceType, int)> _waiting = new List<(ResourceType, int)>();
         Dictionary<int, (ResourceType, int)> _reserved = new Dictionary<int, (ResourceType, int)>();
 
+        public int GetEndlessReserve()
+            => _endlessReserve.Select(x => x.Value).Sum();
+
         public (ResourceType, int)[] GetMissingResources()
         {
             if (!_endlessMode)
@@ -114,7 +117,7 @@ namespace Scripts.Map.Blueprints
             }
             else
             {
-                if (_endlessReserve.Select(x => x.Value).Sum() + 5 >= ConfigManager.S.Config.NbOfResourcePerTransportation)
+                if (_endlessReserve.Select(x => x.Value).Sum() + 5 >= ConfigManager.S.Config.FactoryStorageMaxSize)
                 {
                     return new (ResourceType, int)[0];
                 }
