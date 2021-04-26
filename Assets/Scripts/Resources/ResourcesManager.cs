@@ -1,3 +1,4 @@
+using Scripts.UI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -50,6 +51,7 @@ namespace Scripts.Resources
                 }
             }
             _resourcesText.text = "Resources:\n" + string.Join("\n", _allResources.Select(x => $"{x.Key}: {x.Value.Item1} ({x.Value.Item1 - x.Value.Item2})"));
+            OpenGameMenu.S.UpdateRoomInfo();
         }
     }
 }

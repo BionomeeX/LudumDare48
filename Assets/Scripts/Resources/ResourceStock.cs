@@ -25,6 +25,9 @@ namespace Scripts.Resources
         public int GetSizeTakenWithReservation()
             => GetSizeTaken() + _reservedAdd.Select(x => x.Value.Item2).Sum();
 
+        public int GetSizeOccupiedWithReservation()
+            => GetSizeTaken() + _reserved.Select(x => x.Value.Item2).Sum();
+
         // All resources available
         public Dictionary<ResourceType, int> _resources = new Dictionary<ResourceType, int>();
 

@@ -2,6 +2,7 @@
 using Scripts.Map.Room;
 using Scripts.Resources;
 using Scripts.ScriptableObjects;
+using Scripts.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -57,6 +58,7 @@ namespace Scripts.Map.Blueprints
                 EventManager.S.NotifyManager(Event.BlueprintFinished, _room);
                 MapManager.S.BuildRoomExt(_room);
             }
+            OpenGameMenu.S.UpdateRoomInfo();
         }
 
         public void CancelReservation(int id)

@@ -1,4 +1,7 @@
-﻿using Scripts.ScriptableObjects;
+﻿using Scripts.Extraction;
+using Scripts.ScriptableObjects;
+using Scripts.UI.RoomUI;
+using UnityEngine;
 
 namespace Scripts.Map.Room.ModulableRoom
 {
@@ -17,5 +20,16 @@ namespace Scripts.Map.Room.ModulableRoom
 
         public override bool IsMining()
             => true;
+
+        public override GameObject GetDescriptionPanel()
+            => UIRoom.S._miningStorage;
+
+        public override void SetupConfigPanel(GameObject go)
+        {
+            var c = go.GetComponent<MiningUI>();
+            c.StorageInfoText.text = $"Space Taken: {Stock.GetSizeOccupiedWithReservation()} / {Stock.MaxSize}\nCurrently mining {CurrentMining?.Type}";
+        }
+
+        public Metal CurrentMining;
     }
 }
