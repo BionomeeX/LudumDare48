@@ -22,5 +22,8 @@ namespace Scripts.ScriptableObjects
         public float SubmarineSpeed;
         public int SubmarineRadius;
         public Vector2Int BaseSurfaceEmpty;
+
+        [Header("NPC")]
+        public float NpcSpeed;
     }
 }

@@ -52,7 +52,7 @@ namespace Scripts.Map.Blueprints
                 throw new ArgumentException("There is no resource reserved for " + id, nameof(id));
             }
             _reserved.Remove(id);
-            if (_reserved.Count == 0) // Room created
+            if (_waiting.Count == 0 && _reserved.Count == 0) // Room created
             {
                 EventManager.S.NotifyManager(Event.BlueprintFinished, _room);
                 MapManager.S.BuildRoomExt(_room);

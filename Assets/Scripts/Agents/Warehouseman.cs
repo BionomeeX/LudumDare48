@@ -41,7 +41,7 @@ namespace Scripts.Agents
             {
                 // oups
             }
-            if (e == Events.Event.BlueprintDrawn)
+            if (e == Events.Event.BlueprintDrawn || e == Events.Event.RoomCreated)
             {
                 Debug.Log("Blueprint Drawn event received for warehouseman");
                 if (IsIdle)

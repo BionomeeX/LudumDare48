@@ -85,6 +85,11 @@ namespace Scripts.Map
                     Quaternion.identity);
                 EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
 
+                var warehouseman2 = Instantiate(_warehousePrefab,
+                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f + Vector3.right * .1f,
+                    Quaternion.identity);
+                EventManager.S.Subscribe(warehouseman2.GetComponent<Warehouseman>());
+
                 var commandant = Instantiate(_commandantPrefab,
                     r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
                     Quaternion.identity);

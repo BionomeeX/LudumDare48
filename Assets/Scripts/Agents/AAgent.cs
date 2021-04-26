@@ -3,6 +3,7 @@ using UnityEngine;
 using Scripts.Map;
 using Scripts.Map.Room;
 using Scripts.Resources;
+using Scripts.ScriptableObjects;
 
 namespace Scripts.Agents
 {
@@ -77,16 +78,6 @@ namespace Scripts.Agents
             }
         }
 
-        public void MoveTo(ARoom room)
-        {
-            _currentRoom = room;
-            transform.position = new Vector3(
-                _currentRoom.Position.x + 0.5f,
-                -_currentRoom.Position.y + 0.1f,
-                transform.position.z
-            );
-        }
-
         public Action MoveOrGetAction()
         {
             if (_actions.Count > 0)
@@ -131,7 +122,35 @@ namespace Scripts.Agents
                     return;
                 }
             }
-            DoNextAction();
+            if (action != Action.Move)
+            {
+                DoNextAction();
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (_objective != null)
+            {
+                transform.position += (_objective.Value - transform.position).normalized * ConfigManager.S.Config.NpcSpeed;
+                if (Vector2.Distance(transform.position, _objective.Value) < .1f)
+                {
+                    Debug.Log("NEXT");
+                    _objective = null;
+                    DoNextAction();
+                }
+            }
+        }
+
+        private Vector3? _objective;
+        public void MoveTo(ARoom room)
+        {
+            _currentRoom = room;
+            _objective = new Vector3(
+                _currentRoom.Position.x + 0.5f,
+                -_currentRoom.Position.y + 0.1f,
+                transform.position.z
+            );
         }
 
     }
