@@ -23,7 +23,8 @@ namespace Scripts.Events
             _agents = new List<AAgent>();
         }
 
-        public void Subscribe(AAgent agent){
+        public void Subscribe(AAgent agent)
+        {
             Debug.Log("Subscribe : " + agent.name);
             _agents.Add(agent);
         }
@@ -34,15 +35,17 @@ namespace Scripts.Events
             {
                 Debug.Log("Blueprint Drawn event received");
                 EnemyManager.S.RecalculateZone();
-                foreach(var agent in _agents){
-                    agent.OnEventReceived(e, o);
-                }
             }
             else if (e == Event.RoomSetType)
             {
                 SubmarineManager.S.UpdateRoom((GenericRoom)o);
             }
             AudioManager.S.ReceiveEvent(e);
+
+            foreach (var agent in _agents)
+            {
+                agent.OnEventReceived(e, o);
+            }
         }
 
         public void ResetAll()
