@@ -26,7 +26,7 @@ namespace Scripts.Agents
             var rprl = MapManager.S.MapRooms.Where(
                 room => room.RoomLeft == null || room.RoomRight == null
             ).Select(
-                room => (room, (float)room.Position.x + 3 * room.Position.y, MapManager.S.GetZoneConstructionPossibilities(room.Position + new Vector2Int(room.Size.x, 0), true, 1, 6), MapManager.S.GetZoneConstructionPossibilities(room.Position, false, 1, 6))
+                room => (room, (float)room.Position.x + 3 * room.Position.y, MapManager.S.GetZoneConstructionPossibilities(room.Position + new Vector2Int(room.Size.x, 0), true, 1, 6), MapManager.S.GetZoneConstructionPossibilities(room.Position, false, 1, 2))
             ).Where(
                 rprl => (rprl.Item3.Count > 0) || (rprl.Item4.Count > 0)
             ).ToList();
@@ -143,7 +143,7 @@ namespace Scripts.Agents
 
             }
 
-            Debug.Break();
+            // Debug.Break();
 
             MapManager.S.MapMasterBlueprints.Add(new Map.Blueprints.MasterBlueprint(
                         roomList.Select(room => new Blueprint(room)).ToList(),
