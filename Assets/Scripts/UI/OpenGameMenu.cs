@@ -10,6 +10,13 @@ namespace Scripts.UI
 {
     public class OpenGameMenu : MonoBehaviour
     {
+        public static OpenGameMenu S;
+
+        private void Awake()
+        {
+            S = this;
+        }
+
         [SerializeField]
         private GameObject _buildPanel, _explorationPanel, _recruitementPanel;
 
@@ -112,12 +119,49 @@ namespace Scripts.UI
             _explanationPanelScript.gameObject.SetActive(false);
         }
 
+        public void UpdateRoomInfo()
+        {
+            if (currInfoD != null)
+            {
+                var room = currInfoD;
+                _roomInfo.Name.text = room.GetName();
+                _roomInfo.Description.text = room.GetDescription();
+                if (_roomInfo.DetailPanel.transform.childCount > 0)
+                {
+                    for (int i = 0; i < _roomInfo.DetailPanel.transform.childCount; i++)
+                    {
+                        Destroy(_roomInfo.DetailPanel.transform.GetChild(i).gameObject);
+                    }
+                }
+                var gRoom = room as GenericRoom;
+                if (gRoom != null || room.Requirement != null)
+                {
+                    var p = room.Requirement == null
+                        ? gRoom.RoomType.GetDescriptionPanel()
+                        : room.GetDescriptionPanel();
+                    if (p != null)
+                    {
+                        var go = Instantiate(p, _roomInfo.DetailPanel.transform);
+                        var t = (RectTransform)go.transform;
+                        var pT = (RectTransform)_roomInfo.DetailPanel.transform;
+                        t.sizeDelta = Vector2.zero;
+                        t.position = pT.position;
+                        if (room.Requirement == null) gRoom.RoomType.SetupConfigPanel(go);
+                        else room.SetupConfigPanel(go);
+                    }
+                }
+                _roomInfo.gameObject.SetActive(true);
+            }
+        }
+        private ARoom currInfoD;
+
         private GenericRoom clicked = null;
         private void Update()
         {
             // We want the user to click and release his mouse on the same element
             if (Input.GetMouseButtonDown(0))
             {
+                currInfoD = null;
                 var mousePos = Input.mousePosition;
                 mousePos.z = -Camera.main.transform.position.z;
                 var pos = Camera.main.ScreenToWorldPoint(mousePos);
@@ -164,6 +208,7 @@ namespace Scripts.UI
                             }
                         }
                         _roomInfo.gameObject.SetActive(true);
+                        currInfoD = gRoom;
                     }
                 }
                 else if (Input.mousePosition.x < Screen.width - 200
@@ -171,9 +216,6 @@ namespace Scripts.UI
                 {
                     _roomInfo.gameObject.SetActive(false);
                 }
-                Debug.Log(Input.mousePosition);
-                Debug.Log(new Vector2(Screen.width, Screen.height));
-                Debug.Log("--------------------------");
             }
             if (Input.GetMouseButtonUp(0) && clicked != null && clicked.IsBuilt)
             {
@@ -192,6 +234,7 @@ namespace Scripts.UI
             }
             if (Input.GetMouseButtonDown(1)) // Reset selection
             {
+                currInfoD = null;
                 if (_currentSelection != null)
                 {
                     SetCurrentBuild(-1);

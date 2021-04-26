@@ -13,6 +13,7 @@ namespace Scripts.ScriptableObjects
 
         [Header("Starting info")]
         public ResourceInfo[] StartingResources;
+        public int StartingSubofficers, StartingWarehousemans;
 
         [Header("Construction")]
         [Tooltip("How many resources can an agent move in one travel")]
@@ -35,6 +36,7 @@ namespace Scripts.ScriptableObjects
         [Header("Mining")]
         public MiningResource[] MiningResources;
         public int MiningRange;
+        public int MiningPerFixedUpdate;
 
         [Header("Layer")]
         public int LayerYSize;

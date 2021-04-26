@@ -10,7 +10,6 @@ using System.Collections.ObjectModel;
 using Scripts.Extraction;
 using Scripts.Map.Blueprints;
 
-
 namespace Scripts.Events
 {
     public class EventManager : MonoBehaviour
