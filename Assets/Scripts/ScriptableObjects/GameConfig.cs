@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Extraction;
+﻿using Assets.Scripts.Craft;
+using Assets.Scripts.Extraction;
+using Scripts.Craft;
 using UnityEngine;
 
 namespace Scripts.ScriptableObjects
@@ -37,5 +39,8 @@ namespace Scripts.ScriptableObjects
         public int LayerYSize;
         public int MinMetalPerLayer;
         public int MaxMetalPerLayer;
+
+        [Header("Craft")]
+        public Formula[] Formulas;
     }
 }

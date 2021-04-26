@@ -3405,6 +3405,7 @@ GameObject:
   - component: {fileID: 1930794186}
   - component: {fileID: 1930794187}
   - component: {fileID: 1930794188}
+  - component: {fileID: 1930794189}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3605,6 +3606,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _metalPrefab: {fileID: 3815253163539268435, guid: 3b5b1965ffadfb247ae16950132f7499, type: 3}
+--- !u!114 &1930794189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1930794177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e48869d4851bb5d4aa68f879393d629c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2002968864
 GameObject:
   m_ObjectHideFlags: 0

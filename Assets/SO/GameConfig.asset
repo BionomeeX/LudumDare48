@@ -53,3 +53,11 @@ MonoBehaviour:
     LayerFrom: 3
     LayerTo: 3
     Material: {fileID: 2100000, guid: 4026d31c398ccf14184ca8ca739ab59f, type: 2}
+  LayerYSize: 10
+  MinMetalPerLayer: 2
+  MaxMetalPerLayer: 4
+  Formulas:
+  - Input: 0000000002000000
+    Output: 5
+  - Input: 0000000000000000
+    Output: 6
