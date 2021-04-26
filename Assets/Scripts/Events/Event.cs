@@ -15,5 +15,7 @@ namespace Scripts.Events
         ExplorationFlagSet,
         ExplorationFlagUnset,
         ExplorationNewZone,
+        ResourceMined,
+        PleaseDoSomething
     }
 }

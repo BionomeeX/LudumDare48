@@ -20,6 +20,13 @@ namespace Scripts.Agents
 
         public override void OnEventReceived(Events.Event e, object o)
         {
+            if (e == Events.Event.PleaseDoSomething)
+            {
+                if (IsIdle)
+                {
+                    StartCoroutine(DoNextThing(Random.Range(0.1f, 1f)));
+                }
+            }
             Debug.Log("Event Received");
             if (e == Events.Event.RoomCreated)
             {
@@ -53,6 +60,13 @@ namespace Scripts.Agents
                 if (IsIdle)
                 {
                     Debug.Log("I'm available");
+                    StartCoroutine(DoNextThing(Random.Range(0.1f, 1f)));
+                }
+            }
+            if (e == Events.Event.ResourceMined)
+            {
+                if (_actions.Count == 0)
+                {
                     StartCoroutine(DoNextThing(Random.Range(0.1f, 1f)));
                 }
             }
@@ -144,23 +158,25 @@ namespace Scripts.Agents
 
         private bool CheckIfTurretNeedResource()
         {
-            var tpws = MapManager.S.GetAllTurrets().Select(
-                t => (t, Astar.FindPath(_currentRoom, t))
-            ).Select(
-                tp => (tp.Item1, tp.Item2, Astar.ComputePathWeight(tp.Item2))
-            ).OrderBy(tpw => tpw.Item3).ToList();
+            // var tpws = MapManager.S.GetAllTurrets().Select(
+            //     t => (t, Astar.FindPath(_currentRoom, t))
+            // ).Select(
+            //     tp => (tp.Item1, tp.Item2, Astar.ComputePathWeight(tp.Item2))
+            // ).OrderBy(tpw => tpw.Item3).ToList();
 
-            return RRRR(tpws, ResourceStock.Priority.ABSOLUTE);
+            // return RRRR(tpws, ResourceStock.Priority.ABSOLUTE);
+            return false;
         }
         private bool CheckIfFactoryNeedResource()
         {
-            var fpws = MapManager.S.GetAllFactory().Select(
-                f => (f, Astar.FindPath(_currentRoom, f))
-            ).Select(
-                fp => (fp.Item1, fp.Item2, Astar.ComputePathWeight(fp.Item2))
-            ).OrderBy(fpw => fpw.Item3).ToList();
+            // var fpws = MapManager.S.GetAllFactory().Select(
+            //     f => (f, Astar.FindPath(_currentRoom, f))
+            // ).Select(
+            //     fp => (fp.Item1, fp.Item2, Astar.ComputePathWeight(fp.Item2))
+            // ).OrderBy(fpw => fpw.Item3).ToList();
 
-            return RRRR(fpws, ResourceStock.Priority.ABSOLUTE);
+            // return RRRR(fpws, ResourceStock.Priority.ABSOLUTE);
+            return false;
         }
 
         // Reserve Resource for Room Requirement RRRR
