@@ -61,8 +61,16 @@ namespace Scripts.Agents
         public IEnumerator DoNextThing(float time)
         {
             yield return new WaitForSeconds(time);
-            ChooseAction();
-            DoNextAction();
+            if (ChooseAction())
+            {
+                IsIdle = false;
+                DoNextAction();
+            }
+            else
+            {
+                IsIdle = true;
+            }
+
         }
 
         public override bool ChooseAction()
