@@ -137,13 +137,13 @@ namespace Scripts.Agents
 
         private void FixedUpdate()
         {
-            Debug.Log("Fixed Update ON");
+            // Debug.Log("Fixed Update ON");
             // if (_objective != null)
             if(_moving)
             {
-                Debug.Log("Moving");
+                // Debug.Log("Moving");
                 transform.position += (_objective - transform.position).normalized * ConfigManager.S.Config.NpcSpeed;
-                Debug.Log("Transformation OK");
+                // Debug.Log("Transformation OK");
                 if (Vector2.Distance(transform.position, _objective) < .1f)
                 {
                     Debug.Log("NEXT");
@@ -151,9 +151,9 @@ namespace Scripts.Agents
                     _moving = false;
                     DoNextAction();
                 }
-                Debug.Log("If OK");
+                // Debug.Log("If OK");
             }
-            Debug.Log("Fixed Update OFF");
+            // Debug.Log("Fixed Update OFF");
         }
 
         private Vector3 _objective;

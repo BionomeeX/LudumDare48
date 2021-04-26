@@ -88,15 +88,20 @@ namespace Scripts.Map
 
                 }
 
-                // var warehouseman = Instantiate(_warehousePrefab,
-                //     r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
-                //     Quaternion.identity);
-                // EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
+                var warehouseman = Instantiate(_warehousePrefab,
+                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
+                    Quaternion.identity);
+                EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
 
                 var warehouseman2 = Instantiate(_warehousePrefab,
-                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f + Vector3.right * .1f,
+                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f + Vector3.right * .2f,
                     Quaternion.identity);
                 EventManager.S.Subscribe(warehouseman2.GetComponent<Warehouseman>());
+
+                var warehouseman3 = Instantiate(_warehousePrefab,
+                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f + Vector3.right * .4f,
+                    Quaternion.identity);
+                EventManager.S.Subscribe(warehouseman3.GetComponent<Warehouseman>());
 
                 var commandant = Instantiate(_commandantPrefab,
                     r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
@@ -152,7 +157,7 @@ namespace Scripts.Map
                 r => r.Requirement != null
             ).Where(
                 // check that at least one neighbor is not a blueprint
-                r => r.GetNeighborhood().ToList().Where(nr => nr.Requirement == null).Count() > 0
+                r => r.GetNeighborhood().ToList().Where(nr => (nr.Requirement == null) && (nr.IsBuilt)).Count() > 0
             ).ToList();
 
             return result;
@@ -389,18 +394,18 @@ namespace Scripts.Map
         }
         private IEnumerator BuildRoom(ARoom room, Action<ARoom> roomBuilt)
         {
-            var sign = Instantiate(_constructionSign, (Vector3)(new Vector2(room.Position.x, -room.Position.y)) + new Vector3(room.Size.x / 2, -room.Size.y / 2f, -1f), Quaternion.identity);
-            yield return new WaitForSeconds(ConfigManager.S.Config.BuildingTime);
-            room.IsBuilt = true;
-            Destroy(sign);
-            roomBuilt?.Invoke(room);
-            EventManager.S.NotifyManager(Events.Event.RoomCreated, room);
             if (room.Sign != null)
             {
                 Destroy(room.Sign);
                 room.Sign = null;
             }
             room.Requirement = null;
+            var sign = Instantiate(_constructionSign, (Vector3)(new Vector2(room.Position.x, -room.Position.y)) + new Vector3(room.Size.x / 2, -room.Size.y / 2f, -1f), Quaternion.identity);
+            yield return new WaitForSeconds(ConfigManager.S.Config.BuildingTime);
+            room.IsBuilt = true;
+            Destroy(sign);
+            roomBuilt?.Invoke(room);
+            EventManager.S.NotifyManager(Events.Event.RoomCreated, room);
         }
 
         public void DiscoverTile(int x, int y)
