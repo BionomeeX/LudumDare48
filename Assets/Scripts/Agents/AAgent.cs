@@ -18,7 +18,7 @@ namespace Scripts.Agents
 
         private string _childClassName;
 
-        protected List<(List<ARoom> path, Action action)> _actions;
+        protected List<(List<ARoom> path, Action action)> _actions = null;
 
         protected bool IsIdle = false;
 
@@ -80,6 +80,7 @@ namespace Scripts.Agents
 
         public Action MoveOrGetAction()
         {
+            Debug.Log("MoveOrGetAction ON");
             if (_actions.Count > 0)
             {
                 Debug.Log("Move");
@@ -88,12 +89,14 @@ namespace Scripts.Agents
                     Debug.Log("  to : " + _actions[0].path[0].Position.x + ", " + _actions[0].path[0].Position.y);
                     MoveTo(_actions[0].path[0]);
                     _actions[0].path.RemoveAt(0);
+                    Debug.Log("Still moves to do");
                     return Action.Move;
                 }
                 else
                 {
                     Action action = _actions[0].action;
                     _actions.RemoveAt(0);
+                    Debug.Log("No move, do the action");
                     return action;
                 }
             }
@@ -109,48 +112,62 @@ namespace Scripts.Agents
         public void DoNextAction()
         {
             IsIdle = false;
+            Debug.Log("Move Or GetAction");
             Action action = MoveOrGetAction();
             if (action != Action.Move && action != Action.Idle)
             {
+                Debug.Log("Do Special Action");
                 DoSpecialAction(action);
             }
             if (action == Action.Idle)
             {
                 if (!ChooseAction())
                 {
+                    Debug.Log("Idle set to true");
                     IsIdle = true;
                     return;
                 }
             }
             if (action != Action.Move)
             {
+                Debug.Log("Do the next Action");
                 DoNextAction();
             }
         }
 
         private void FixedUpdate()
         {
-            if (_objective != null)
+            Debug.Log("Fixed Update ON");
+            // if (_objective != null)
+            if(_moving)
             {
-                transform.position += (_objective.Value - transform.position).normalized * ConfigManager.S.Config.NpcSpeed;
-                if (Vector2.Distance(transform.position, _objective.Value) < .3f)
+                Debug.Log("Moving");
+                transform.position += (_objective - transform.position).normalized * ConfigManager.S.Config.NpcSpeed;
+                Debug.Log("Transformation OK");
+                if (Vector2.Distance(transform.position, _objective) < .1f)
                 {
                     Debug.Log("NEXT");
-                    _objective = null;
+                    // _objective = null;
+                    _moving = false;
                     DoNextAction();
                 }
+                Debug.Log("If OK");
             }
+            Debug.Log("Fixed Update OFF");
         }
 
-        private Vector3? _objective;
+        private Vector3 _objective;
+        private bool _moving = false;
         public void MoveTo(ARoom room)
         {
+            Debug.Log("Moving to called");
             _currentRoom = room;
             _objective = new Vector3(
                 _currentRoom.Position.x + 0.5f,
                 -_currentRoom.Position.y - 0.9f,
                 transform.position.z
             );
+            _moving = true;
         }
 
     }
