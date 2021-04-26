@@ -120,6 +120,24 @@ namespace Scripts.Map
 
         }
 
+        public void NotifyBluePrintFininshed(ARoom room)
+        {
+            // get the Masterblueprint where this room come from
+            foreach (var masterbp in MapMasterBlueprints)
+            {
+                if (masterbp.Contains(room))
+                // we found it
+                {
+                    masterbp.NotifyBlueprintFinished(room);
+                    return;
+                }
+            }
+        }
+
+        public void NotifyMasterBluePrintFininshed(MasterBlueprint mbp)
+        {
+            MapMasterBlueprints.Remove(mbp);
+        }
         public bool CanIBuildHere(Vector2Int position, Vector2Int size)
         {
             if (position.x < 0 || position.y - size.y < 0)
@@ -327,7 +345,7 @@ namespace Scripts.Map
                 dText.GetComponent<TextMesh>().text = "(" + newRoom.Position.x + ", " + newRoom.Position.y + ")";
             }
 
-            for (int y = position.y - size.y + 1; y <= position.y ; ++y)
+            for (int y = position.y - size.y + 1; y <= position.y; ++y)
             {
                 for (int x = position.x; x < position.x + size.x; ++x)
                 {
