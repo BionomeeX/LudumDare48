@@ -166,10 +166,14 @@ namespace Scripts.UI
                         _roomInfo.gameObject.SetActive(true);
                     }
                 }
-                else
+                else if (Input.mousePosition.x < Screen.width - 200
+                    || Input.mousePosition.y < Screen.height - 300)
                 {
                     _roomInfo.gameObject.SetActive(false);
                 }
+                Debug.Log(Input.mousePosition);
+                Debug.Log(new Vector2(Screen.width, Screen.height));
+                Debug.Log("--------------------------");
             }
             if (Input.GetMouseButtonUp(0) && clicked != null && clicked.IsBuilt)
             {

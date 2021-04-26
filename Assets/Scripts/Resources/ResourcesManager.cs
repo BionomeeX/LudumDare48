@@ -30,6 +30,9 @@ namespace Scripts.Resources
         public ReadOnlyCollection<ResourceStock> GetResourceStocks(Vector2 myPos)
             => _stocks.AsReadOnly();
 
+        public ResourceType[] GetKnownResources()
+            => _stocks.SelectMany(x => x._resources.Keys).Distinct().ToArray();
+
         public void UpdateUI()
         {
             Dictionary<ResourceType, (int, int)> _allResources = new Dictionary<ResourceType, (int, int)>();

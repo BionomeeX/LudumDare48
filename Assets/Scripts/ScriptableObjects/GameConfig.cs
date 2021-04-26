@@ -25,5 +25,8 @@ namespace Scripts.ScriptableObjects
 
         [Header("NPC")]
         public float NpcSpeed;
+
+        [Header("Camera")]
+        public float CameraSpeed;
     }
 }
