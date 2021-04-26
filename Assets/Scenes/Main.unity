@@ -3465,7 +3465,7 @@ MonoBehaviour:
   - GameObject: {fileID: 8974266133367059421, guid: 62fe6f650e677a042a11d11d72f7e9cd, type: 3}
     Size: {x: 3, y: 2}
   Corridor: {fileID: 3153340296566217181, guid: 793c1afd15fab094db64b538936590a3, type: 3}
-  _elevator: {fileID: 952793276}
+  Elevator: {fileID: 1917970693088605037, guid: 66b959472c569f74bba447159cfb2f0e, type: 3}
   _constructionSign: {fileID: 8695930291489931896, guid: f7e7142116be43b4296ab540c1ba3588, type: 3}
   _blueprintSign: {fileID: 8695930291489931896, guid: 4198db51ac5b8714298278fbcb32f3c1, type: 3}
   _commandantPrefab: {fileID: 5267582097250314843, guid: 51f737aa78f6b41409ddd64189c23158, type: 3}
