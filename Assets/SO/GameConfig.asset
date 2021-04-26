@@ -17,9 +17,9 @@ MonoBehaviour:
   MiningStorageMaxSize: 200
   StartingResources:
   - Type: 5
-    Amount: 1000
+    Amount: 100000
   - Type: 1
-    Amount: 500
+    Amount: 50000
   StartingSubofficers: 1
   StartingWarehousemans: 10
   NbOfResourcePerTransportation: 5
@@ -29,6 +29,7 @@ MonoBehaviour:
   - Type: 1
     Amount: 25
   BuildingTime: 2
+  ChangeBuildElevator: 1
   SubmarineSpeed: 2
   SubmarineRadius: 5
   BaseSurfaceEmpty: {x: 20, y: 10}
