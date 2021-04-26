@@ -208,9 +208,10 @@ namespace Scripts.Agents
                     foreach (var resourceAmount in resourcesNeeded)
                     {
                         Debug.Log("  Need " + resourceAmount.amount);
+                        // register to the blueprint
+                        // room.Requirement.CancelReservation(_id);
                         if (FindPathForResource(resourceAmount.type, resourceAmount.amount, 0))
                         {
-                            // register to the blueprint
                             room.Requirement.Reserve(_id, i);
                             // add path from the last element to the blueprint
                             Debug.Log("Found path : " + _actions.Count);
@@ -229,6 +230,10 @@ namespace Scripts.Agents
                                 (additionalPath, Action.DropRessource)
                             );
                             return true;
+                        }
+                        else
+                        {
+                            room.Requirement.CancelReservation(_id);
                         }
                         ++i;
                     }
@@ -292,6 +297,7 @@ namespace Scripts.Agents
             {
                 if (rapw.Item2 >= myamount)
                 {
+                    // ((GenericRoom)rapw.Item1).RoomType.Stock.CancelAllReservations(_id);
                     ((GenericRoom)rapw.Item1).RoomType.Stock.ReserveResource(resource, myamount, _id);
                     // generate a path
                     // if first -> from here to there
