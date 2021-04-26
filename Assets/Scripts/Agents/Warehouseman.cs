@@ -38,9 +38,10 @@ namespace Scripts.Agents
                         ));
                     }
                     _actions = newactions;
-                } else {
-                    ChooseAction();
                 }
+                // else {
+                //     ChooseAction();
+                // }
             }
             if (e == Events.Event.RoomDestroyed)
             {

@@ -26,7 +26,7 @@ namespace Scripts.Agents
             var rprl = MapManager.S.MapRooms.Where(
                 room => room.RoomLeft == null || room.RoomRight == null
             ).Select(
-                room => (room, (float)room.Position.x + 3 * room.Position.y, MapManager.S.GetZoneConstructionPossibilities(room.Position, true, 1, 6), MapManager.S.GetZoneConstructionPossibilities(room.Position, false, 1, 6))
+                room => (room, (float)room.Position.x + 3 * room.Position.y, MapManager.S.GetZoneConstructionPossibilities(room.Position + new Vector2Int(room.Size.x, 0), true, 1, 6), MapManager.S.GetZoneConstructionPossibilities(room.Position, false, 1, 6))
             ).Where(
                 rprl => (rprl.Item3.Count > 0) || (rprl.Item4.Count > 0)
             ).ToList();
@@ -84,7 +84,7 @@ namespace Scripts.Agents
                 for (int corridor = 0; corridor < blueprint.Item1; ++corridor)
                 {
                     runningRoom = MapManager.S.AddRoom(
-                        new Vector2Int(runningRoom.Position.x + 1, runningRoom.Position.y),
+                        new Vector2Int(runningRoom.Position.x + runningRoom.Size.x, runningRoom.Position.y),
                         new Vector2Int(1, 1),
                         MapManager.S.Corridor,
                         RoomType.CORRIDOR,
@@ -98,7 +98,7 @@ namespace Scripts.Agents
                 }
                 var roominfo = MapManager.S.Rooms.First(ri => ri.Size.x == blueprint.Item2 && ri.Size.y == blueprint.Item3);
                 runningRoom = MapManager.S.AddRoom(
-                        new Vector2Int(runningRoom.Position.x + 1, runningRoom.Position.y),
+                        new Vector2Int(runningRoom.Position.x + runningRoom.Size.x, runningRoom.Position.y),
                         new Vector2Int(blueprint.Item2, blueprint.Item3),
                         roominfo.GameObject,
                         RoomType.EMPTY,
@@ -109,7 +109,9 @@ namespace Scripts.Agents
                 roomList.Add(
                     runningRoom
                 );
-            } else {
+            }
+            else
+            {
                 for (int corridor = 0; corridor < blueprint.Item1; ++corridor)
                 {
                     runningRoom = MapManager.S.AddRoom(
