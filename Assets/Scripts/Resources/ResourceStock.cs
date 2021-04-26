@@ -125,7 +125,8 @@ namespace Scripts.Resources
             if (_reserved.ContainsKey(id))
             {
                 var elem = _reserved[id];
-                _resources.Add(elem.Item1, elem.Item2);
+                if (_resources.ContainsKey(elem.Item1)) _resources[elem.Item1] += elem.Item2;
+                else _resources.Add(elem.Item1, elem.Item2);
                 _reserved.Remove(id);
             }
             if (_reservedAdd.ContainsKey(id))
