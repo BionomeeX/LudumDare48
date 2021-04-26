@@ -2,7 +2,9 @@
 using Scripts.ScriptableObjects;
 using Scripts.UI.RoomUI;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Scripts.Map.Room.ModulableRoom
 {
@@ -40,6 +42,9 @@ namespace Scripts.Map.Room.ModulableRoom
                 if (!names.Contains(p.Type.ToString()))
                 {
                     var go2 = Object.Instantiate(c.Button, c.ChangeMiningPanel.transform);
+                    ((RectTransform)go2.transform).position = c.ChangeMiningPanel.transform.position + new Vector3(0f, i2 * -30f, 0f);
+                    go2.GetComponentInChildren<Text>().text = p.Type.ToString();
+                    //go2.GetComponent<Button>().
                     names.Add(p.Type.ToString());
                     i2++;
                 }

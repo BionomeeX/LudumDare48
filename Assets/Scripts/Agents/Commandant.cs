@@ -5,7 +5,7 @@ using Scripts.Map.Room;
 using UnityEngine;
 using Scripts.Map.Blueprints;
 using Scripts.Events;
-
+using Scripts.ScriptableObjects;
 
 namespace Scripts.Agents
 {
@@ -23,7 +23,7 @@ namespace Scripts.Agents
         private void GenerateNewMasterBlueprint()
         {
             // Choose between Expansion or Descent
-            bool descent = Random.Range(0f, 1f) < 0.33f;
+            bool descent = Random.Range(0f, 1f) < ConfigManager.S.Config.ChangeBuildElevator;
             if (descent)
             {
                 // choose the layer at the bottom

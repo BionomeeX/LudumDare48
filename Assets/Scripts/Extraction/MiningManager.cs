@@ -96,7 +96,9 @@ namespace Scripts.Extraction
                             (i + 1) * ConfigManager.S.Config.LayerYSize)), Random.rotation);
                         go.transform.parent = metalParent.transform;
                         go.GetComponent<MeshRenderer>().material = m.Material;
-                        _metals.Add(go.GetComponent<Metal>());
+                        var metal = go.GetComponent<Metal>();
+                        metal.Type = m.Resource;
+                        _metals.Add(metal);
                     }
                 }
             }
