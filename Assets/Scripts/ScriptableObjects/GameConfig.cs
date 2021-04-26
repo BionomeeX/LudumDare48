@@ -23,6 +23,17 @@ namespace Scripts.ScriptableObjects
         public float BuildingTime;
         public float ChangeBuildElevator;
 
+        [Header("Resources Distribution Priority")]
+        [Tooltip("Probability weight for turrets")]
+        public float TurretPriorityWeight;
+        [Tooltip("Probability weight for factories")]
+        public float FactoryPriorityWeight;
+        [Tooltip("Probability weight for blueprints")]
+        public float BlueprintPriorityWeight;
+        [Tooltip("Probability weight for high priority stocks")]
+        public float StockPriorityWeight;
+
+
         [Header("Exploration")]
         public float SubmarineSpeed;
         public int SubmarineRadius;

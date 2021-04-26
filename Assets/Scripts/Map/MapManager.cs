@@ -168,7 +168,9 @@ namespace Scripts.Map
         public List<ARoom> GetAllFactory()
         {
             Debug.Log("GETALLFACTORY");
-            List<ARoom> result = new List<ARoom>();
+            List<ARoom> result = MapRooms.Where(
+                r => r is GenericRoom gr && gr.RoomType.IsFactory()
+            ).ToList();
             return result;
         }
 
@@ -176,10 +178,10 @@ namespace Scripts.Map
         {
             Debug.Log("GETALLACCESSIBLEBLUEPRINT");
             var result = MapRooms.Where(
-                r => r.Requirement != null
+                r => !r.IsBuilt
             ).Where(
                 // check that at least one neighbor is not a blueprint
-                r => r.GetNeighborhood().ToList().Where(nr => (nr.Requirement == null) && (nr.IsBuilt)).Count() > 0
+                r => r.GetNeighborhood().ToList().Where(nr => nr.IsBuilt).Count() > 0
             ).ToList();
 
             return result;
