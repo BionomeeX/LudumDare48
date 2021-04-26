@@ -7,6 +7,7 @@ using Scripts.Agents;
 using System.Collections.Generic;
 using Scripts.Sounds;
 using System.Collections.ObjectModel;
+using Scripts.Extraction;
 
 namespace Scripts.Events
 {
@@ -40,6 +41,7 @@ namespace Scripts.Events
             else if (e == Event.RoomSetType)
             {
                 SubmarineManager.S.UpdateRoom((GenericRoom)o);
+                MiningManager.S.UpdateRoom((GenericRoom)o);
             }
             AudioManager.S.ReceiveEvent(e);
 
