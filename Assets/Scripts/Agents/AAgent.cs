@@ -4,13 +4,11 @@ using UnityEngine;
 using Scripts.Map;
 using Scripts.Map.Room;
 using Scripts.Resources;
-using Scripts.Events;
 
 namespace Scripts.Agents
 {
     public abstract class AAgent : MonoBehaviour
     {
-
         protected int _id;
 
         protected Dictionary<ResourceType, int> _inventory;
@@ -43,8 +41,10 @@ namespace Scripts.Agents
         public abstract void OnEventReceived(Events.Event e, object o);
         protected abstract void DoStartAction();
 
+        public string ClassName;
         public void Start()
         {
+            ClassName = _childClassName;
             name = _childClassName + " " + _id;
             _actions = new List<(List<ARoom> path, Action action)>();
             WhereAmI();

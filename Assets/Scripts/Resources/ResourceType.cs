@@ -2,8 +2,8 @@
 {
     public enum ResourceType
     {
-        STEEL,
-        ALUMINIUM,
-        AMMO
+        Steel,
+        Aluminium,
+        Ammunition
     }
 }

@@ -62,7 +62,6 @@ namespace Scripts.Map
         private void Start()
         {
             // Base zone discovered
-            const int baseDiscoveredSize = 80;
             for (int y = 0; y < ConfigManager.S.Config.BaseSurfaceEmpty.y; y++)
             {
                 List<TileState> _elems = new List<TileState>();

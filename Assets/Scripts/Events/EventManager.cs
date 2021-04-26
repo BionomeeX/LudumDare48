@@ -4,9 +4,9 @@ using Scripts.Map;
 using Scripts.Map.Room;
 using UnityEngine;
 using Scripts.Agents;
-using System.Collections;
 using System.Collections.Generic;
 using Scripts.Sounds;
+using System.Collections.ObjectModel;
 
 namespace Scripts.Events
 {
@@ -15,6 +15,8 @@ namespace Scripts.Events
         public static EventManager S;
 
         private List<AAgent> _agents;
+        public ReadOnlyCollection<AAgent> GetAgents()
+            => _agents.AsReadOnly();
         private void Awake()
         {
             S = this;

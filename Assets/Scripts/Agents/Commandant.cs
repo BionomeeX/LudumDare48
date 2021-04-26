@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Scripts.Map;
@@ -14,7 +13,7 @@ namespace Scripts.Agents
     class Commandant : AAgent
     {
 
-        public Commandant() : base("Commandant")
+        public Commandant() : base("Sub-officer")
         {
 
         }

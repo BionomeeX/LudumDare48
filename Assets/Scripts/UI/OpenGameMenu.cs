@@ -11,9 +11,10 @@ namespace Scripts.UI
     public class OpenGameMenu : MonoBehaviour
     {
         [SerializeField]
-        private GameObject _buildPanel, _explorationPanel;
+        private GameObject _buildPanel, _explorationPanel, _recruitementPanel;
 
         private ExplorationPanel _explorationPanelScript;
+        private RecruitementPanel _recruitementPanelScript;
 
         [SerializeField]
         private Material[] _materials;
@@ -32,25 +33,40 @@ namespace Scripts.UI
         {
             _buildPanel.SetActive(false);
             _explorationPanel.SetActive(false);
+            _recruitementPanel.SetActive(false);
             _explanationPanelScript.gameObject.SetActive(false);
             _roomInfo.gameObject.SetActive(false);
 
             _explorationPanelScript = _explorationPanel.GetComponent<ExplorationPanel>();
+            _recruitementPanelScript = _recruitementPanel.GetComponent<RecruitementPanel>();
         }
 
         public void ToggleBuildPanel()
         {
             _explorationPanel.SetActive(false);
+            _recruitementPanel.SetActive(false);
             _buildPanel.SetActive(!_buildPanel.activeInHierarchy);
         }
 
         public void ToggleExplorationPanel()
         {
             _buildPanel.SetActive(false);
+            _recruitementPanel.SetActive(false);
             _explorationPanel.SetActive(!_explorationPanel.activeInHierarchy);
             if (_explorationPanel.activeInHierarchy)
             {
                 _explorationPanelScript.Enable();
+            }
+        }
+
+        public void ToggleRecruitementPanel()
+        {
+            _buildPanel.SetActive(false);
+            _explorationPanel.SetActive(false);
+            _recruitementPanel.SetActive(!_recruitementPanel.activeInHierarchy);
+            if (_recruitementPanel.activeInHierarchy)
+            {
+                _recruitementPanelScript.Enable();
             }
         }
 
