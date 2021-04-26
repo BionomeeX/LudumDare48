@@ -167,12 +167,55 @@ namespace Scripts.Agents
         }
         private bool CheckIfFactoryNeedResource()
         {
-            // var factories = MapManager.S.GetAllFactory().Select(
-            //     f => (f, Astar.FindPath(_currentRoom, f))
-            // ).Select(
-            //     fp => (fp.Item1, fp.Item2, Astar.ComputePathWeight(fp.Item2))
-            // )
+            var fpws = MapManager.S.GetAllFactory().Select(
+                f => (f, Astar.FindPath(_currentRoom, f))
+            ).Select(
+                fp => (fp.Item1, fp.Item2, Astar.ComputePathWeight(fp.Item2))
+            ).OrderBy(fpw => fpw.Item3).ToList();
 
+            return RRRR(fpws, ResourceStock.Priority.ABSOLUTE);
+        }
+
+        // Reserve Resource for Room Requirement RRRR
+        private bool RRRR(List<(ARoom room, List<ARoom> path, float weight)> rpws, ResourceStock.Priority priority)
+        {
+            if (rpws.Count > 0)
+            {
+                foreach (var rpw in rpws)
+                {
+                    List<(ResourceType type, int amount)> resourcesNeeded = rpw.room.Requirement.GetRequirements().ToList();
+                    int i = 0;
+                    foreach (var resourceAmount in resourcesNeeded)
+                    {
+                        // room.Requirement.CancelReservation(_id);
+                        if (FindPathForResource(resourceAmount.type, resourceAmount.amount, priority))
+                        {
+                            // register to the blueprint
+                            rpw.room.Requirement.Reserve(_id, i);
+                            // add path from the last element to the blueprint
+
+                            List<ARoom> additionalPath = new List<ARoom>();
+                            if (_actions.Last().path.Count > 0)
+                            {
+                                additionalPath = Astar.FindPath(_actions.Last().path.Last(), rpw.room);
+                            }
+                            else
+                            {
+                                additionalPath = Astar.FindPath(_currentRoom, rpw.room);
+                            }
+                            _actions.Add(
+                                (additionalPath, Action.DropRessource)
+                            );
+                            return true;
+                        }
+                        else
+                        {
+                            rpw.room.Requirement.CancelReservation(_id);
+                        }
+                        ++i;
+                    }
+                }
+            }
             return false;
         }
 
@@ -181,97 +224,39 @@ namespace Scripts.Agents
             Debug.Log("Any blueprints need some loving ?");
             // check if there any blueprints
             var blueprints = MapManager.S.GetAllAccessibleBlueprint().Select(
-                b => Astar.FindPath(_currentRoom, b)
+                b => (b, Astar.FindPath(_currentRoom, b))
             ).Select(
-                path => (path, Astar.ComputePathWeight(path))
-            ).OrderBy(pf => pf.Item2).ToList();
+                path => (path.Item1, path.Item2, Astar.ComputePathWeight(path.Item2))
+            ).OrderBy(pf => pf.Item3).ToList();
 
-            Debug.Log("blueprints found : " + blueprints.Count);
-            // if there is, reserve a block and ask for its needed resources
-            if (blueprints.Count > 0)
-            {
-                foreach (var blueprint in blueprints)
-                {
-                    // check the ressource needed for the blueprint
-                    ARoom room = null;
-                    if (blueprint.path.Count > 0)
-                    {
-                        room = blueprint.path.Last();
-                    }
-                    else
-                    {
-                        room = _currentRoom;
-                    }
-                    List<(ResourceType type, int amount)> resourcesNeeded = room.Requirement.GetRequirements().ToList();
-                    Debug.Log("Resources needed : " + resourcesNeeded.Count);
-                    int i = 0;
-                    foreach (var resourceAmount in resourcesNeeded)
-                    {
-                        Debug.Log("  Need " + resourceAmount.amount);
-                        // register to the blueprint
-                        // room.Requirement.CancelReservation(_id);
-                        if (FindPathForResource(resourceAmount.type, resourceAmount.amount, 0))
-                        {
-                            room.Requirement.Reserve(_id, i);
-                            // add path from the last element to the blueprint
-                            Debug.Log("Found path : " + _actions.Count);
-
-                            List<ARoom> additionalPath = new List<ARoom>();
-                            if (_actions.Last().path.Count > 0)
-                            {
-                                additionalPath = Astar.FindPath(_actions.Last().path.Last(), room);
-                            }
-                            else
-                            {
-                                additionalPath = Astar.FindPath(_currentRoom, room);
-                            }
-                            Debug.Log("additionalPath : " + additionalPath.Count);
-                            _actions.Add(
-                                (additionalPath, Action.DropRessource)
-                            );
-                            return true;
-                        }
-                        else
-                        {
-                            room.Requirement.CancelReservation(_id);
-                        }
-                        ++i;
-                    }
-                }
-            }
-            Debug.Log("No resources for the blueprints ...");
-            return false;
+            return RRRR(blueprints, ResourceStock.Priority.ABSOLUTE);
         }
         private bool CheckIfHighPriorityStockNeedResource()
         {
-            // get list of nonfull stocks
-
-            // sort stocks by priority
-
-            // reserve as input
-
-            // search all lowest priority stock if there is any available resources
-
-            // if not, look at the miners
-
-            // if miner or stock, reserve as output
 
             return false;
         }
 
-        private bool FindPathForResource(ResourceType resource, int amount, int priority)
+        private bool FindPathForResource(ResourceType resource, int amount, ResourceStock.Priority priority)
         // hypothesis:
         // 1) inventory is empty
         // 2) actions list is empty
         {
-            Debug.Log("Find Path For resource ON");
-            var stocksrooms = MapManager.S.GetAllStockRoom().ToList();
-            Debug.Log("stocksRooms : " + stocksrooms.Count);
+            // Debug.Log("Find Path For resource ON");
+            var stocksrooms = MapManager.S
+            .GetAllStockRoom()
+            // we keep only the ones with lower priority
+            .Where(
+                room => ((GenericRoom)room).RoomType.Stock.GetResourcePriority(resource) < priority
+            )
+            .ToList();
+
+            // Debug.Log("stocksRooms : " + stocksrooms.Count);
 
             var ra = stocksrooms.Select(
                 room => (room, ((GenericRoom)room).RoomType.Stock.CheckResourceByType(resource))
             ).ToList();
-            Debug.Log("stocksRooms 2 : " + ra.Count);
+            // Debug.Log("stocksRooms 2 : " + ra.Count);
             foreach (var el in ra)
             {
                 Debug.Log("  " + el.Item2);
@@ -289,7 +274,7 @@ namespace Scripts.Agents
                 rapw => rapw.Item4
             ).ToList();
 
-            Debug.Log("Stocks found : " + stocks.Count);
+            // Debug.Log("Stocks found : " + stocks.Count);
             // go in ascending order to fill my inventory
             int myamount = ConfigManager.S.Config.NbOfResourcePerTransportation;
             bool first = true;

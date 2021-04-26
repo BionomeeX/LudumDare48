@@ -344,6 +344,15 @@ namespace Scripts.Agents
                     GenerateNewMasterBlueprint();
                 }
             }
+            if (e == Events.Event.ExplorationNewZone)
+            {
+                // check if any blueprints is active
+                if (!MapManager.S.MapMasterBlueprints.Any(mbp => mbp.Owner == _id))
+                {
+                    GenerateNewMasterBlueprint();
+                }
+            }
+
         }
 
     }

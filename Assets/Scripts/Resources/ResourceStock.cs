@@ -162,9 +162,19 @@ namespace Scripts.Resources
             return value.ToString();
         }
 
-        private enum Priority
+        public Priority GetResourcePriority(ResourceType resource)
         {
-            NONE, LOW, MEDIUM, HIGH
+            if (_priority.ContainsKey(resource))
+            {
+                return _priority[resource];
+            }
+            return Priority.MEDIUM;
+        }
+
+
+        public enum Priority
+        {
+            NONE, LOW, MEDIUM, HIGH, ABSOLUTE
         }
     }
 }
