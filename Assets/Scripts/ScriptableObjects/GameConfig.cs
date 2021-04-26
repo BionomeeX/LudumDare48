@@ -34,6 +34,7 @@ namespace Scripts.ScriptableObjects
 
         [Header("Mining")]
         public MiningResource[] MiningResources;
+        public int MiningRange;
 
         [Header("Layer")]
         public int LayerYSize;

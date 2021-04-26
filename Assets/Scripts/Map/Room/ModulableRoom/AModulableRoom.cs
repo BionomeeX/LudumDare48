@@ -21,6 +21,8 @@ namespace Scripts.Map.Room.ModulableRoom
 
         public virtual bool IsAirlock()
             => false;
+        public virtual bool IsMining()
+            => false;
 
         public ResourceStock Stock;
     }
