@@ -169,16 +169,29 @@ namespace Scripts.Map
         {
             Debug.Log("GETALLFACTORY");
             List<ARoom> result = MapRooms.Where(
-                r => r is GenericRoom gr && gr.RoomType.IsFactory()
+                r => (r is GenericRoom gr) && (gr.RoomType.IsFactory())
             ).ToList();
             return result;
         }
+
+        // public List<ARoom> GetAllAccessibleBlueprint()
+        // {
+        //     Debug.Log("GETALLACCESSIBLEBLUEPRINT");
+        //     var result = MapRooms.Where(
+        //         r => !r.IsBuilt
+        //     ).Where(
+        //         // check that at least one neighbor is not a blueprint
+        //         r => r.GetNeighborhood().ToList().Where(nr => nr.IsBuilt).Count() > 0
+        //     ).ToList();
+
+        //     return result;
+        // }
 
         public List<ARoom> GetAllAccessibleBlueprint()
         {
             Debug.Log("GETALLACCESSIBLEBLUEPRINT");
             var result = MapRooms.Where(
-                r => !r.IsBuilt
+                r => r.Requirement != null && !(r is GenericRoom gr && gr.RoomType.IsFactory())
             ).Where(
                 // check that at least one neighbor is not a blueprint
                 r => r.GetNeighborhood().ToList().Where(nr => nr.IsBuilt).Count() > 0

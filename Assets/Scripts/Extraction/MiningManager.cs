@@ -5,6 +5,7 @@ using Scripts.ScriptableObjects;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Scripts.Events;
 
 namespace Scripts.Extraction
 {
@@ -53,6 +54,7 @@ namespace Scripts.Extraction
                     if (r.RoomType.Stock.GetSizeTakenWithReservation() < r.RoomType.Stock.MaxSize)
                     {
                         r.RoomType.Stock.AddResource(((MiningRoom)r.RoomType).CurrentMining.Type, 1);
+                        EventManager.S.NotifyManager(Events.Event.ResourceMined, this);
                     }
                 }
                 ResourcesManager.S.UpdateUI();

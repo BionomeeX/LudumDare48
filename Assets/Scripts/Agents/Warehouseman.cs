@@ -20,6 +20,15 @@ namespace Scripts.Agents
 
         public override void OnEventReceived(Events.Event e, object o)
         {
+            if (e == Events.Event.PleaseDoSomething)
+            {
+                if (_actions.Count == 0)
+                {
+                    StartCoroutine(DoNextThing(Random.Range(0.1f, 1f)));
+                } else {
+                    DoNextAction();
+                }
+            }
             Debug.Log("Event Received");
             if (e == Events.Event.RoomCreated)
             {
@@ -50,9 +59,16 @@ namespace Scripts.Agents
             if (e == Events.Event.BlueprintDrawn || e == Events.Event.RoomCreated)
             {
                 Debug.Log("Blueprint Drawn event received for warehouseman");
-                if (IsIdle)
+                if (_actions.Count == 0)
                 {
                     Debug.Log("I'm available");
+                    StartCoroutine(DoNextThing(Random.Range(0.1f, 1f)));
+                }
+            }
+            if (e == Events.Event.ResourceMined)
+            {
+                if (_actions.Count == 0)
+                {
                     StartCoroutine(DoNextThing(Random.Range(0.1f, 1f)));
                 }
             }
@@ -80,13 +96,13 @@ namespace Scripts.Agents
             {
                 return true;
             }
-            if (CheckIfFactoryNeedResource())
-            {
-                return true;
-            }
             if (CheckIfBlueprintNeedResource())
             {
                 Debug.Log("CheckIfBlueprint !");
+                return true;
+            }
+            if (CheckIfFactoryNeedResource())
+            {
                 return true;
             }
             if (CheckIfHighPriorityStockNeedResource())
@@ -114,17 +130,17 @@ namespace Scripts.Agents
             Debug.Log("Take resource");
             // get the ResourceStock assiociated with the current room
             var resourceAndAmount = ((GenericRoom)_currentRoom).RoomType.Stock.GetResource(_id);
-            if (!_inventory.ContainsKey(resourceAndAmount.resourceType))
-            {
-                _inventory.Add(
-                    resourceAndAmount.resourceType,
-                    resourceAndAmount.amount
-                );
-            }
-            else
-            {
-                _inventory[resourceAndAmount.resourceType] += resourceAndAmount.amount;
-            }
+            // if (!_inventory.ContainsKey(resourceAndAmount.resourceType))
+            // {
+            //     _inventory.Add(
+            //         resourceAndAmount.resourceType,
+            //         resourceAndAmount.amount
+            //     );
+            // }
+            // else
+            // {
+            //     _inventory[resourceAndAmount.resourceType] += resourceAndAmount.amount;
+            // }
         }
 
         public void DropRessource()
@@ -133,7 +149,7 @@ namespace Scripts.Agents
             //List<(ResourceType type, int amount)> needs = new List<(ResourceType type, int amount)>();
             // ???????????????????????????????
             Debug.Log("Drop resource");
-            _inventory.Clear();
+            // _inventory.Clear();
             _currentRoom.Requirement.CompleteReservation(_id);
         }
 
@@ -144,16 +160,18 @@ namespace Scripts.Agents
 
         private bool CheckIfTurretNeedResource()
         {
-            var tpws = MapManager.S.GetAllTurrets().Select(
-                t => (t, Astar.FindPath(_currentRoom, t))
-            ).Select(
-                tp => (tp.Item1, tp.Item2, Astar.ComputePathWeight(tp.Item2))
-            ).OrderBy(tpw => tpw.Item3).ToList();
+            // var tpws = MapManager.S.GetAllTurrets().Select(
+            //     t => (t, Astar.FindPath(_currentRoom, t))
+            // ).Select(
+            //     tp => (tp.Item1, tp.Item2, Astar.ComputePathWeight(tp.Item2))
+            // ).OrderBy(tpw => tpw.Item3).ToList();
 
-            return RRRR(tpws, ResourceStock.Priority.ABSOLUTE);
+            // return RRRR(tpws, ResourceStock.Priority.ABSOLUTE);
+            return false;
         }
         private bool CheckIfFactoryNeedResource()
         {
+            Debug.Log("Factoriiiiiiiies ??");
             var fpws = MapManager.S.GetAllFactory().Select(
                 f => (f, Astar.FindPath(_currentRoom, f))
             ).Select(
@@ -161,6 +179,7 @@ namespace Scripts.Agents
             ).OrderBy(fpw => fpw.Item3).ToList();
 
             return RRRR(fpws, ResourceStock.Priority.ABSOLUTE);
+            // return false;
         }
 
         // Reserve Resource for Room Requirement RRRR
@@ -174,7 +193,6 @@ namespace Scripts.Agents
                     int i = 0;
                     foreach (var resourceAmount in resourcesNeeded)
                     {
-                        // room.Requirement.CancelReservation(_id);
                         if (FindPathForResource(resourceAmount.type, resourceAmount.amount, priority))
                         {
                             // register to the blueprint

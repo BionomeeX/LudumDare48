@@ -9,6 +9,8 @@ using Scripts.Sounds;
 using System.Collections.ObjectModel;
 using Scripts.Extraction;
 using Scripts.Map.Blueprints;
+using System.Collections;
+
 
 namespace Scripts.Events
 {
@@ -52,7 +54,8 @@ namespace Scripts.Events
                 MapManager.S.NotifyBluePrintFininshed(room);
             }
 
-            if(e == Event.MasterBlueprintFinished){
+            if (e == Event.MasterBlueprintFinished)
+            {
                 MasterBlueprint mbp = (MasterBlueprint)o;
                 MapManager.S.NotifyMasterBluePrintFininshed(mbp);
             }
@@ -60,6 +63,18 @@ namespace Scripts.Events
             foreach (var agent in _agents)
             {
                 agent.OnEventReceived(e, o);
+            }
+        }
+
+        private IEnumerator SendSignal()
+        {
+            while (true)
+            {
+                foreach (var agent in _agents)
+                {
+                    agent.OnEventReceived(Events.Event.PleaseDoSomething, this);
+                }
+                yield return new WaitForSeconds(1f);
             }
         }
 
