@@ -47,16 +47,18 @@ namespace Scripts.Extraction
 
         private void Start()
         {
+            var metalParent = new GameObject("Metals");
             for (int i = 0; i < 4; i++)
             {
                 foreach (var m in ConfigManager.S.Config.MiningResources)
                 {
-                    if (m.LayerFrom >= i && m.LayerTo <= i)
+                    if (i >= m.LayerFrom && i <= m.LayerTo)
                     {
                         var amount = Random.Range(ConfigManager.S.Config.MinMetalPerLayer, ConfigManager.S.Config.MaxMetalPerLayer);
                         var go = Instantiate(_metalPrefab, new Vector2(0f,
-                            Random.Range(i * ConfigManager.S.Config.LayerYSize,
-                            (i + 1) * ConfigManager.S.Config.LayerYSize)), Quaternion.identity);
+                            -Random.Range((float)i * ConfigManager.S.Config.LayerYSize,
+                            (i + 1) * ConfigManager.S.Config.LayerYSize)), Random.rotation);
+                        go.transform.parent = metalParent.transform;
                         go.GetComponent<MeshRenderer>().material = m.Material;
                         _metals.Add(go.GetComponent<Metal>());
                     }
