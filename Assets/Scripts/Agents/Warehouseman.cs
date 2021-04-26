@@ -22,6 +22,7 @@ namespace Scripts.Agents
         {
             if (e == Events.Event.RoomCreated)
             {
+                // If already doing something, just redo the paths
                 if (_actions.Count > 0)
                 {
                     List<(List<ARoom> path, Action action)> newactions = new List<(List<ARoom> path, Action action)>();
@@ -35,6 +36,9 @@ namespace Scripts.Agents
                             action.action
                         ));
                     }
+                    _actions = newactions;
+                } else {
+                    ChooseAction();
                 }
             }
             if (e == Events.Event.RoomDestroyed)
@@ -89,6 +93,7 @@ namespace Scripts.Agents
 
         public void TakeRessource()
         {
+            Debug.Log("Take resource");
             // get the ResourceStock assiociated with the current room
             var resourceAndAmount = ((GenericRoom)_currentRoom).RoomType.Stock.GetResource(_id);
             if (!_inventory.ContainsKey(resourceAndAmount.resourceType))
@@ -109,6 +114,7 @@ namespace Scripts.Agents
             // check what ressources the current room need
             //List<(ResourceType type, int amount)> needs = new List<(ResourceType type, int amount)>();
             // ???????????????????????????????
+            Debug.Log("Drop resource");
             _inventory.Clear();
             _currentRoom.Requirement.CompleteReservation(_id);
         }

@@ -133,7 +133,7 @@ namespace Scripts.Agents
             if (_objective != null)
             {
                 transform.position += (_objective.Value - transform.position).normalized * ConfigManager.S.Config.NpcSpeed;
-                if (Vector2.Distance(transform.position, _objective.Value) < .1f)
+                if (Vector2.Distance(transform.position, _objective.Value) < .3f)
                 {
                     Debug.Log("NEXT");
                     _objective = null;
@@ -148,7 +148,7 @@ namespace Scripts.Agents
             _currentRoom = room;
             _objective = new Vector3(
                 _currentRoom.Position.x + 0.5f,
-                -_currentRoom.Position.y + 0.1f,
+                -_currentRoom.Position.y - 0.9f,
                 transform.position.z
             );
         }

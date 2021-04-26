@@ -27,6 +27,14 @@ namespace Scripts.Map
         public List<ARoom> MapRooms = new List<ARoom>();
         public List<MasterBlueprint> MapMasterBlueprints = new List<MasterBlueprint>();
 
+        private List<(int width, int heigth)> _possibleRoomsSize = new List<(int width, int heigth)>{
+                //(1, 1),
+                (2, 1),
+                (3, 1),
+                (2, 2),
+                (3, 2)
+            };
+
         [Header("Rooms")]
         [SerializeField]
         private Transform _mapTransform;
@@ -101,6 +109,10 @@ namespace Scripts.Map
             ARoom thirdRoom = AddRoom(new Vector2Int(9, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, secondRoom, null, false);
 
             ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom, null, false);
+
+            // var roominfo = Rooms.First(ri => ri.Size.x == 2 && ri.Size.y == 2);
+            // ARoom FifthRoom = AddRoom(new Vector2Int(0, 2), new Vector2Int(2, 2), roominfo.GameObject, RoomType.EMPTY, fourthRoom, null, true);
+
         }
 
         public bool CanIBuildHere(Vector2Int position, Vector2Int size)
@@ -154,6 +166,113 @@ namespace Scripts.Map
             return result;
         }
 
+        private bool IsThisConstructionValid(Vector2Int position, (int corridors, int width, int heigth) construction, bool toTheRight)
+        {
+            // First check for out of the water
+            if (position.y - construction.heigth + 1 < 0)
+            {
+                return false;
+            }
+            // Check for cliff if going left
+            if (!toTheRight && position.x - construction.corridors - construction.width < 0)
+            {
+                return false;
+            }
+            // Check if not explorated zone if going right
+            if (toTheRight)
+            {
+                // Check every line
+                for (int line = position.y - construction.heigth + 1; line < position.y; ++line)
+                {
+                    // If expansion out of the grid => oups !
+                    if (position.x + construction.corridors + construction.width > _mapPathfinding[line].Count)
+                    {
+                        return false;
+                    }
+                }
+            }
+            // Now we check for other constructions
+            if (toTheRight)
+            {
+                /**
+                *    #########
+                *   #   XXX   #
+                *   #XXXXXX   #
+                *    #########
+                */
+                // First check for the corridors + base line
+                for (int col = position.x; col < position.x + construction.corridors + construction.width; ++col)
+                {
+                    if (_mapPathfinding[position.y][col] == TileState.OCCUPIED)
+                    {
+                        return false;
+                    }
+                }
+                // Check the up line if any
+                if (construction.heigth > 1)
+                {
+                    for (int line = position.y - construction.heigth + 1; line < position.y - 1; ++line)
+                    {
+                        for (int col = position.x + construction.corridors + 1; col < position.x + construction.corridors + construction.width; ++col)
+                        {
+                            if (_mapPathfinding[line][col] == TileState.OCCUPIED)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                /**
+                *    #########
+                *   #   XXX   #
+                *   #   XXXXXX#
+                *    #########
+                */
+                for (int col = position.x - construction.corridors - construction.width; col < position.x; ++col)
+                {
+                    if (_mapPathfinding[position.y][col] == TileState.OCCUPIED)
+                    {
+                        return false;
+                    }
+                }
+                // Check the up line if any
+                if (construction.heigth > 1)
+                {
+                    for (int line = position.y - construction.heigth + 1; line < position.y - 1; ++line)
+                    {
+                        for (int col = position.x - construction.corridors - construction.width; col < position.x - construction.corridors - 1; ++col)
+                        {
+                            if (_mapPathfinding[line][col] == TileState.OCCUPIED)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        public List<(int corridors, int width, int heigth)> GetZoneConstructionPossibilities(Vector2Int position, bool toTheRight, int corridorMin, int corridorMax)
+        {
+            List<(int corridors, int width, int heigth)> result = new List<(int corridors, int width, int heigth)>();
+            foreach (var room in _possibleRoomsSize)
+            {
+                for (int corridor = corridorMin; corridor <= corridorMax; ++corridor)
+                {
+                    if (IsThisConstructionValid(position, (corridor, room.width, room.heigth), toTheRight))
+                    {
+                        result.Add((corridor, room.width, room.heigth));
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public ARoom AddRoom(
             Vector2Int position,
             Vector2Int size,
@@ -187,7 +306,7 @@ namespace Scripts.Map
             }
             MapRooms.Add(newRoom);
 
-            var go = Instantiate(room, new Vector2(position.x, -position.y) + new Vector2(1f, -size.y), Quaternion.identity);
+            var go = Instantiate(room, new Vector2(position.x, -position.y) + new Vector2(1f, -1f), Quaternion.identity);
             go.transform.parent = _mapTransform;
             newRoom.GameObject = go;
 
@@ -203,9 +322,9 @@ namespace Scripts.Map
                 dText.GetComponent<TextMesh>().text = "(" + newRoom.Position.x + ", " + newRoom.Position.y + ")";
             }
 
-            for (int y = position.y; y < position.y + size.y; y++)
+            for (int y = position.y - size.y + 1; y <= position.y ; ++y)
             {
-                for (int x = position.x; x < position.x + size.x; x++)
+                for (int x = position.x; x < position.x + size.x; ++x)
                 {
                     _mapPathfinding[y][x] = TileState.OCCUPIED;
                 }

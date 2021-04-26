@@ -22,100 +22,128 @@ namespace Scripts.Agents
 
         private void GenerateNewMasterBlueprint()
         {
-            // choose a room
-            // 1) choose a room from where to expand
-            List<(ARoom room, float weight)> choices = new List<(ARoom room, float weight)>();
-            foreach (ARoom room in MapManager.S.MapRooms)
-            {
-                if (room.RoomLeft == null || room.RoomRight == null)
-                {
-                    choices.Add((room, (float)room.Position.x + 3 * room.Position.y));
-                }
-            }
+            // for each room get the list of all possible expansions
+            var rprl = MapManager.S.MapRooms.Where(
+                room => room.RoomLeft == null || room.RoomRight == null
+            ).Select(
+                room => (room, (float)room.Position.x + 3 * room.Position.y, MapManager.S.GetZoneConstructionPossibilities(room.Position, true, 1, 6), MapManager.S.GetZoneConstructionPossibilities(room.Position, false, 1, 6))
+            ).Where(
+                rprl => rprl.Item3.Count > 0 || rprl.Item4.Count > 0
+            ).ToList();
 
-            // if there is no room to expand, wait for the next time the map change
-            if (choices.Count == 0)
+            if (rprl.Count == 0)
             {
                 return;
             }
 
             float total = 0;
-            foreach ((var _, var weight) in choices)
+            foreach (var rprlVal in rprl)
             {
-                total += weight;
+                total += rprlVal.Item2;
             }
 
             int i = 0;
             {
-                float choice = Random.Range(0f, total) - choices[0].weight;
+                float choice = Random.Range(0f, total) - rprl[0].Item2;
                 while (choice > 0f)
                 {
                     ++i;
-                    choice -= choices[i].weight;
+                    choice -= rprl[i].Item2;
                 }
             }
-            // i is the choosen room
-            ARoom targetRoom = choices[i].room;
 
-            // choose a direction
-            List<int> directions = new List<int>();
-            if (targetRoom.RoomRight == null)
+            // for each expansion, associate a probability weigth
+            var choosenRoom = rprl[i];
+            List<int> directionChoices = new List<int>();
+            if (choosenRoom.Item3.Count > 0)
             {
-                directions.Add(0);
+                directionChoices.Add(0);
             }
-            if (targetRoom.RoomLeft == null)
+            if (choosenRoom.Item4.Count > 0)
             {
-                directions.Add(1);
+                directionChoices.Add(1);
             }
 
-            // choose one
+            int direction = directionChoices[Random.Range(0, directionChoices.Count)];
+
+            var blueprints = direction == 0 ? choosenRoom.Item3 : choosenRoom.Item4;
+
+            var blueprint = blueprints[Random.Range(0, blueprints.Count)];
+
+            ARoom runningRoom = choosenRoom.Item1;
+
+            List<ARoom> roomList = new List<ARoom>();
+            if (direction == 0)
             {
-                int choice = directions[Random.Range(0, directions.Count)];
-
-                List<ARoom> roomList = new List<ARoom>();
-
-                roomList.Add(
-                    MapManager.S.AddRoom(
-                        new Vector2Int(targetRoom.Position.x + ((choice == 0) ? +targetRoom.Size.x : -1), targetRoom.Position.y),
+                for (int corridor = 0; corridor < blueprint.Item1; ++corridor)
+                {
+                    runningRoom = MapManager.S.AddRoom(
+                        new Vector2Int(runningRoom.Position.x + 1, runningRoom.Position.y),
                         new Vector2Int(1, 1),
                         MapManager.S.Corridor,
                         RoomType.CORRIDOR,
-                        targetRoom,
+                        runningRoom,
                         null,
                         true
-                    )
-                );
-                roomList.Add(
-                    MapManager.S.AddRoom(
-                        new Vector2Int(roomList[0].Position.x + ((choice == 0) ? +roomList[0].Size.x : -1), roomList[0].Position.y),
-                        new Vector2Int(1, 1),
-                        MapManager.S.Corridor,
-                        RoomType.CORRIDOR,
-                        roomList[0],
-                        null,
-                        true
-                    )
-                );
-                var randRoom = MapManager.S.Rooms[Random.Range(0, MapManager.S.Rooms.Length)];
-                roomList.Add(
-                    MapManager.S.AddRoom(
-                        new Vector2Int(roomList[1].Position.x + ((choice == 0) ? +roomList[1].Size.x : -2), roomList[1].Position.y),
-                        randRoom.Size,
-                        randRoom.GameObject,
+                    );
+                    roomList.Add(
+                        runningRoom
+                    );
+                }
+                var roominfo = MapManager.S.Rooms.First(ri => ri.Size.x == blueprint.Item2 && ri.Size.y == blueprint.Item3);
+                runningRoom = MapManager.S.AddRoom(
+                        new Vector2Int(runningRoom.Position.x + 1, runningRoom.Position.y),
+                        new Vector2Int(blueprint.Item2, blueprint.Item3),
+                        roominfo.GameObject,
                         RoomType.EMPTY,
-                        roomList[1],
+                        runningRoom,
                         null,
                         true
-                    )
+                    );
+                roomList.Add(
+                    runningRoom
+                );
+            } else {
+                for (int corridor = 0; corridor < blueprint.Item1; ++corridor)
+                {
+                    runningRoom = MapManager.S.AddRoom(
+                        new Vector2Int(runningRoom.Position.x - 1, runningRoom.Position.y),
+                        new Vector2Int(1, 1),
+                        MapManager.S.Corridor,
+                        RoomType.CORRIDOR,
+                        runningRoom,
+                        null,
+                        true
+                    );
+                    roomList.Add(
+                        runningRoom
+                    );
+                }
+                var roominfo = MapManager.S.Rooms.First(ri => ri.Size.x == blueprint.Item2 && ri.Size.y == blueprint.Item3);
+                runningRoom = MapManager.S.AddRoom(
+                        new Vector2Int(runningRoom.Position.x - blueprint.Item2, runningRoom.Position.y),
+                        new Vector2Int(blueprint.Item2, blueprint.Item3),
+                        roominfo.GameObject,
+                        RoomType.EMPTY,
+                        runningRoom,
+                        null,
+                        true
+                    );
+                roomList.Add(
+                    runningRoom
                 );
 
-                MapManager.S.MapMasterBlueprints.Add(new Map.Blueprints.MasterBlueprint(
-                    roomList.Select(room => new Blueprint(room)).ToList(),
-                    _id
-                ));
-
-                EventManager.S.NotifyManager(Events.Event.BlueprintDrawn, this);
             }
+
+
+            MapManager.S.MapMasterBlueprints.Add(new Map.Blueprints.MasterBlueprint(
+                        roomList.Select(room => new Blueprint(room)).ToList(),
+                        _id
+                    ));
+
+            EventManager.S.NotifyManager(Events.Event.BlueprintDrawn, this);
+
+
         }
 
         public override bool ChooseAction()
