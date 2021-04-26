@@ -109,11 +109,13 @@ namespace Scripts.Map
                 EventManager.S.Subscribe(commandant.GetComponent<Commandant>());
             }, false);
 
-            ARoom secondRoom = AddRoom(new Vector2Int(7, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, firstRoom, null, false);
+            ARoom leftC1 = AddRoom(new Vector2Int(7, 0), new Vector2Int(1, 1), Corridor, RoomType.EMPTY, firstRoom, null, false);
+            ARoom leftC2 = AddRoom(new Vector2Int(8, 0), new Vector2Int(1, 1), Corridor, RoomType.EMPTY, leftC1, null, false);
+            ARoom leftR = AddRoom(new Vector2Int(9, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, leftC2, null, false);
 
-            ARoom thirdRoom = AddRoom(new Vector2Int(9, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, secondRoom, null, false);
-
-            ARoom fourthRoom = AddRoom(new Vector2Int(9, 1), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, thirdRoom, null, false);
+            ARoom rightC1 = AddRoom(new Vector2Int(4, 0), new Vector2Int(1, 1), Corridor, RoomType.EMPTY, firstRoom, null, false);
+            ARoom rightC2 = AddRoom(new Vector2Int(3, 0), new Vector2Int(1, 1), Corridor, RoomType.EMPTY, rightC1, null, false);
+            ARoom rightR = AddRoom(new Vector2Int(1, 0), new Vector2Int(2, 1), ReceptionRoom, RoomType.EMPTY, rightC2, null, false);
 
             // var roominfo = Rooms.First(ri => ri.Size.x == 2 && ri.Size.y == 2);
             // ARoom FifthRoom = AddRoom(new Vector2Int(0, 2), new Vector2Int(2, 2), roominfo.GameObject, RoomType.EMPTY, fourthRoom, null, true);
