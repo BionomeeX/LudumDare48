@@ -30,4 +30,26 @@ MonoBehaviour:
   SubmarineSpeed: 2
   SubmarineRadius: 5
   BaseSurfaceEmpty: {x: 20, y: 10}
-  NpcSpeed: 0.01
+  NpcSpeed: 0.05
+  CameraSpeed: 0.2
+  MiningResources:
+  - Resource: 0
+    LayerFrom: 1
+    LayerTo: 2
+    Material: {fileID: 2100000, guid: b936529caf193a1438cf20a037f8a35c, type: 2}
+  - Resource: 1
+    LayerFrom: 2
+    LayerTo: 2
+    Material: {fileID: 2100000, guid: 8fad9dec31e13164b8a74e12d88dab3b, type: 2}
+  - Resource: 2
+    LayerFrom: 1
+    LayerTo: 2
+    Material: {fileID: 2100000, guid: b35d4eb3be0974c4d94c7ddd94d1973f, type: 2}
+  - Resource: 3
+    LayerFrom: 2
+    LayerTo: 3
+    Material: {fileID: 2100000, guid: 2c141d0b91261eb428acbaecd85437f8, type: 2}
+  - Resource: 4
+    LayerFrom: 3
+    LayerTo: 3
+    Material: {fileID: 2100000, guid: 4026d31c398ccf14184ca8ca739ab59f, type: 2}

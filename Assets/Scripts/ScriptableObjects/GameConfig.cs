@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Extraction;
+using UnityEngine;
 
 namespace Scripts.ScriptableObjects
 {
@@ -25,5 +26,16 @@ namespace Scripts.ScriptableObjects
 
         [Header("NPC")]
         public float NpcSpeed;
+
+        [Header("Camera")]
+        public float CameraSpeed;
+
+        [Header("Mining")]
+        public MiningResource[] MiningResources;
+
+        [Header("Layer")]
+        public int LayerYSize;
+        public int MinMetalPerLayer;
+        public int MaxMetalPerLayer;
     }
 }

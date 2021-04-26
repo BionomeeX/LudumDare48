@@ -278,6 +278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StorageInfoText: {fileID: 3304247741050348045}
   PriorityContainer: {fileID: 3304247741246180160}
+  PriorityPrefab: {fileID: 5634858518709175697, guid: 843570c0d0b93084f859ecb292459ec7, type: 3}
 --- !u!1 &3304247741246180160
 GameObject:
   m_ObjectHideFlags: 0

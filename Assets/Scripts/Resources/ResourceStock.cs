@@ -142,5 +142,25 @@ namespace Scripts.Resources
             _reservedAdd = new Dictionary<int, (ResourceType, int)>();
             ResourcesManager.S.UpdateUI();
         }
+
+        private Dictionary<ResourceType, Priority> _priority = new Dictionary<ResourceType, Priority>();
+
+        /// <param name="change">-1 or +1</param>
+        public string SetPriority(ResourceType res, int change)
+        {
+            if (!_priority.ContainsKey(res))
+                _priority.Add(res, Priority.MEDIUM);
+            var value = _priority[res];
+            value += change;
+            if (value < 0) value = Priority.NONE;
+            if (value > Priority.HIGH) value = Priority.HIGH;
+            _priority[res] = value;
+            return value.ToString();
+        }
+
+        private enum Priority
+        {
+            NONE, LOW, MEDIUM, HIGH
+        }
     }
 }

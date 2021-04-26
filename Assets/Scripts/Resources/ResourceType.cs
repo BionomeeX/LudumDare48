@@ -2,8 +2,18 @@
 {
     public enum ResourceType
     {
-        Steel,
-        Aluminium,
+        // ZONE 1
+        Iron,
+        Cobalt,
+        Charcoal,
+
+        // ZONE 2
+        Gold,
+
+        // ZONE 3
+        Manganese,
+
+        // CRAFT
         Ammunition
     }
 }
