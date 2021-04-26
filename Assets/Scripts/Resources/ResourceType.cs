@@ -14,6 +14,7 @@
         Manganese,
 
         // CRAFT
-        Ammunition
+        Steel, // Iron + Charcoal
+        Ammunition, // Iron + Iron
     }
 }
