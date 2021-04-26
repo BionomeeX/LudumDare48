@@ -191,8 +191,6 @@ namespace Scripts.Agents
                 // if not possible, try building a classic room
             }
             {
-
-
                 // for each room get the list of all possible expansions
                 var rprl = MapManager.S.MapRooms.Where(
                     room => room.RoomLeft == null || room.RoomRight == null

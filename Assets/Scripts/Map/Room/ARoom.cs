@@ -4,14 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+
 namespace Scripts.Map.Room
 {
     [System.Serializable]
     public abstract class ARoom
     {
+        public static int id = 0;
+        public int Myid;
 
         public ARoom(Vector2Int size, Vector2Int position)
         {
+            Myid = ++id;
             Size = size;
             Position = position;
             IsBuilt = false;

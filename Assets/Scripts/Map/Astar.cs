@@ -2,6 +2,8 @@ using Scripts.Map.Room;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+
 
 namespace Scripts.Map
 {
@@ -96,20 +98,20 @@ namespace Scripts.Map
 
                     Node neighbour = new Node(neighbor);
 
-                    if (closedSet.Contains(neighbour))
+                    if (closedSet.Any(x => x.currentNode.Myid == neighbour.currentNode.Myid))
                     {
                         continue;
                     }
 
                     float newMovementCostToNeighbour = currentNode.gCost + neighbour.currentNode.GetCost();
 
-                    if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+                    if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Any(x => x.currentNode.Myid == neighbour.currentNode.Myid))
                     {
                         neighbour.gCost = newMovementCostToNeighbour;
                         neighbour.hCost = ARoom.GetDistance(neighbor, endPosition);
                         neighbour.parent = currentNode;
 
-                        if (!openSet.Contains(neighbour))
+                        if (!openSet.Any(x => x.currentNode.Myid == neighbour.currentNode.Myid))
                         {
                             openSet.Add(neighbour);
                         }
