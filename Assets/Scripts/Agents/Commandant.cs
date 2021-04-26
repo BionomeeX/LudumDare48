@@ -60,7 +60,7 @@ namespace Scripts.Agents
 
                     ARoom runningRoom = rrl.Item1;
                     List<ARoom> roomList = new List<ARoom>();
-                    Debug.Log("Direction : " + ((direction == 0) ? "Rigth" : "Left") + " ------------------------------------------------------");
+                    // Debug.Log("Direction : " + ((direction == 0) ? "Rigth" : "Left") + " ------------------------------------------------------");
                     if (direction == 0)
                     {
                         for (int corridor = 0; corridor < blueprint.Item1; ++corridor)
@@ -224,7 +224,7 @@ namespace Scripts.Agents
                 // for each expansion, associate a probability weigth
                 var choosenRoom = rprl[i];
 
-                Debug.Log("ChoosenRoom lists : " + choosenRoom.Item3.Count + ", " + choosenRoom.Item4.Count);
+                // Debug.Log("ChoosenRoom lists : " + choosenRoom.Item3.Count + ", " + choosenRoom.Item4.Count);
 
                 List<int> directionChoices = new List<int>();
                 if (choosenRoom.Item3.Count > 0)
@@ -236,7 +236,7 @@ namespace Scripts.Agents
                     directionChoices.Add(1);
                 }
 
-                Debug.Log("DirectionChoices : " + directionChoices.Count);
+                // Debug.Log("DirectionChoices : " + directionChoices.Count);
 
                 int direction = directionChoices[Random.Range(0, directionChoices.Count)];
 
@@ -247,7 +247,7 @@ namespace Scripts.Agents
                 ARoom runningRoom = choosenRoom.Item1;
 
                 List<ARoom> roomList = new List<ARoom>();
-                Debug.Log("Direction : " + ((direction == 0) ? "Rigth" : "Left") + " ------------------------------------------------------");
+                // Debug.Log("Direction : " + ((direction == 0) ? "Rigth" : "Left") + " ------------------------------------------------------");
                 if (direction == 0)
                 {
                     for (int corridor = 0; corridor < blueprint.Item1; ++corridor)

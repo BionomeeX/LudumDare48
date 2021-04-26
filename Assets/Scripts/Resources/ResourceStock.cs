@@ -80,7 +80,7 @@ namespace Scripts.Resources
         {
             if (!_resources.ContainsKey(type)) // Not available
             {
-                Debug.Log("Ressource not available !!");
+                // Debug.Log("Ressource not available !!");
                 return 0;
             }
             return _resources[type];

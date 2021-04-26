@@ -120,7 +120,7 @@ namespace Scripts.Map
 
         public void NotifyBluePrintFininshed(ARoom room)
         {
-            Debug.Log("NOTIFYBPF");
+            // Debug.Log("NOTIFYBPF");
             // get the Masterblueprint where this room come from
             foreach (var masterbp in MapMasterBlueprints)
             {
@@ -135,12 +135,12 @@ namespace Scripts.Map
 
         public void NotifyMasterBluePrintFininshed(MasterBlueprint mbp)
         {
-            Debug.Log("NOTIGYMASTERBPF");
+            // Debug.Log("NOTIGYMASTERBPF");
             MapMasterBlueprints.Remove(mbp);
         }
         public bool CanIBuildHere(Vector2Int position, Vector2Int size)
         {
-            Debug.Log("CANIBUILDHERE");
+            // Debug.Log("CANIBUILDHERE");
             if (position.x < 0 || position.y - size.y < 0)
             {
                 return false;
@@ -160,14 +160,14 @@ namespace Scripts.Map
 
         public List<ARoom> GetAllTurrets()
         {
-            Debug.Log("GETALLTURRETS");
+            // Debug.Log("GETALLTURRETS");
             List<ARoom> result = new List<ARoom>();
             return result;
         }
 
         public List<ARoom> GetAllFactory()
         {
-            Debug.Log("GETALLFACTORY");
+            // Debug.Log("GETALLFACTORY");
             List<ARoom> result = MapRooms.Where(
                 r => (r is GenericRoom gr) && (gr.RoomType.IsFactory())
             ).ToList();
@@ -176,7 +176,7 @@ namespace Scripts.Map
 
         // public List<ARoom> GetAllAccessibleBlueprint()
         // {
-        //     Debug.Log("GETALLACCESSIBLEBLUEPRINT");
+        //     // Debug.Log("GETALLACCESSIBLEBLUEPRINT");
         //     var result = MapRooms.Where(
         //         r => !r.IsBuilt
         //     ).Where(
@@ -189,7 +189,7 @@ namespace Scripts.Map
 
         public List<ARoom> GetAllAccessibleBlueprint()
         {
-            Debug.Log("GETALLACCESSIBLEBLUEPRINT");
+            // Debug.Log("GETALLACCESSIBLEBLUEPRINT");
             var result = MapRooms.Where(
                 r => r.Requirement != null && !(r is GenericRoom gr && gr.RoomType.IsFactory())
             ).Where(
@@ -202,7 +202,7 @@ namespace Scripts.Map
 
         public List<ARoom> GetAllStockRoom()
         {
-            Debug.Log("GETALLSTOCKROOM");
+            // Debug.Log("GETALLSTOCKROOM");
             List<ARoom> result = MapRooms.Where(
                 r => r is GenericRoom gRoom && gRoom.RoomType.Stock != null
             ).ToList();
@@ -211,7 +211,7 @@ namespace Scripts.Map
 
         private bool IsThisLiftValid(Vector2Int position, (int corridors, int depth) lift, bool toTheRight)
         {
-            Debug.Log("ISTHISLIFTVALID");
+            // Debug.Log("ISTHISLIFTVALID");
             // Check for cliff if going left
             if ((!toTheRight) && (position.x - lift.corridors - 1 < 0))
             {
@@ -288,7 +288,7 @@ namespace Scripts.Map
 
         private bool IsThisConstructionValid(Vector2Int position, (int corridors, int width, int heigth) construction, bool toTheRight)
         {
-            Debug.Log("ISTHISCONSTRUCTIONVALID");
+            // Debug.Log("ISTHISCONSTRUCTIONVALID");
             // First check for out of the water
             if (position.y - construction.heigth + 1 < 0)
             {
@@ -379,7 +379,7 @@ namespace Scripts.Map
 
         public List<(int corridors, int width, int heigth)> GetZoneConstructionPossibilities(Vector2Int position, bool toTheRight, int corridorMin, int corridorMax)
         {
-            Debug.Log("GETZONECONSTRUCTION");
+            // Debug.Log("GETZONECONSTRUCTION");
             List<(int corridors, int width, int heigth)> result = new List<(int corridors, int width, int heigth)>();
             foreach (var room in _possibleRoomsSize)
             {
@@ -397,7 +397,7 @@ namespace Scripts.Map
 
         public List<(int corridors, int depth)> GetZoneLiftPossibilities(Vector2Int position, bool toTheRight, int corridorMin, int corridorMax)
         {
-            Debug.Log("GETZONELIFT");
+            // Debug.Log("GETZONELIFT");
             // check for depth from 1 to 3 !!
             List<(int corridors, int depth)> result = new List<(int corridors, int depth)>();
             for (int depth = 1; depth <= 3; ++depth)
@@ -423,7 +423,7 @@ namespace Scripts.Map
             bool hasCommandant
         )
         {
-            Debug.Log("ADDROOM");
+            // Debug.Log("ADDROOM");
             ARoom newRoom;
             switch (type)
             {
@@ -554,12 +554,12 @@ namespace Scripts.Map
 
         public void BuildRoomExt(ARoom room)
         {
-            Debug.Log("BUILDROOMEXT");
+            // Debug.Log("BUILDROOMEXT");
             StartCoroutine(BuildRoom(room, null));
         }
         private IEnumerator BuildRoom(ARoom room, Action<ARoom> roomBuilt)
         {
-            Debug.Log("BUILDROOM");
+            // Debug.Log("BUILDROOM");
             if (room.Sign != null)
             {
                 Destroy(room.Sign);
@@ -576,7 +576,7 @@ namespace Scripts.Map
 
         public void DiscoverTile(int x, int y)
         {
-            Debug.Log("DISCOVERTILE");
+            // Debug.Log("DISCOVERTILE");
             if (x < 0 || y < 0)
             {
                 return;

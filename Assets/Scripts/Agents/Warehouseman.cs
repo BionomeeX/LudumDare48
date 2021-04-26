@@ -29,7 +29,7 @@ namespace Scripts.Agents
                     DoNextAction();
                 }
             }
-            Debug.Log("Event Received");
+            // Debug.Log("Event Received");
             if (e == Events.Event.RoomCreated)
             {
                 // If already doing something, just redo the paths
@@ -58,10 +58,10 @@ namespace Scripts.Agents
             }
             if (e == Events.Event.BlueprintDrawn || e == Events.Event.RoomCreated)
             {
-                Debug.Log("Blueprint Drawn event received for warehouseman");
+                // Debug.Log("Blueprint Drawn event received for warehouseman");
                 if (_actions.Count == 0)
                 {
-                    Debug.Log("I'm available");
+                    // Debug.Log("I'm available");
                     StartCoroutine(DoNextThing(Random.Range(0.1f, 1f)));
                 }
             }
@@ -91,14 +91,14 @@ namespace Scripts.Agents
 
         public override bool ChooseAction()
         {
-            Debug.Log("ChooseAction ON");
+            // Debug.Log("ChooseAction ON");
             if (CheckIfTurretNeedResource())
             {
                 return true;
             }
             if (CheckIfBlueprintNeedResource())
             {
-                Debug.Log("CheckIfBlueprint !");
+                // Debug.Log("CheckIfBlueprint !");
                 return true;
             }
             if (CheckIfFactoryNeedResource())
@@ -114,7 +114,7 @@ namespace Scripts.Agents
 
         public override void DoSpecialAction(Action action)
         {
-            Debug.Log("Do Special Action ON");
+            // Debug.Log("Do Special Action ON");
             if (action == Action.TakeRessource)
             {
                 TakeRessource();
@@ -127,7 +127,7 @@ namespace Scripts.Agents
 
         public void TakeRessource()
         {
-            Debug.Log("Take resource");
+            // Debug.Log("Take resource");
             // get the ResourceStock assiociated with the current room
             var resourceAndAmount = ((GenericRoom)_currentRoom).RoomType.Stock.GetResource(_id);
             // if (!_inventory.ContainsKey(resourceAndAmount.resourceType))
@@ -148,7 +148,7 @@ namespace Scripts.Agents
             // check what ressources the current room need
             //List<(ResourceType type, int amount)> needs = new List<(ResourceType type, int amount)>();
             // ???????????????????????????????
-            Debug.Log("Drop resource");
+            // Debug.Log("Drop resource");
             // _inventory.Clear();
             _currentRoom.Requirement.CompleteReservation(_id);
         }
@@ -171,7 +171,7 @@ namespace Scripts.Agents
         }
         private bool CheckIfFactoryNeedResource()
         {
-            Debug.Log("Factoriiiiiiiies ??");
+            // Debug.Log("Factoriiiiiiiies ??");
             var fpws = MapManager.S.GetAllFactory().Select(
                 f => (f, Astar.FindPath(_currentRoom, f))
             ).Select(
@@ -226,7 +226,7 @@ namespace Scripts.Agents
 
         private bool CheckIfBlueprintNeedResource()
         {
-            Debug.Log("Any blueprints need some loving ?");
+            // Debug.Log("Any blueprints need some loving ?");
             // check if there any blueprints
             var blueprints = MapManager.S.GetAllAccessibleBlueprint().Select(
                 b => (b, Astar.FindPath(_currentRoom, b))
@@ -247,7 +247,7 @@ namespace Scripts.Agents
         // 1) inventory is empty
         // 2) actions list is empty
         {
-            // Debug.Log("Find Path For resource ON");
+            // // Debug.Log("Find Path For resource ON");
             var stocksrooms = MapManager.S
             .GetAllStockRoom()
             // we keep only the ones with lower priority
@@ -256,15 +256,15 @@ namespace Scripts.Agents
             )
             .ToList();
 
-            // Debug.Log("stocksRooms : " + stocksrooms.Count);
+            // // Debug.Log("stocksRooms : " + stocksrooms.Count);
 
             var ra = stocksrooms.Select(
                 room => (room, ((GenericRoom)room).RoomType.Stock.CheckResourceByType(resource))
             ).ToList();
-            // Debug.Log("stocksRooms 2 : " + ra.Count);
+            // // Debug.Log("stocksRooms 2 : " + ra.Count);
             foreach (var el in ra)
             {
-                Debug.Log("  " + el.Item2);
+                // Debug.Log("  " + el.Item2);
             }
 
             var raw = ra.Where(
@@ -279,7 +279,7 @@ namespace Scripts.Agents
                 rapw => rapw.Item4
             ).ToList();
 
-            // Debug.Log("Stocks found : " + stocks.Count);
+            // // Debug.Log("Stocks found : " + stocks.Count);
             // go in ascending order to fill my inventory
             int myamount = ConfigManager.S.Config.NbOfResourcePerTransportation;
             bool first = true;
