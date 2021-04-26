@@ -20,10 +20,11 @@ namespace Scripts.Agents
 
         public override void OnEventReceived(Events.Event e, object o)
         {
+            Debug.Log("Event Received");
             if (e == Events.Event.RoomCreated)
             {
                 // If already doing something, just redo the paths
-                if (_actions.Count > 0)
+                if (_actions != null && _actions.Count > 0)
                 {
                     List<(List<ARoom> path, Action action)> newactions = new List<(List<ARoom> path, Action action)>();
 
@@ -59,6 +60,7 @@ namespace Scripts.Agents
 
         public override bool ChooseAction()
         {
+            Debug.Log("ChooseAction ON");
             if (CheckIfTurretNeedResource())
             {
                 return true;
@@ -81,6 +83,7 @@ namespace Scripts.Agents
 
         public override void DoSpecialAction(Action action)
         {
+            Debug.Log("Do Special Action ON");
             if (action == Action.TakeRessource)
             {
                 TakeRessource();
@@ -238,6 +241,7 @@ namespace Scripts.Agents
         // 1) inventory is empty
         // 2) actions list is empty
         {
+            Debug.Log("Find Path For resource ON");
             var stocksrooms = MapManager.S.GetAllStockRoom().ToList();
             Debug.Log("stocksRooms : " + stocksrooms.Count);
 

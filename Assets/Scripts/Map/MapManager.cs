@@ -88,10 +88,10 @@ namespace Scripts.Map
 
                 }
 
-                var warehouseman = Instantiate(_warehousePrefab,
-                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
-                    Quaternion.identity);
-                EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
+                // var warehouseman = Instantiate(_warehousePrefab,
+                //     r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
+                //     Quaternion.identity);
+                // EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
 
                 var warehouseman2 = Instantiate(_warehousePrefab,
                     r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f + Vector3.right * .1f,
@@ -174,7 +174,7 @@ namespace Scripts.Map
                 return false;
             }
             // Check for cliff if going left
-            if (!toTheRight && position.x - construction.corridors - construction.width < 0)
+            if ((!toTheRight) && (position.x - construction.corridors - construction.width < 0))
             {
                 return false;
             }
@@ -182,7 +182,7 @@ namespace Scripts.Map
             if (toTheRight)
             {
                 // Check every line
-                for (int line = position.y - construction.heigth + 1; line < position.y; ++line)
+                for (int line = position.y - construction.heigth + 1; line <= position.y; ++line)
                 {
                     // If expansion out of the grid => oups !
                     if (position.x + construction.corridors + construction.width > _mapPathfinding[line].Count)
@@ -211,7 +211,7 @@ namespace Scripts.Map
                 // Check the up line if any
                 if (construction.heigth > 1)
                 {
-                    for (int line = position.y - construction.heigth + 1; line < position.y - 1; ++line)
+                    for (int line = position.y - construction.heigth + 1; line <= position.y - 1; ++line)
                     {
                         for (int col = position.x + construction.corridors + 1; col < position.x + construction.corridors + construction.width; ++col)
                         {
@@ -241,7 +241,7 @@ namespace Scripts.Map
                 // Check the up line if any
                 if (construction.heigth > 1)
                 {
-                    for (int line = position.y - construction.heigth + 1; line < position.y - 1; ++line)
+                    for (int line = position.y - construction.heigth + 1; line <= position.y - 1; ++line)
                     {
                         for (int col = position.x - construction.corridors - construction.width; col < position.x - construction.corridors - 1; ++col)
                         {

@@ -31,6 +31,7 @@ namespace Scripts.Events
 
         public void NotifyManager(Event e, object o)
         {
+            Debug.Log("Event send to the manager !");
             if (e == Event.BlueprintDrawn)
             {
                 Debug.Log("Blueprint Drawn event received");

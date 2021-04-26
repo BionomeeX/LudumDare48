@@ -28,7 +28,7 @@ namespace Scripts.Agents
             ).Select(
                 room => (room, (float)room.Position.x + 3 * room.Position.y, MapManager.S.GetZoneConstructionPossibilities(room.Position, true, 1, 6), MapManager.S.GetZoneConstructionPossibilities(room.Position, false, 1, 6))
             ).Where(
-                rprl => rprl.Item3.Count > 0 || rprl.Item4.Count > 0
+                rprl => (rprl.Item3.Count > 0) || (rprl.Item4.Count > 0)
             ).ToList();
 
             if (rprl.Count == 0)
@@ -54,6 +54,9 @@ namespace Scripts.Agents
 
             // for each expansion, associate a probability weigth
             var choosenRoom = rprl[i];
+
+            Debug.Log("ChoosenRoom lists : " + choosenRoom.Item3.Count + ", " + choosenRoom.Item4.Count);
+
             List<int> directionChoices = new List<int>();
             if (choosenRoom.Item3.Count > 0)
             {
@@ -64,15 +67,18 @@ namespace Scripts.Agents
                 directionChoices.Add(1);
             }
 
+            Debug.Log("DirectionChoices : " + directionChoices.Count);
+
             int direction = directionChoices[Random.Range(0, directionChoices.Count)];
 
-            var blueprints = direction == 0 ? choosenRoom.Item3 : choosenRoom.Item4;
+            var blueprints = (direction == 0) ? choosenRoom.Item3 : choosenRoom.Item4;
 
             var blueprint = blueprints[Random.Range(0, blueprints.Count)];
 
             ARoom runningRoom = choosenRoom.Item1;
 
             List<ARoom> roomList = new List<ARoom>();
+            Debug.Log("Direction : " + ((direction == 0) ? "Rigth" : "Left") + " ------------------------------------------------------");
             if (direction == 0)
             {
                 for (int corridor = 0; corridor < blueprint.Item1; ++corridor)
@@ -135,6 +141,7 @@ namespace Scripts.Agents
 
             }
 
+            Debug.Break();
 
             MapManager.S.MapMasterBlueprints.Add(new Map.Blueprints.MasterBlueprint(
                         roomList.Select(room => new Blueprint(room)).ToList(),
