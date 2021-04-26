@@ -5,6 +5,14 @@ namespace Scripts.Menu
 {
     public class MainMenu : MonoBehaviour
     {
+        public AudioSource _source;
+
+        public void PlayAudio(AudioClip clip)
+        {
+            _source.clip = clip;
+            _source.Play();
+        }
+
         public void Play()
         {
             SceneManager.LoadScene("Main");
