@@ -134,6 +134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StorageInfoText: {fileID: 3304247741050348045}
   ChangeMiningPanel: {fileID: 9187974085668350696}
+  Button: {fileID: 413700117123751724, guid: ffd206f4307186142838da732bb5d50b, type: 3}
 --- !u!1 &5129371914139496551
 GameObject:
   m_ObjectHideFlags: 0

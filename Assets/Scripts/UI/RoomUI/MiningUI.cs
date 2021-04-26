@@ -7,5 +7,6 @@ namespace Scripts.UI.RoomUI
     {
         public Text StorageInfoText;
         public GameObject ChangeMiningPanel;
+        public GameObject Button;
     }
 }

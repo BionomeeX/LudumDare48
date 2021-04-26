@@ -2,7 +2,6 @@
 using Scripts.Map.Room.ModulableRoom;
 using Scripts.Resources;
 using Scripts.ScriptableObjects;
-using Scripts.UI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -35,7 +34,9 @@ namespace Scripts.Extraction
                 var metals = GetMetalsCloseEnough(room.GameObject.transform.position);
                 if (metals.Length > 0)
                 {
-                    ((MiningRoom)room.RoomType).CurrentMining = metals[0];
+                    var mr = (MiningRoom)room.RoomType;
+                    mr.CurrentMining = metals[0];
+                    mr.Possibilities = metals;
                 }
                 _miningRooms.Add(room);
             }
