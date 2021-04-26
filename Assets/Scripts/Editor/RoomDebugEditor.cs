@@ -18,7 +18,7 @@ public class RoomDebugEditor : EditorWindow
             return;
         }
         // EditorGUI.TextArea(new Rect(), "AAAA");
-        // Debug.Log("AAAA");
+        // // Debug.Log("AAAA");
         EditorGUI.TextArea(new Rect(0, 0, 500, 500), string.Join("\n", MapManager.S.MapRooms.Select(x => x.ToString())));
     }
 

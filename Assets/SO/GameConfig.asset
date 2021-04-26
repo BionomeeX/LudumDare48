@@ -17,9 +17,9 @@ MonoBehaviour:
   MiningStorageMaxSize: 200
   StartingResources:
   - Type: 5
-    Amount: 100000
+    Amount: 1000
   - Type: 1
-    Amount: 50000
+    Amount: 500
   StartingSubofficers: 1
   StartingWarehousemans: 10
   NbOfResourcePerTransportation: 5
@@ -29,7 +29,11 @@ MonoBehaviour:
   - Type: 1
     Amount: 25
   BuildingTime: 0.5
-  ChangeBuildElevator: 0
+  ChangeBuildElevator: 0.33
+  TurretPriorityWeight: 0
+  FactoryPriorityWeight: 0
+  BlueprintPriorityWeight: 0
+  StockPriorityWeight: 0
   SubmarineSpeed: 2
   SubmarineRadius: 5
   BaseSurfaceEmpty: {x: 20, y: 10}
@@ -56,7 +60,7 @@ MonoBehaviour:
     LayerFrom: 2
     LayerTo: 2
     Material: {fileID: 2100000, guid: 4026d31c398ccf14184ca8ca739ab59f, type: 2}
-  MiningRange: 20
+  MiningRange: 5
   MiningPerFixedUpdate: 4
   LayerYSize: 10
   MinMetalPerLayer: 2

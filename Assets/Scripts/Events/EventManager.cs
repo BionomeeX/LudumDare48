@@ -29,16 +29,16 @@ namespace Scripts.Events
 
         public void Subscribe(AAgent agent)
         {
-            Debug.Log("Subscribe : " + agent.name);
+            // Debug.Log("Subscribe : " + agent.name);
             _agents.Add(agent);
         }
 
         public void NotifyManager(Event e, object o)
         {
-            Debug.Log("Event send to the manager !");
+            // Debug.Log("Event send to the manager !");
             if (e == Event.BlueprintDrawn)
             {
-                Debug.Log("Blueprint Drawn event received");
+                // Debug.Log("Blueprint Drawn event received");
                 EnemyManager.S.RecalculateZone();
             }
             else if (e == Event.RoomSetType)

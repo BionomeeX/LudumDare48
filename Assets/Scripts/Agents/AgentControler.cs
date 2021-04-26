@@ -52,16 +52,16 @@ namespace Scripts.Agents
         {
             while (true)
             {
-                Debug.Log("ChooseAction begin");
+                // Debug.Log("ChooseAction begin");
                 // First of all, if _currentRoom is null, let's try to find where we are
                 if (_currentRoom == null)
                 {
-                    Debug.Log("  Checking for room");
-                    Debug.Log("  My pos : " + transform.position.x + ", " + transform.position.y);
+                    // Debug.Log("  Checking for room");
+                    // Debug.Log("  My pos : " + transform.position.x + ", " + transform.position.y);
                     foreach (var room in MapManager.S.MapRooms)
                     {
-                        Debug.Log("    Room pos :");
-                        Debug.Log("      (" + room.Position.x + ", " + room.Position.y + ") (" + (room.Position.x + room.Size.x) + ", " + (room.Position.y + room.Size.y) + ")");
+                        // Debug.Log("    Room pos :");
+                        // Debug.Log("      (" + room.Position.x + ", " + room.Position.y + ") (" + (room.Position.x + room.Size.x) + ", " + (room.Position.y + room.Size.y) + ")");
 
                         if (transform.position.x >= room.Position.x && transform.position.x <= room.Position.x + room.Size.x &&
                            -transform.position.y >= room.Position.y && -transform.position.y <= room.Position.y + room.Size.y
@@ -74,21 +74,21 @@ namespace Scripts.Agents
                     // if _currentRoom is still null ... we are in the water !
                     if (_currentRoom == null)
                     {
-                        Debug.Log("  Still no room => aborting");
+                        // Debug.Log("  Still no room => aborting");
                         yield return new WaitForSeconds(1f);
                     }
                 }
 
                 if (_currentAction == Action.Idle)
                 {
-                    Debug.Log("  Currently Idle");
+                    // Debug.Log("  Currently Idle");
 
                     float actionChoice = Random.Range(0f, 1f);
 
                     if (actionChoice < 0.9f)
                     // 10% chance build a new room
                     {
-                        Debug.Log("    Will Build");
+                        // Debug.Log("    Will Build");
                         // go to building mode
                         // 1) choose a room from where to expand
                         List<(ARoom room, float weight)> choices = new List<(ARoom room, float weight)>();
@@ -121,7 +121,7 @@ namespace Scripts.Agents
                             _targetRoom = choices[i].room;
                             // 2) set the path to the target room
                             _roomPath = Astar.FindPath(_currentRoom, _targetRoom);
-                            Debug.Log("    Going to room (" + _targetRoom.Position.x + ", " + _targetRoom.Position.y + ") to build");
+                            // Debug.Log("    Going to room (" + _targetRoom.Position.x + ", " + _targetRoom.Position.y + ") to build");
                             _currentAction = Action.Building;
                         }
                     }
@@ -130,36 +130,36 @@ namespace Scripts.Agents
                         // move to a random room
                         _targetRoom = MapManager.S.MapRooms[Random.Range(0, MapManager.S.MapRooms.Count)];
                         _roomPath = Astar.FindPath(_currentRoom, _targetRoom);
-                        Debug.Log("    Going to room (" + _targetRoom.Position.x + ", " + _targetRoom.Position.y + ")");
+                        // Debug.Log("    Going to room (" + _targetRoom.Position.x + ", " + _targetRoom.Position.y + ")");
                     }
 
                 }
                 else if (_currentAction == Action.Building)
                 {
-                    Debug.Log("  Currently Building");
+                    // Debug.Log("  Currently Building");
                     if (_roomPath.Count > 0)
                     {
                         // still moving
                         var room = _roomPath[0];
-                        Debug.Log("    Still Moving to (" + room.Position.x + ", " + room.Position.y + ")");
+                        // Debug.Log("    Still Moving to (" + room.Position.x + ", " + room.Position.y + ")");
                         // Go to next room
                         MoveToRoom(room);
                         _roomPath.RemoveAt(0);
                     }
                     else
                     {
-                        Debug.Log("    Building Room/Corridor");
+                        // Debug.Log("    Building Room/Corridor");
                         // We are at the building room
                         _targetRoom = null;
                         // now start building
                         if (_currentRoom is Corridor)
                         {
-                            Debug.Log("      In a corridor");
+                            // Debug.Log("      In a corridor");
                             if (Random.Range(0f, 1f) < 0.75f)
                             // 75% expand corridor
                             {
-                                Debug.Log("        Expanding corridor");
-                                Debug.Log("          In the same direction");
+                                // Debug.Log("        Expanding corridor");
+                                // Debug.Log("          In the same direction");
                                 ARoom corridor = null;
                                 if (_currentRoom.RoomLeft != null)
                                 // we are going from left to right
@@ -177,18 +177,18 @@ namespace Scripts.Agents
                             else
                             // 25% build a room
                             {
-                                Debug.Log("        Build a new room");
+                                // Debug.Log("        Build a new room");
                                 ARoom room = null;
                                 if (_currentRoom.RoomLeft != null)
                                 // we are going from left to right
                                 {
-                                    Debug.Log("          To the right");
+                                    // Debug.Log("          To the right");
                                     room = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x + 1, _currentRoom.Position.y), new Vector2Int(2, 1), MapManager.S.ReceptionRoom, RoomType.EMPTY, _currentRoom, null, false);
                                 }
                                 else
                                 // right to left
                                 {
-                                    Debug.Log("          To the left");
+                                    // Debug.Log("          To the left");
                                     room = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x - 2, _currentRoom.Position.y), new Vector2Int(2, 1), MapManager.S.ReceptionRoom, RoomType.EMPTY, _currentRoom, null, false);
                                 }
                                 _currentAction = Action.Idle;
@@ -199,7 +199,7 @@ namespace Scripts.Agents
                         else
                         // not a corridor => we are in a room and we start a corridor
                         {
-                            Debug.Log("      In a room");
+                            // Debug.Log("      In a room");
                             // Right/Left??
                             List<int> directions = new List<int>();
                             if (_currentRoom.RoomRight == null)
@@ -213,13 +213,13 @@ namespace Scripts.Agents
 
                             if (directions.Count > 0)
                             {
-                                Debug.Log("        Building Corridor");
+                                // Debug.Log("        Building Corridor");
                                 // choose one
                                 int choice = directions[Random.Range(0, directions.Count)];
                                 if (choice == 0)
                                 // add to the right
                                 {
-                                    Debug.Log("          to the right");
+                                    // Debug.Log("          to the right");
                                     var corridor = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x + _currentRoom.Size.x, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom, null, false);
                                     _targetRoom = corridor;
                                     _roomPath = Astar.FindPath(_currentRoom, _targetRoom);
@@ -227,7 +227,7 @@ namespace Scripts.Agents
                                 else
                                 // add to the left
                                 {
-                                    Debug.Log("          to the left");
+                                    // Debug.Log("          to the left");
                                     var corridor = MapManager.S.AddRoom(new Vector2Int(_currentRoom.Position.x - 1, _currentRoom.Position.y), new Vector2Int(1, 1), MapManager.S.Corridor, RoomType.CORRIDOR, _currentRoom, null, false);
                                     _targetRoom = corridor;
                                     _roomPath = Astar.FindPath(_currentRoom, _targetRoom);
@@ -238,21 +238,21 @@ namespace Scripts.Agents
                 }
                 else if (_roomPath.Count > 0)
                 {
-                    Debug.Log("  Currently Moving");
+                    // Debug.Log("  Currently Moving");
                     var room = _roomPath[0];
-                    Debug.Log("    to (" + room.Position.x + ", " + room.Position.y + ")");
+                    // Debug.Log("    to (" + room.Position.x + ", " + room.Position.y + ")");
                     // we are moving
                     MoveToRoom(room);
                     _roomPath.RemoveAt(0);
                 }
                 else
                 {
-                    Debug.Log("  Currently Stopped Moving");
+                    // Debug.Log("  Currently Stopped Moving");
                     // we stopped moving ...
                     _targetRoom = null;
                     _currentAction = Action.Idle;
                 }
-                Debug.Log("ChooseAction End, starting anew ...");
+                // Debug.Log("ChooseAction End, starting anew ...");
                 yield return new WaitForSeconds(0.1f);
                 // ChooseAction();
             }
