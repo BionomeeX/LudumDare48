@@ -144,26 +144,13 @@ namespace Scripts.Agents
 
         private bool CheckIfTurretNeedResource()
         {
-            // Get list of all turrets that need ressources
-            // List<ARoom> turrets = MapManager.S.GetAllTurrets().Where(t => t.NeedRessource(ResourceType.AMMO)).ToList();
+            var tpws = MapManager.S.GetAllTurrets().Select(
+                t => (t, Astar.FindPath(_currentRoom, t))
+            ).Select(
+                tp => (tp.Item1, tp.Item2, Astar.ComputePathWeight(tp.Item2))
+            ).OrderBy(tpw => tpw.Item3).ToList();
 
-            // // for each turret, pathfind and sort by distance
-            // List<(List<Map.ARoom> path, float distance)> orderedTurretPaths = turrets.Select(
-            //     t => Astar.FindPath(_currentRoom, t)
-            // ).Select(
-            //     path => (path, Astar.ComputePathWeight(path))
-            // ).OrderBy(pf => pf.Item2).ToList();
-
-            // // Lock the turret for filling and reserve the first one
-            // ARoom turretTarget = orderedTurretPaths[0];
-
-            // List<ARoom> stocks = MapManager.S.GetAllStockRoom().Where(s => ((GenericRoom)s).RoomType.Stock.CheckResourceByType(ResourceType.AMMO));
-
-
-
-            //
-
-            return false;
+            return RRRR(tpws, ResourceStock.Priority.ABSOLUTE);
         }
         private bool CheckIfFactoryNeedResource()
         {
