@@ -57,6 +57,7 @@ namespace Scripts.Map.Blueprints
             {
                 EventManager.S.NotifyManager(Event.BlueprintFinished, _room);
                 MapManager.S.BuildRoomExt(_room);
+                // EventManager.S.NotifyManager(Events.Event.BlueprintFinished, _room);
             }
             OpenGameMenu.S.UpdateRoomInfo();
         }

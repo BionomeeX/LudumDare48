@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using Scripts.Sounds;
 using System.Collections.ObjectModel;
 using Scripts.Extraction;
-using Scripts.UI;
+using Scripts.Map.Blueprints;
 
 namespace Scripts.Events
 {
@@ -45,6 +45,17 @@ namespace Scripts.Events
                 MiningManager.S.UpdateRoom((GenericRoom)o);
             }
             AudioManager.S.ReceiveEvent(e);
+
+            if (e == Event.BlueprintFinished)
+            {
+                ARoom room = (ARoom)o;
+                MapManager.S.NotifyBluePrintFininshed(room);
+            }
+
+            if(e == Event.MasterBlueprintFinished){
+                MasterBlueprint mbp = (MasterBlueprint)o;
+                MapManager.S.NotifyMasterBluePrintFininshed(mbp);
+            }
 
             foreach (var agent in _agents)
             {
