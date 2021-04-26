@@ -88,25 +88,21 @@ namespace Scripts.Map
 
                 }
 
-                var warehouseman = Instantiate(_warehousePrefab,
-                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
-                    Quaternion.identity);
-                EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
+                for (int i = 0; i < ConfigManager.S.Config.StartingSubofficers; i++)
+                {
+                    var commandant = Instantiate(_commandantPrefab,
+                        r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
+                        Quaternion.identity);
+                    EventManager.S.Subscribe(commandant.GetComponent<Commandant>());
+                }
+                for (int i = 0; i < ConfigManager.S.Config.StartingWarehousemans; i++)
+                {
+                    var warehouseman = Instantiate(_warehousePrefab,
+                        r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
+                        Quaternion.identity);
+                    EventManager.S.Subscribe(warehouseman.GetComponent<Warehouseman>());
+                }
 
-                var warehouseman2 = Instantiate(_warehousePrefab,
-                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f + Vector3.right * .2f,
-                    Quaternion.identity);
-                EventManager.S.Subscribe(warehouseman2.GetComponent<Warehouseman>());
-
-                var warehouseman3 = Instantiate(_warehousePrefab,
-                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f + Vector3.right * .4f,
-                    Quaternion.identity);
-                EventManager.S.Subscribe(warehouseman3.GetComponent<Warehouseman>());
-
-                var commandant = Instantiate(_commandantPrefab,
-                    r.GameObject.transform.position + Vector3.up * .5f + Vector3.back * .5f,
-                    Quaternion.identity);
-                EventManager.S.Subscribe(commandant.GetComponent<Commandant>());
             }, false);
 
             ARoom leftC1 = AddRoom(new Vector2Int(7, 0), new Vector2Int(1, 1), Corridor, RoomType.EMPTY, firstRoom, null, false);
@@ -449,6 +445,7 @@ namespace Scripts.Map
             if (_mapPathfinding[y][x] == TileState.NOT_DISCOVERED)
             {
                 _mapPathfinding[y][x] = TileState.EMPTY;
+                EventManager.S.NotifyManager(Events.Event.ExplorationNewZone, new Vector2Int(x, y));
             }
         }
 

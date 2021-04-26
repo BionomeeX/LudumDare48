@@ -12,20 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0d6aee530f17ab4f911678d166336d4, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  NormalStorageMaxSize: 1000
-  FactoryStorageMaxSize: 50
-  MiningStorageMaxSize: 50
+  NormalStorageMaxSize: 5000
+  FactoryStorageMaxSize: 200
+  MiningStorageMaxSize: 200
   StartingResources:
   - Type: 5
-    Amount: 100
+    Amount: 1000
   - Type: 1
-    Amount: 50
+    Amount: 500
+  StartingSubofficers: 1
+  StartingWarehousemans: 10
   NbOfResourcePerTransportation: 5
   RequirementPerBloc:
   - Type: 5
-    Amount: 15
+    Amount: 75
   - Type: 1
-    Amount: 5
+    Amount: 25
   BuildingTime: 2
   SubmarineSpeed: 2
   SubmarineRadius: 5
@@ -54,7 +56,7 @@ MonoBehaviour:
     LayerTo: 2
     Material: {fileID: 2100000, guid: 4026d31c398ccf14184ca8ca739ab59f, type: 2}
   MiningRange: 5
-  MiningPerFixedUpdate: 10
+  MiningPerFixedUpdate: 4
   LayerYSize: 10
   MinMetalPerLayer: 2
   MaxMetalPerLayer: 4

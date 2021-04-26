@@ -13,6 +13,7 @@ namespace Scripts.ScriptableObjects
 
         [Header("Starting info")]
         public ResourceInfo[] StartingResources;
+        public int StartingSubofficers, StartingWarehousemans;
 
         [Header("Construction")]
         [Tooltip("How many resources can an agent move in one travel")]
