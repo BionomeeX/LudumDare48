@@ -23,6 +23,8 @@ namespace Scripts.Map.Room.ModulableRoom
             => false;
         public virtual bool IsMining()
             => false;
+        public virtual bool IsFactory()
+            => false;
 
         public ResourceStock Stock;
     }

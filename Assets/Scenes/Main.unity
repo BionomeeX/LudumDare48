@@ -3529,7 +3529,7 @@ MonoBehaviour:
   _uiStorage: {fileID: 3304247741130620652, guid: 624cbf4e7b68f81409d44bee94dd74de, type: 3}
   _receptionStorage: {fileID: 3304247741130620652, guid: 5eaf9542c6093c34c9c8f54bd76fe694, type: 3}
   _miningStorage: {fileID: 3304247741130620652, guid: e1b747f0a1b27c646bcf78d23c81c805, type: 3}
-  _factoryStorage: {fileID: 0}
+  _factoryStorage: {fileID: 4381234755295056172, guid: dddfcec2664bf3d4abacd96aa3c3659e, type: 3}
   _uiStoragePriority: {fileID: 5634858518709175697, guid: 843570c0d0b93084f859ecb292459ec7, type: 3}
 --- !u!114 &1930794184
 MonoBehaviour:

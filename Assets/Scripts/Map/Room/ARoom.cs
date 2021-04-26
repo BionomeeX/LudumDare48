@@ -29,7 +29,16 @@ namespace Scripts.Map.Room
         public string GetName()
         {
             if (Requirement != null)
-                return "Blueprint";
+            {
+                if (this is GenericRoom gRoom && gRoom.RoomType.IsFactory())
+                {
+                    if (!IsBuilt)
+                        return "Construction";
+                    return GetNameInternal();
+                }    
+                else
+                    return "Blueprint";
+            }
             if (!IsBuilt)
                 return "Construction";
             return GetNameInternal();
@@ -38,7 +47,16 @@ namespace Scripts.Map.Room
         public string GetDescription()
         {
             if (Requirement != null)
-                return "The room was ordered by a commander and is waiting for its materials";
+            {
+                if (this is GenericRoom gRoom && gRoom.RoomType.IsFactory())
+                {
+                    if (!IsBuilt)
+                        return "The room is being build";
+                    return GetDescriptionInternal();
+                }
+                else
+                    return "The room was ordered by a commander and is waiting for its materials";
+            }
             if (!IsBuilt)
                 return "The room is being build";
             return GetDescriptionInternal();

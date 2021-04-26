@@ -20,7 +20,10 @@ namespace Scripts.Map.Room.ModulableRoom
                 Type = x,
                 Amount = ConfigManager.S.Config.NbOfResourcePerTransportation
             }).ToArray(), true);
-            r.Requirement = req;
+            if (r != null)
+            {
+                r.Requirement = req;
+            }
         }
 
         public override string GetName()
@@ -28,6 +31,9 @@ namespace Scripts.Map.Room.ModulableRoom
 
         public override string GetDescription()
             => "Convert your ores into refined resources";
+
+        public override bool IsFactory()
+            => true;
 
         public override GameObject GetDescriptionPanel()
             => UIRoom.S._factoryStorage;
