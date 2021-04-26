@@ -159,6 +159,12 @@ namespace Scripts.Agents
         }
         private bool CheckIfFactoryNeedResource()
         {
+            // var factories = MapManager.S.GetAllFactory().Select(
+            //     f => (f, Astar.FindPath(_currentRoom, f))
+            // ).Select(
+            //     fp => (fp.Item1, fp.Item2, Astar.ComputePathWeight(fp.Item2))
+            // )
+
             return false;
         }
 
@@ -210,9 +216,6 @@ namespace Scripts.Agents
                             {
                                 additionalPath = Astar.FindPath(_currentRoom, room);
                             }
-
-                            // var additionalPath = Astar.FindPath(_actions.Last().path.Last(), blueprint.path.Last());
-
                             Debug.Log("additionalPath : " + additionalPath.Count);
                             _actions.Add(
                                 (additionalPath, Action.DropRessource)

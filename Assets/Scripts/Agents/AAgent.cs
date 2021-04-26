@@ -5,6 +5,8 @@ using Scripts.Map.Room;
 using Scripts.Resources;
 using Scripts.ScriptableObjects;
 using System.Collections;
+using System.Linq;
+
 
 namespace Scripts.Agents
 {
@@ -85,31 +87,32 @@ namespace Scripts.Agents
             }
         }
 
-        public Action MoveOrGetAction()
-        {
-            Debug.Log("MoveOrGetAction ON");
-            if (_actions.Count > 0)
-            {
-                Debug.Log("Move");
-                if (_actions[0].path.Count > 0)
-                {
-                    Debug.Log("  to : " + _actions[0].path[0].Position.x + ", " + _actions[0].path[0].Position.y);
-                    MoveTo(_actions[0].path[0]);
-                    _actions[0].path.RemoveAt(0);
-                    Debug.Log("Still moves to do");
-                    return Action.Move;
-                }
-                else
-                {
-                    Action action = _actions[0].action;
-                    _actions.RemoveAt(0);
-                    Debug.Log("No move, do the action");
-                    return action;
-                }
-            }
-            Debug.Log(this.name + " is Idle");
-            return Action.Idle;
-        }
+        // public Action MoveOrGetAction()
+        // {
+        //     Debug.Log("MoveOrGetAction ON");
+        //     if (_actions.Count > 0)
+        //     {
+        //         Debug.Log("Move");
+        //         if (_actions[0].path.Count > 0)
+        //         {
+        //             Debug.Log("  to : " + _actions[0].path[0].Position.x + ", " + _actions[0].path[0].Position.y);
+        //             MoveTo(_actions[0].path[0]);
+        //             _actions[0].path.RemoveAt(0);
+        //             Debug.Log("Still moves to do");
+        //             return Action.Move;
+        //         }
+        //         else
+        //         {
+        //             Action action = _actions[0].action;
+        //             _actions.RemoveAt(0);
+        //             Debug.Log("No move, do the action");
+        //             return action;
+        //         }
+        //     }
+        //     Debug.Log(this.name + " is Idle");
+        //     IsIdle = true;
+        //     return Action.Idle;
+        // }
 
 
 
@@ -118,35 +121,70 @@ namespace Scripts.Agents
 
         public void DoNextAction()
         {
-            IsIdle = false;
-            Debug.Log("Move Or GetAction");
-            Action action = MoveOrGetAction();
-            if (action != Action.Move && action != Action.Idle)
+            if (_actions.Count > 0)
             {
-                Debug.Log("Do Special Action");
-                DoSpecialAction(action);
-            }
-            if (action == Action.Idle)
-            {
-                if (!ChooseAction())
+                IsIdle = false;
+                var actions = _actions.First();
+                if (actions.path.Count > 0)
                 {
-                    Debug.Log("Idle set to true");
+                    MoveTo(_actions.First().path.First());
+                    _actions.First().path.RemoveAt(0);
+                    return;
+                }
+                DoSpecialAction(actions.action);
+                _actions.RemoveAt(0);
+                DoNextAction();
+            }
+            else
+            {
+                if (ChooseAction())
+                {
+                    IsIdle = false;
+                    DoNextAction();
+                }
+                else
+                {
                     IsIdle = true;
                     return;
                 }
             }
-            if (action != Action.Move)
-            {
-                Debug.Log("Do the next Action");
-                DoNextAction();
-            }
         }
+
+
+        //     IsIdle = false;
+
+        //     Debug.Log("Move Or GetAction");
+
+        //     Action action = MoveOrGetAction(); // Action.MOVE if move, Action if special Action, Action.IDLE if no actions & no moves
+
+        //     if (action != Action.Move && action != Action.Idle)
+        //     {
+        //         Debug.Log("Do Special Action");
+        //         DoSpecialAction(action);
+        //         DoNextAction();
+        //     }
+        //     else if (action == Action.Idle)
+        //     {
+        //         if (!ChooseAction())
+        //         {
+        //             Debug.Log("Idle set to true");
+        //             IsIdle = true;
+        //             return;
+        //         }
+        //         DoNextAction();
+        //     }
+        //     if (action == Action.Move)
+        //     {
+        //         Debug.Log("Do the next Action");
+        //         DoNextAction();
+        //     }
+        // }
 
         private void FixedUpdate()
         {
             // Debug.Log("Fixed Update ON");
             // if (_objective != null)
-            if(_moving)
+            if (_moving)
             {
                 // Debug.Log("Moving");
                 transform.position += (_objective - transform.position).normalized * ConfigManager.S.Config.NpcSpeed;
