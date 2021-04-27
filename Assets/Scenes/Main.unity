@@ -3501,6 +3501,31 @@ MonoBehaviour:
   - {fileID: 2800000, guid: ac7b63f8ca57cb749a4e55b2fd125c3d, type: 3}
   _explanationPanelScript: {fileID: 820362135}
   _roomInfo: {fileID: 1878990285}
+  PStorage:
+  - {fileID: 7574129945539300137, guid: 9d2d027bfd87b984682c1ece543a351a, type: 3}
+  - {fileID: 3859066728483806960, guid: 9931b32ee8865714ba8bf026fe80adba, type: 3}
+  - {fileID: 1235259868758050446, guid: f85bdd75b6b4e564c8e9ecd85c8a7a5a, type: 3}
+  - {fileID: 8226630099735080869, guid: 892e81b20e40d98418f6fd23abc4aa3e, type: 3}
+  PFactory:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  PMining:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  PDefense:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  PAirlock:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &1930794182
 MonoBehaviour:
   m_ObjectHideFlags: 0

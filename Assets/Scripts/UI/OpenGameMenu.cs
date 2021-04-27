@@ -220,13 +220,34 @@ namespace Scripts.UI
             if (Input.GetMouseButtonUp(0) && clicked != null && clicked.IsBuilt)
             {
                 clicked.RoomType = ModularRoomFactory.BuildModularRoom(_currentSelection.Value, clicked);
-                foreach (var renderer in clicked.GameObject.GetComponentsInChildren<MeshRenderer>())
+                int index;
+                if (clicked.Size.x == 2)
                 {
-                    if (_debugMaterial == null)
-                    {
-                        _debugMaterial = renderer.material;
-                    }
-                    renderer.material = _materials[(int)_currentSelection.Value - 3];
+                    if (clicked.Size.y == 1)
+                        index = 0;
+                    else
+                        index = 1;
+                }
+                else
+                {
+                    if (clicked.Size.y == 1)
+                        index = 2;
+                    else
+                        index = 3;
+                }
+                GameObject go;
+                if (_currentSelection.Value == RoomType.AIRLOCK) go = PAirlock[index];
+                else if (_currentSelection.Value == RoomType.DEFENSE) go = PDefense[index];
+                else if (_currentSelection.Value == RoomType.FACTORY) go = PFactory[index];
+                else if (_currentSelection.Value == RoomType.MINING) go = PMining[index];
+                else if (_currentSelection.Value == RoomType.STORAGE) go = PStorage[index];
+                else go = null;
+
+                if (go != null)
+                {
+                    var n = Instantiate(go, clicked.GameObject.transform.position, Quaternion.identity);
+                    Destroy(clicked.GameObject);
+                    clicked.GameObject = n;
                 }
                 EventManager.S.NotifyManager(Events.Event.RoomSetType, clicked);
                 clicked = null;
@@ -242,5 +263,7 @@ namespace Scripts.UI
                 SubmarineManager.S.RemoveSubmarinePlacementMode();
             }
         }
+
+        public GameObject[] PStorage, PFactory, PMining, PDefense, PAirlock;
     }
 }
