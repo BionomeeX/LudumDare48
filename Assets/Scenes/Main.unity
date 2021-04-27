@@ -3507,25 +3507,25 @@ MonoBehaviour:
   - {fileID: 1235259868758050446, guid: f85bdd75b6b4e564c8e9ecd85c8a7a5a, type: 3}
   - {fileID: 8226630099735080869, guid: 892e81b20e40d98418f6fd23abc4aa3e, type: 3}
   PFactory:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 7623204661732250414, guid: d849ea70b02abf048afd2b20fed18e9a, type: 3}
+  - {fileID: 9061659978446908524, guid: 8148d570bfbfc8a4cb9420fa9e530a4d, type: 3}
+  - {fileID: 6100881076416112495, guid: bd75b5f586535d444aba5641b537a5de, type: 3}
+  - {fileID: 3654290282794826056, guid: 5058e9786cebe4b4695178e1592e3b06, type: 3}
   PMining:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 2079340253447968471, guid: 0b4ec98d007e00b4784fe62c979e41a4, type: 3}
+  - {fileID: 3526295016114575775, guid: 241f0afb40e84c548922a1fe52b8f0ea, type: 3}
+  - {fileID: 4510582710501012311, guid: 2d6cdb15562d4bb4596b136d83859245, type: 3}
+  - {fileID: 6280359709266299962, guid: 3ce1b4381517ca148a972c8c6558fc58, type: 3}
   PDefense:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1516967602832309255, guid: 1c6c583642d73304e8a9b64704530aff, type: 3}
+  - {fileID: 7007439743585404193, guid: 4233f21010e1e1e45974a00d7092cf5f, type: 3}
+  - {fileID: 8008308267865587164, guid: fa7b6676780f457468702a3b6403febc, type: 3}
+  - {fileID: 3775972594005918406, guid: 13964045cd6c1204fbf6975568febfc6, type: 3}
   PAirlock:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 2148040184056368775, guid: 096d05562e5b2d241b6039fd218f8e15, type: 3}
+  - {fileID: 7926760683403696982, guid: bb08742f7b4845047a567df5f049a8bc, type: 3}
+  - {fileID: 2868932776374189129, guid: eeccf7d8ee2ca9649abca190f8608c35, type: 3}
+  - {fileID: 8172990095822992733, guid: 96a0c5f9f412f1240b1ed7472c694aa0, type: 3}
 --- !u!114 &1930794182
 MonoBehaviour:
   m_ObjectHideFlags: 0

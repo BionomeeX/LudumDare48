@@ -245,7 +245,7 @@ namespace Scripts.UI
 
                 if (go != null)
                 {
-                    var n = Instantiate(go, clicked.GameObject.transform.position, Quaternion.identity);
+                    var n = Instantiate(go, clicked.GameObject.transform.position, Quaternion.Euler(0f, 180f, 0f));
                     Destroy(clicked.GameObject);
                     clicked.GameObject = n;
                 }
