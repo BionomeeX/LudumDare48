@@ -17,3 +17,5 @@ Click on a structure to have more info about it\
 You can place structures from the "Build" menu
 
 Also, you might want to reduce the volume of the game cause it's way too loud
+
+Ludum Dare page: https://ldjam.com/events/ludum-dare/48/$239653
